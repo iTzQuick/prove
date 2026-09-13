@@ -253,3 +253,128 @@ def format_duration(seconds: float) -> str:
     if hours < 36:
         return f"{hours:.1f} ore"
     return f"{hours / 24:.1f} giorni"
+
+
+def harvest_listings(
+    start_urls: Iterable[str],
+    config: SiteConfig,
+    fetcher: Fetcher,
+    session_factory: sessionmaker[Session],
+    max_pages_per_category: Optional[int] = None,
+    on_progress: Optional[Callable[[CrawlSummary], None]] = None,
+) -> CrawlSummary:
+    """Raccoglie i prodotti dalle pagine di categoria, seguendo la paginazione.
+
+    Una richiesta rende decine di prodotti invece di uno: e' la strada rapida
+    per avere l'intero catalogo con prezzi, sconti e immagini. Taglie e
+    descrizioni restano da riempire con ``enrich_missing_sizes``.
+    """
+    from .listing import bump_page_param, extract_listing
+
+    summary = CrawlSummary()
+    visited: set[str] = set()
+
+    with session_factory() as session:
+        for start_url in start_urls:
+            url: Optional[str] = start_url
+            page = 1
+            # Finche' la prima pagina non ci dice come si pagina, non lo sappiamo:
+            # se espone un link "avanti" ci fidiamo solo di quello, altrimenti
+            # proviamo a costruire ?page=N e ci fermiamo appena una pagina e'
+            # vuota. Indovinare anche quando il link esiste sprecherebbe una
+            # richiesta a vuoto in fondo a ogni categoria.
+            explicit_pagination: Optional[bool] = None
+            guessing = False
+
+            while url and url not in visited:
+                visited.add(url)
+                summary.seen += 1
+                try:
+                    resp = fetcher.get(url)
+                except RobotsDisallowed:
+                    summary.skipped_robots += 1
+                    break
+                if resp is None or resp.status_code >= 400:
+                    if guessing:
+                        summary.seen -= 1  # pagina inesistente: fine categoria
+                        break
+                    summary.failed += 1
+                    break
+
+                try:
+                    records, next_url = extract_listing(
+                        resp.text, url, source=config.source, selectors=config.selectors
+                    )
+                except Exception:
+                    log.exception("estrazione listing fallita su %s", url)
+                    summary.failed += 1
+                    break
+
+                if not records:
+                    log.info("nessun prodotto su %s: fine della categoria", url)
+                    if guessing:
+                        summary.seen -= 1
+                    break
+
+                if explicit_pagination is None:
+                    explicit_pagination = next_url is not None
+
+                for record in records:
+                    try:
+                        outcome = upsert_product(session, record)
+                    except Exception:
+                        session.rollback()
+                        summary.failed += 1
+                        log.exception("scrittura fallita per %s", record.url)
+                    else:
+                        if outcome == "new":
+                            summary.new += 1
+                        else:
+                            summary.updated += 1
+                session.commit()
+
+                if on_progress:
+                    on_progress(summary)
+
+                page += 1
+                if max_pages_per_category and page > max_pages_per_category:
+                    break
+                if explicit_pagination:
+                    url, guessing = next_url, False
+                else:
+                    url, guessing = bump_page_param(start_url, page), True
+                if url in visited:
+                    break
+
+    return summary
+
+
+def enrich_missing_sizes(
+    config: SiteConfig,
+    fetcher: Fetcher,
+    session_factory: sessionmaker[Session],
+    limit: Optional[int] = None,
+    workers: int = 4,
+    on_progress: Optional[Callable[[CrawlSummary], None]] = None,
+) -> CrawlSummary:
+    """Scarica la scheda dei soli prodotti a cui mancano le taglie.
+
+    Completa il lavoro di ``harvest_listings`` pagando una richiesta per
+    prodotto solo dove serve davvero, invece che su tutto il catalogo.
+    """
+    from sqlalchemy import select
+
+    from .models import Product, ProductSize
+
+    with session_factory() as session:
+        stmt = (
+            select(Product.url)
+            .where(~Product.sizes.any(ProductSize.id.isnot(None)))
+            .order_by(Product.id)
+        )
+        if limit:
+            stmt = stmt.limit(limit)
+        urls = [u for (u,) in session.execute(stmt).all()]
+
+    log.info("prodotti senza taglie da completare: %d", len(urls))
+    return crawl(urls, config, fetcher, session_factory, workers=workers, on_progress=on_progress)

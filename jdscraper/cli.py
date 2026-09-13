@@ -17,7 +17,14 @@ from .export import export, stats
 from .extract import extract_product
 from .fetcher import DEFAULT_USER_AGENT, Fetcher, RobotsDisallowed
 from .parsing import extract_state_blobs, find_jsonld_product
-from .pipeline import crawl, estimate_duration, format_duration, ingest_directory
+from .pipeline import (
+    crawl,
+    enrich_missing_sizes,
+    estimate_duration,
+    format_duration,
+    harvest_listings,
+    ingest_directory,
+)
 
 DEFAULT_DB = "sqlite:///catalogo.db"
 
@@ -116,6 +123,58 @@ def cmd_scrape(args) -> int:
     )
     print(summary.as_text())
     print(f"Richieste HTTP: {fetcher.stats.requests}, MB scaricati: {fetcher.stats.bytes_downloaded / 1e6:.1f}")
+    fetcher.close()
+    return 0
+
+
+def cmd_harvest(args) -> int:
+    """Raccoglie il catalogo dalle pagine di categoria: poche richieste, molti prodotti."""
+    config = SiteConfig.load(args.config)
+    fetcher = _make_fetcher(config, args)
+    fetcher.apply_robots_delay(config.root)
+
+    start_urls = args.url or config.category_urls
+    if not start_urls:
+        print("Nessuna categoria: passa --url o popola category_urls nel config.", file=sys.stderr)
+        return 2
+
+    engine = init_db(args.db)
+    print(f"Raccolgo da {len(start_urls)} categorie (delay {fetcher.limiter.delay:g}s).")
+    summary = harvest_listings(
+        start_urls,
+        config,
+        fetcher,
+        make_session_factory(engine),
+        max_pages_per_category=args.max_pages,
+        on_progress=lambda s: print(f"  pagine: {s.seen} | prodotti: {s.new + s.updated}"),
+    )
+    print(summary.as_text())
+    prodotti = summary.new + summary.updated
+    if summary.seen:
+        print(f"Resa: {prodotti / summary.seen:.0f} prodotti per richiesta.")
+    if fetcher.stats.throttled:
+        print(f"Il sito ha chiesto di rallentare {fetcher.stats.throttled} volte.")
+    print(f"Ritmo finale: una richiesta ogni {fetcher.limiter.delay:.2f}s.")
+    fetcher.close()
+    return 0
+
+
+def cmd_enrich(args) -> int:
+    """Completa con le taglie i soli prodotti che ne sono privi."""
+    config = SiteConfig.load(args.config)
+    fetcher = _make_fetcher(config, args)
+    fetcher.apply_robots_delay(config.root)
+    engine = init_db(args.db)
+
+    summary = enrich_missing_sizes(
+        config,
+        fetcher,
+        make_session_factory(engine),
+        limit=args.limit,
+        workers=args.workers,
+        on_progress=lambda s: print("  ...", s.as_text()),
+    )
+    print(summary.as_text())
     fetcher.close()
     return 0
 
@@ -260,6 +319,20 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--download-images", default=None, metavar="DIR")
     p.add_argument("--workers", type=int, default=2)
     p.set_defaults(func=cmd_scrape)
+
+    p = sub.add_parser("harvest", help="catalogo dalle pagine di categoria (molto piu' rapido)")
+    add_common(p)
+    p.add_argument("--db", default=DEFAULT_DB)
+    p.add_argument("--url", action="append", help="URL di categoria (ripetibile)")
+    p.add_argument("--max-pages", type=int, default=None, help="pagine per categoria")
+    p.set_defaults(func=cmd_harvest)
+
+    p = sub.add_parser("enrich", help="aggiunge le taglie ai prodotti che ne sono privi")
+    add_common(p)
+    p.add_argument("--db", default=DEFAULT_DB)
+    p.add_argument("--limit", type=int, default=None)
+    p.add_argument("--workers", type=int, default=4)
+    p.set_defaults(func=cmd_enrich)
 
     p = sub.add_parser("parse-file", help="estrae un prodotto da un HTML gia' salvato")
     add_common(p, net=False)

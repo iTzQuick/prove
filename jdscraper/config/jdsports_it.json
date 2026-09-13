@@ -14,62 +14,209 @@
   "delay": 3.0,
   "selectors": {
     "name": [
-      {"selector": "h1[itemprop='name']"},
-      {"selector": ".itemTitle"},
-      {"selector": "h1.product-name"},
-      {"selector": "h1"}
+      {
+        "selector": "h1[itemprop='name']"
+      },
+      {
+        "selector": ".itemTitle"
+      },
+      {
+        "selector": "h1.product-name"
+      },
+      {
+        "selector": "h1"
+      }
     ],
     "brand": [
-      {"selector": "[itemprop='brand'] [itemprop='name']"},
-      {"selector": "[itemprop='brand']", "attr": "content"},
-      {"selector": ".brandTitle"},
-      {"selector": ".product-brand"}
+      {
+        "selector": "[itemprop='brand'] [itemprop='name']"
+      },
+      {
+        "selector": "[itemprop='brand']",
+        "attr": "content"
+      },
+      {
+        "selector": ".brandTitle"
+      },
+      {
+        "selector": ".product-brand"
+      }
     ],
     "price": [
-      {"selector": "[itemprop='price']", "attr": "content"},
-      {"selector": ".pri"},
-      {"selector": ".pdp-price .now"},
-      {"selector": ".price-sales"},
-      {"selector": ".product-price"}
+      {
+        "selector": "[itemprop='price']",
+        "attr": "content"
+      },
+      {
+        "selector": ".pri"
+      },
+      {
+        "selector": ".pdp-price .now"
+      },
+      {
+        "selector": ".price-sales"
+      },
+      {
+        "selector": ".product-price"
+      }
     ],
     "list_price": [
-      {"selector": ".was"},
-      {"selector": ".pdp-price .was"},
-      {"selector": ".price-standard"},
-      {"selector": "del"},
-      {"selector": "s"}
+      {
+        "selector": ".was"
+      },
+      {
+        "selector": ".pdp-price .was"
+      },
+      {
+        "selector": ".price-standard"
+      },
+      {
+        "selector": "del"
+      },
+      {
+        "selector": "s"
+      }
     ],
     "colour": [
-      {"selector": "[itemprop='color']"},
-      {"selector": ".colourName"},
-      {"selector": ".product-colour"}
+      {
+        "selector": "[itemprop='color']"
+      },
+      {
+        "selector": ".colourName"
+      },
+      {
+        "selector": ".product-colour"
+      }
     ],
     "style_code": [
-      {"selector": "[itemprop='mpn']", "attr": "content"},
-      {"selector": ".styleCode"},
-      {"selector": ".product-style-code"}
+      {
+        "selector": "[itemprop='mpn']",
+        "attr": "content"
+      },
+      {
+        "selector": ".styleCode"
+      },
+      {
+        "selector": ".product-style-code"
+      }
     ],
     "description": [
-      {"selector": "[itemprop='description']"},
-      {"selector": "#productDetails"},
-      {"selector": ".product-description"}
+      {
+        "selector": "[itemprop='description']"
+      },
+      {
+        "selector": "#productDetails"
+      },
+      {
+        "selector": ".product-description"
+      }
     ],
     "images": [
-      {"selector": "[itemprop='image']", "attr": "content"},
-      {"selector": "#productImgs img", "attr": "src"},
-      {"selector": ".product-gallery img", "attr": "src"},
-      {"selector": ".swiper-slide img", "attr": "data-src"}
+      {
+        "selector": "[itemprop='image']",
+        "attr": "content"
+      },
+      {
+        "selector": "#productImgs img",
+        "attr": "src"
+      },
+      {
+        "selector": ".product-gallery img",
+        "attr": "src"
+      },
+      {
+        "selector": ".swiper-slide img",
+        "attr": "data-src"
+      }
     ],
     "sizes": [
-      {"selector": "ul.sizeButtons li a", "label_attr": null, "available_attr": null},
-      {"selector": ".sizeButtons li", "label_attr": "data-size", "available_attr": "data-available"},
-      {"selector": "[data-e2e='pdp-size-list'] button", "label_attr": null, "available_attr": "aria-disabled"},
-      {"selector": ".size-selector button", "label_attr": null, "available_attr": "aria-disabled"}
+      {
+        "selector": "ul.sizeButtons li a",
+        "label_attr": null,
+        "available_attr": null
+      },
+      {
+        "selector": ".sizeButtons li",
+        "label_attr": "data-size",
+        "available_attr": "data-available"
+      },
+      {
+        "selector": "[data-e2e='pdp-size-list'] button",
+        "label_attr": null,
+        "available_attr": "aria-disabled"
+      },
+      {
+        "selector": ".size-selector button",
+        "label_attr": null,
+        "available_attr": "aria-disabled"
+      }
     ],
     "breadcrumb": [
-      {"selector": "nav.breadcrumb li"},
-      {"selector": ".breadcrumbs a"},
-      {"selector": "[itemtype*='BreadcrumbList'] [itemprop='name']"}
-    ]
-  }
+      {
+        "selector": "nav.breadcrumb li"
+      },
+      {
+        "selector": ".breadcrumbs a"
+      },
+      {
+        "selector": "[itemtype*='BreadcrumbList'] [itemprop='name']"
+      }
+    ],
+    "listing": {
+      "_README": "Contenitore di una scheda nella griglia, poi i campi al suo interno.",
+      "item": [
+        "li.productListItem",
+        "[data-e2e='product-card']",
+        "article.product-card",
+        ".product-grid .product-item",
+        "li[data-productid]"
+      ],
+      "link": [
+        "a.itemImage",
+        "a[href*='/product/']",
+        "a"
+      ],
+      "name": [
+        ".itemTitle",
+        ".product-card__name",
+        "h2",
+        "h3"
+      ],
+      "brand": [
+        ".brandTitle",
+        ".product-card__brand"
+      ],
+      "price": [
+        ".pri",
+        ".now",
+        ".product-card__price",
+        "[data-e2e='product-price']"
+      ],
+      "list_price": [
+        ".was",
+        ".product-card__price--was",
+        "del",
+        "s"
+      ],
+      "image": [
+        "img.itemImage",
+        "img"
+      ],
+      "next": [
+        "a[rel='next']",
+        ".pagination__next",
+        "a.next"
+      ]
+    }
+  },
+  "category_urls": [
+    "https://www.jdsports.it/uomo/scarpe-uomo/",
+    "https://www.jdsports.it/donna/scarpe-donna/",
+    "https://www.jdsports.it/bambino/scarpe-bambino/",
+    "https://www.jdsports.it/uomo/abbigliamento-uomo/",
+    "https://www.jdsports.it/donna/abbigliamento-donna/",
+    "https://www.jdsports.it/bambino/abbigliamento-bambino/",
+    "https://www.jdsports.it/uomo/accessori-uomo/",
+    "https://www.jdsports.it/donna/accessori-donna/"
+  ]
 }

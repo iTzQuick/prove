@@ -13,6 +13,8 @@ in un file JSON: `jdscraper/config/<sito>.json`.
 |---|---|
 | Schema database + upsert + storico prezzi | completo, 43 test verdi |
 | Estrazione JSON-LD / blob JS / selettori CSS | completa e testata su fixture |
+| Raccolta multi-prodotto dalle pagine di categoria | completa e testata |
+| Ritmo adattivo (accelera se pulito, rallenta sui 429) | completo e testato |
 | Robots.txt, rate limit, retry, sitemap | completi, testati offline |
 | CLI (discover / scrape / export / stats / diagnostica) | completa |
 | **Selettori CSS tarati sul sito reale** | **da validare** (vedi sotto) |
@@ -71,15 +73,16 @@ affiancare un file `pagina.html.url` con dentro l'indirizzo. Serve a ricostruire
 ./ottieni-catalogo.sh
 ```
 
-Crea il virtualenv, installa le dipendenze, scopre le URL dalle sitemap,
-scarica i prodotti, costruisce `catalogo.db` ed esporta `catalogo.csv`,
-`catalogo.json` e `sconti.csv`. E' interrompibile con Ctrl+C — il database resta
-valido a meta' e rilanciando lo stesso comando riprende senza duplicare nulla,
-aggiornando prezzi e storico.
+Crea il virtualenv, installa le dipendenze, raccoglie il catalogo dalle pagine di
+categoria, costruisce `catalogo.db` ed esporta `catalogo.csv`, `catalogo.json` e
+`sconti.csv`. Nell'ordine di minuti, non di ore — vedi *Quanto ci mette*.
 
 ```bash
-./ottieni-catalogo.sh --limit 200            # prova su 200 prodotti
+./ottieni-catalogo.sh --taglie 500           # + taglie dei primi 500 prodotti
+./ottieni-catalogo.sh --taglie               # + taglie di tutti (ore)
+./ottieni-catalogo.sh --limit 2              # prova: 2 pagine per categoria
 ./ottieni-catalogo.sh --images               # scarica anche le immagini
+./ottieni-catalogo.sh --pagine               # una pagina per prodotto (lento)
 ./ottieni-catalogo.sh --offline ./pagine     # da pagine salvate, senza rete
 ```
 
@@ -95,7 +98,11 @@ pip install -r requirements.txt
 # 1. Verifica che i selettori reggano su una pagina prodotto reale
 python -m jdscraper check-selectors "https://www.jdsports.it/product/..."
 
-# 2. Elenca le URL prodotto dalle sitemap (nessuna pagina scaricata)
+# 2a. STRADA RAPIDA: catalogo dalle pagine di categoria
+python -m jdscraper harvest --db sqlite:///catalogo.db
+python -m jdscraper enrich --db sqlite:///catalogo.db --limit 500   # taglie dove servono
+
+# 2b. Elenca le URL prodotto dalle sitemap (nessuna pagina scaricata)
 python -m jdscraper discover --limit 100 --out urls.txt
 
 # 3. Prova su poche pagine prima di allargare
@@ -153,29 +160,57 @@ Note di comportamento:
 
 ## Quanto ci mette
 
-Il collo di bottiglia e' il rate limiter, non la banda: le richieste partono una
-ogni `--delay` secondi (default 3), e i worker non cambiano il conto. Quindi la
-durata e' `numero di prodotti x delay`, e basta contare le URL che restituisce
-`discover` per sapere in anticipo dove si va a finire — il comando la stampa da
-solo. Con delay 3s:
+Il collo di bottiglia non e' la banda: e' il numero di richieste, perche' fra una
+e l'altra si aspetta. Quindi il modo per andare piu' veloce non e' aspettare di
+meno, e' **chiedere di meno**.
 
-| Prodotti | Solo dati | Con `--images` |
-|---|---|---|
-| 1.000  | ~52 minuti | ~80 minuti |
-| 10.000 | ~8,8 ore   | ~13 ore |
-| 20.000 | ~17,5 ore  | ~27 ore |
-| 40.000 | ~35 ore    | ~2,2 giorni |
+### Le due strade
 
-Le immagini hanno un limitatore separato e molto piu' rapido (`asset_delay`,
-0,25s): stanno su CDN dimensionate per il traffico dei browser, e applicargli il
-delay delle pagine moltiplicherebbe la durata per il numero di immagini per
-prodotto senza alcun guadagno in cortesia. Restano comunque soggette a robots.txt.
+`harvest` legge le **pagine di categoria**, dove ogni richiesta rende decine di
+prodotti gia' completi di nome, brand, prezzo, prezzo pieno, sconto e immagine.
+`scrape` legge **una pagina per prodotto**: e' l'unico modo per avere taglie e
+descrizione, e costa esattamente una richiesta a testa.
 
-Se `robots.txt` dichiara un `Crawl-delay` piu' alto di quello impostato, vince il
-suo e i tempi si allungano di conseguenza.
+Per un catalogo da 20.000 prodotti, con 60 prodotti per pagina di categoria:
 
-Non serve fare tutto in una volta: il crawl e' interrompibile e riprendibile, e
-`--limit` permette di lavorare a blocchi.
+| | Richieste | A 3s | A ~1s (ritmo adattivo) |
+|---|---|---|---|
+| `harvest` (prezzi, sconti, immagini) | ~333 | ~17 min | **~6 min** |
+| `+ enrich` taglie di 1.000 prodotti | +1.000 | ~52 min | ~17 min |
+| `scrape` taglie di tutti e 20.000 | 20.000 | ~17,5 ore | ~5,8 ore |
+
+Il salto sta nella prima riga: **due ordini di grandezza**, e la qualita' dei
+campi raccolti e' identica perche' arrivano dallo stesso JSON-LD. Cio' che il
+listing non puo' dare sono le taglie, e quelle si pagano per prodotto — ma solo
+per i prodotti che servono davvero:
+
+```bash
+./ottieni-catalogo.sh                 # catalogo completo: minuti
+./ottieni-catalogo.sh --taglie 500    # + taglie dei primi 500
+./ottieni-catalogo.sh --taglie        # + taglie di tutti: ore
+```
+
+### Il ritmo si adatta da solo
+
+Il limitatore parte dal `--delay` impostato e poi **accelera per gradi** finche'
+le risposte restano pulite, fino a un minimo di 0,5s. Se il sito risponde `429`
+o `503`, rallenta immediatamente e rispetta l'header `Retry-After`. Cosi' il
+crawl va veloce quanto il sito tollera, invece che quanto abbiamo indovinato a
+tavolino — ed e' il server a dettare il limite, che e' anche il modo corretto di
+comportarsi.
+
+Un `Crawl-delay` dichiarato da `robots.txt` diventa un pavimento invalicabile:
+l'accelerazione non lo scavalca mai.
+
+Le immagini hanno un limitatore separato e molto piu' rapido (0,25s): stanno su
+CDN dimensionate per il traffico dei browser, e applicargli il delay delle pagine
+moltiplicherebbe la durata per il numero di immagini per prodotto senza alcun
+guadagno in cortesia. Restano soggette a robots.txt.
+
+### Non serve fare tutto in una volta
+
+Il crawl e' interrompibile e riprendibile: il database resta valido a meta' e un
+rilancio aggiorna prezzi e storico senza duplicare.
 
 ## Come funziona l'estrazione
 
@@ -201,7 +236,7 @@ Copia `jdscraper/config/jdsports_it.json`, cambia `source`, `root`,
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest tests/ -q      # 58 test, tutti offline
+python -m pytest tests/ -q      # 75 test, tutti offline
 ```
 
 I test coprono parsing prezzi in formato italiano, i tre livelli di estrazione,

@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Costruisce il database del catalogo da zero, in un comando solo.
 #
-#   ./ottieni-catalogo.sh                 # catalogo completo
-#   ./ottieni-catalogo.sh --limit 200     # prova su 200 prodotti
+#   ./ottieni-catalogo.sh                 # catalogo dalle categorie: minuti
+#   ./ottieni-catalogo.sh --taglie        # + taglie di ogni prodotto: ore
+#   ./ottieni-catalogo.sh --taglie 500    # + taglie dei primi 500 prodotti
+#   ./ottieni-catalogo.sh --pagine        # una pagina per prodotto (lento)
 #   ./ottieni-catalogo.sh --offline ./pagine-salvate
 #
 # Interrompibile: il database e' valido anche a meta' e rilanciando riprende
@@ -16,10 +18,16 @@ DELAY="${DELAY:-3}"
 LIMIT=""
 OFFLINE_DIR=""
 IMAGES=""
+TAGLIE=""
+MODO="harvest"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --limit)   LIMIT="$2"; shift 2 ;;
+    --pagine)  MODO="scrape"; shift 1 ;;
+    --taglie)  # il numero e' opzionale: "--taglie" da solo completa tutto
+               if [[ -n "${2:-}" && "${2}" != --* ]]; then TAGLIE="$2"; shift 2
+               else TAGLIE="tutti"; shift 1; fi ;;
     --offline) OFFLINE_DIR="$2"; shift 2 ;;
     --images)  # la cartella e' opzionale: "--images" da solo usa ./immagini
                if [[ -n "${2:-}" && "${2}" != --* ]]; then IMAGES="$2"; shift 2
@@ -49,6 +57,28 @@ echo "dipendenze pronte: $(python -c 'import sys; print(sys.version.split()[0])'
 if [[ -n "$OFFLINE_DIR" ]]; then
   step "Importo le pagine gia' salvate in $OFFLINE_DIR"
   python -m jdscraper ingest-dir "$OFFLINE_DIR" --db "$DB" --config "$CONFIG"
+elif [[ "$MODO" == "harvest" ]]; then
+  step "Raccolgo il catalogo dalle pagine di categoria"
+  HARVEST_ARGS=(--config "$CONFIG" --db "$DB" --delay "$DELAY")
+  [[ -n "$LIMIT" ]] && HARVEST_ARGS+=(--max-pages "$LIMIT")
+
+  if ! python -m jdscraper harvest "${HARVEST_ARGS[@]}"; then
+    warn "Raccolta fallita."
+    warn "Se il messaggio sopra parla di robots.txt irraggiungibile, non e' un"
+    warn "problema del catalogo: e' la rete da cui parte QUESTO processo."
+    warn "  - sul tuo computer: proxy aziendale, VPN o firewall"
+    warn "  - in un ambiente remoto/CI: policy di egress che blocca gli host esterni"
+    warn "Se invece ha raccolto zero prodotti, i selettori del listing non"
+    warn "combaciano: controlla il blocco \"listing\" nel file di configurazione."
+    exit 1
+  fi
+
+  if [[ -n "$TAGLIE" ]]; then
+    step "Completo con le taglie (una richiesta per prodotto: e' la parte lenta)"
+    ENRICH_ARGS=(--config "$CONFIG" --db "$DB" --delay "$DELAY")
+    [[ "$TAGLIE" != "tutti" ]] && ENRICH_ARGS+=(--limit "$TAGLIE")
+    python -m jdscraper enrich "${ENRICH_ARGS[@]}" || warn "Interrotto: il database tiene quanto raccolto."
+  fi
 else
   step "Cerco le URL prodotto nelle sitemap"
   DISCOVER_ARGS=(--config "$CONFIG" --delay "$DELAY" --out urls.txt)

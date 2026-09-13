@@ -75,17 +75,26 @@ def upsert_product(session: Session, rec: ProductRecord) -> UpsertResult:
     product.raw = rec.raw or None
     product.last_seen = utcnow()
 
+    # Una scheda da pagina di categoria non porta le taglie: sostituire le
+    # collezioni con liste vuote cancellerebbe dati buoni raccolti altrove.
+    # Si riscrive solo cio' che questo passaggio ha davvero trovato.
+    replace_images = bool(rec.images)
+    replace_sizes = bool(rec.sizes)
+
     # Le collezioni figlie vanno svuotate e scaricate PRIMA di reinserirle:
     # in un unico flush SQLAlchemy emetterebbe gli INSERT prima dei DELETE,
     # violando i vincoli UNIQUE su (product_id, url) e (product_id, label).
     if result == "updated":
-        product.images.clear()
-        product.sizes.clear()
+        if replace_images:
+            product.images.clear()
+        if replace_sizes:
+            product.sizes.clear()
         session.flush()
 
-    product.images = [
-        ProductImage(url=url, position=i) for i, url in enumerate(dict.fromkeys(rec.images))
-    ]
+    if replace_images:
+        product.images = [
+            ProductImage(url=url, position=i) for i, url in enumerate(dict.fromkeys(rec.images))
+        ]
 
     seen_labels: set[str] = set()
     sizes: list[ProductSize] = []
@@ -102,7 +111,8 @@ def upsert_product(session: Session, rec: ProductRecord) -> UpsertResult:
                 price=size.price,
             )
         )
-    product.sizes = sizes
+    if replace_sizes:
+        product.sizes = sizes
 
     if price_changed:
         product.prices.append(

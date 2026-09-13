@@ -17,6 +17,7 @@ class SiteConfig:
     product_url_pattern: str
     sitemap_pattern: Optional[str] = None
     sitemaps: list[str] = field(default_factory=list)
+    category_urls: list[str] = field(default_factory=list)
     selectors: dict[str, Any] = field(default_factory=dict)
     delay: float = 2.0
     user_agent: Optional[str] = None
