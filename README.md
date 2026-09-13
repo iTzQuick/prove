@@ -16,15 +16,17 @@ in un file JSON: `jdscraper/config/<sito>.json`.
 | Robots.txt, rate limit, retry, sitemap | completi, testati offline |
 | CLI (discover / scrape / export / stats / diagnostica) | completa |
 | **Selettori CSS tarati sul sito reale** | **da validare** (vedi sotto) |
+| Ingestione offline di pagine salvate | completa, testata |
 | **Esecuzione su jdsports.it** | **non eseguita** (vedi sotto) |
 
 ### Cosa NON e' stato fatto, e perche'
 
 **Il database non e' stato popolato con i prodotti reali di jdsports.it.**
-L'ambiente in cui il codice e' stato scritto ha una policy di rete che blocca
-l'host `www.jdsports.it` in uscita (il proxy risponde `403` al CONNECT), quindi
-non e' stato possibile scaricare neanche il `robots.txt`. Tutte le verifiche sono
-state fatte su fixture HTML locali, non sulle pagine reali.
+L'ambiente in cui il codice e' stato scritto non ha accesso al web: il proxy di
+uscita risponde `403` al CONNECT per qualsiasi host esterno (verificato sia su
+`www.jdsports.it` sia su un host neutro), quindi non e' stato possibile scaricare
+neanche il `robots.txt`. Tutte le verifiche sono state fatte su fixture HTML
+locali, non sulle pagine reali.
 
 Conseguenza pratica: i **selettori CSS** in `jdscraper/config/jdsports_it.json`
 sono candidati ragionevoli ma **non verificati sul sito**. I due livelli piu'
@@ -48,6 +50,20 @@ catalogo:
 
 Il codice **non ha un flag per ignorare `robots.txt`**: se una URL e' vietata,
 viene saltata e contata, punto.
+
+### Se non vuoi (o non puoi) far uscire richieste automatiche
+
+C'e' un percorso completamente offline: salvi le pagine dal browser (Ctrl+S) in
+una cartella e il tool le importa in blocco, senza aprire nessuna connessione.
+
+```bash
+python -m jdscraper ingest-dir ./pagine-salvate --db sqlite:///catalogo.db
+```
+
+L'URL di origine, che una pagina salvata perde, viene ripreso dal
+`<link rel="canonical">` o da `og:url` dentro la pagina stessa; se mancano, puoi
+affiancare un file `pagina.html.url` con dentro l'indirizzo. Serve a ricostruire
+`source_id` e a rendere assolute le immagini con percorso relativo.
 
 ## Installazione
 
@@ -83,6 +99,9 @@ Estrazione da un HTML gia' salvato, senza rete:
 
 ```bash
 python -m jdscraper parse-file pagina.html --url "https://www.jdsports.it/product/x/1/"
+
+# oppure un'intera cartella (ricorsiva)
+python -m jdscraper ingest-dir ./pagine-salvate --db sqlite:///catalogo.db
 ```
 
 ## Schema
@@ -138,9 +157,10 @@ Copia `jdscraper/config/jdsports_it.json`, cambia `source`, `root`,
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest tests/ -q      # 43 test, tutti offline
+python -m pytest tests/ -q      # 51 test, tutti offline
 ```
 
 I test coprono parsing prezzi in formato italiano, i tre livelli di estrazione,
-il calcolo dello sconto, upsert e storico prezzi, export e — con una sessione
-HTTP finta — il rispetto di `robots.txt`, il crawl-delay e i retry.
+il calcolo dello sconto, upsert e storico prezzi, export, l'ingestione offline di
+una cartella di pagine salvate e — con una sessione HTTP finta — il rispetto di
+`robots.txt`, il crawl-delay e i retry.

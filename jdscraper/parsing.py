@@ -192,3 +192,21 @@ def deep_find(data: Any, keys: Iterable[str], _depth: int = 0) -> Optional[Any]:
             if found is not None:
                 return found
     return None
+
+
+def find_canonical_url(soup) -> Optional[str]:
+    """Recupera l'URL originale da una pagina salvata su disco.
+
+    Una pagina salvata dal browser perde l'indirizzo da cui proviene, ma quasi
+    tutti gli e-commerce lo ripetono nel ``<link rel="canonical">`` o in
+    ``og:url``: e' quello che serve per ricostruire ``source_id`` e per rendere
+    assolute le immagini con percorso relativo.
+    """
+    tag = soup.find("link", attrs={"rel": lambda v: v and "canonical" in (v if isinstance(v, list) else [v])})
+    if tag and tag.get("href"):
+        return clean_text(tag["href"])
+    for prop in ("og:url", "twitter:url"):
+        meta = soup.find("meta", attrs={"property": prop}) or soup.find("meta", attrs={"name": prop})
+        if meta and meta.get("content"):
+            return clean_text(meta["content"])
+    return None

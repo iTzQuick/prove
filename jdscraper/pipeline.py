@@ -156,3 +156,70 @@ def crawl(
             session.commit()
 
     return summary
+
+
+def ingest_directory(
+    directory: Path,
+    config: SiteConfig,
+    session_factory: sessionmaker[Session],
+    fallback_url: str = "https://www.jdsports.it/product/sconosciuto/0/",
+    recursive: bool = True,
+) -> CrawlSummary:
+    """Importa nel database le pagine HTML gia' salvate su disco.
+
+    Percorso completamente offline: non viene aperta nessuna connessione. Serve
+    quando le pagine vengono salvate a mano dal browser (Ctrl+S) oppure con un
+    downloader esterno. L'URL di origine viene ripreso, in ordine, da un file
+    affiancato ``<nome>.url``, dal ``<link rel=canonical>`` della pagina stessa
+    o infine da ``fallback_url``.
+    """
+    from bs4 import BeautifulSoup
+
+    from .parsing import find_canonical_url
+
+    # Il suffisso va confrontato in modo esatto: un glob "*.htm*" raccoglierebbe
+    # anche i file sidecar "pagina.html.url", trattandoli come pagine.
+    pattern = "**/*" if recursive else "*"
+    files = sorted(
+        p for p in directory.glob(pattern)
+        if p.is_file() and p.suffix.lower() in (".html", ".htm", ".xhtml")
+    )
+    summary = CrawlSummary()
+
+    with session_factory() as session:
+        for path in files:
+            summary.seen += 1
+            html = path.read_text(encoding="utf-8", errors="replace")
+
+            sidecar = path.with_suffix(path.suffix + ".url")
+            if sidecar.exists():
+                url = sidecar.read_text(encoding="utf-8").strip()
+            else:
+                url = find_canonical_url(BeautifulSoup(html, "lxml")) or fallback_url
+
+            try:
+                record = extract_product(html, url, source=config.source, selectors=config.selectors)
+            except Exception:
+                log.exception("estrazione fallita su %s", path)
+                summary.failed += 1
+                continue
+
+            if record is None:
+                log.info("%s non e' una scheda prodotto", path.name)
+                summary.not_a_product += 1
+                continue
+
+            try:
+                outcome = upsert_product(session, record)
+                session.commit()
+            except Exception:
+                session.rollback()
+                summary.failed += 1
+                log.exception("scrittura su database fallita per %s", path)
+            else:
+                if outcome == "new":
+                    summary.new += 1
+                else:
+                    summary.updated += 1
+
+    return summary

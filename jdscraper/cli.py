@@ -17,7 +17,7 @@ from .export import export, stats
 from .extract import extract_product
 from .fetcher import DEFAULT_USER_AGENT, Fetcher, RobotsDisallowed
 from .parsing import extract_state_blobs, find_jsonld_product
-from .pipeline import crawl
+from .pipeline import crawl, ingest_directory
 
 DEFAULT_DB = "sqlite:///catalogo.db"
 
@@ -181,6 +181,25 @@ def cmd_check_selectors(args) -> int:
     return 0
 
 
+def cmd_ingest_dir(args) -> int:
+    """Importa pagine HTML gia' salvate su disco: nessuna connessione di rete."""
+    config = SiteConfig.load(args.config)
+    directory = Path(args.directory)
+    if not directory.is_dir():
+        print(f"{directory} non e' una cartella", file=sys.stderr)
+        return 2
+
+    engine = init_db(args.db)
+    summary = ingest_directory(
+        directory,
+        config,
+        make_session_factory(engine),
+        recursive=not args.no_recursive,
+    )
+    print(summary.as_text())
+    return 0 if summary.new or summary.updated else 1
+
+
 def cmd_export(args) -> int:
     engine = init_db(args.db)
     with make_session_factory(engine)() as session:
@@ -248,6 +267,13 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("url", nargs="?", default=None)
     p.add_argument("--file", default=None, help="usa un HTML locale invece di scaricarlo")
     p.set_defaults(func=cmd_check_selectors)
+
+    p = sub.add_parser("ingest-dir", help="importa una cartella di pagine HTML salvate (offline)")
+    add_common(p, net=False)
+    p.add_argument("directory")
+    p.add_argument("--db", default=DEFAULT_DB)
+    p.add_argument("--no-recursive", action="store_true")
+    p.set_defaults(func=cmd_ingest_dir)
 
     p = sub.add_parser("export", help="esporta il catalogo in CSV o JSON")
     p.add_argument("--db", default=DEFAULT_DB)
