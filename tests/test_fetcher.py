@@ -122,3 +122,22 @@ def test_rate_limiter_serialises_calls():
     for _ in range(3):
         limiter.wait()
     assert time.monotonic() - start >= 0.1
+
+
+def test_assets_use_the_fast_limiter_not_the_page_one():
+    """Le immagini non devono pagare il delay pensato per le pagine HTML."""
+    page = FakeResponse("img")
+    fetcher = make_fetcher(extra_routes={"https://shop.test/a.jpg": page})
+    fetcher.limiter.delay = 99.0       # delay pagine assurdo
+    fetcher.asset_limiter.delay = 0.0  # asset liberi
+
+    import time
+    start = time.monotonic()
+    assert fetcher.get("https://shop.test/a.jpg", asset=True).status_code == 200
+    assert time.monotonic() - start < 1.0
+
+
+def test_assets_still_respect_robots():
+    fetcher = make_fetcher()
+    with pytest.raises(RobotsDisallowed):
+        fetcher.get("https://shop.test/checkout/foto.jpg", asset=True)

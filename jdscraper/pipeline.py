@@ -75,7 +75,7 @@ def download_images(
     for url in record.images[:max_images]:
         digest = hashlib.sha1(url.encode()).hexdigest()[:16]
         try:
-            resp = fetcher.get(url)
+            resp = fetcher.get(url, asset=True)
         except RobotsDisallowed:
             continue
         if resp is None or resp.status_code >= 400:
@@ -223,3 +223,33 @@ def ingest_directory(
                     summary.updated += 1
 
     return summary
+
+
+def estimate_duration(
+    n_urls: int,
+    delay: float,
+    images_per_product: int = 0,
+    asset_delay: float = 0.25,
+    jitter: float = 0.3,
+) -> float:
+    """Stima in secondi la durata del crawl.
+
+    Il collo di bottiglia e' il rate limiter, non la rete ne' il numero di
+    worker: le richieste partono comunque una ogni ``delay`` secondi. Le
+    immagini viaggiano sul limitatore separato, molto piu' rapido.
+    """
+    per_page = delay + jitter / 2
+    per_assets = images_per_product * (asset_delay + 0.05 / 2)
+    return n_urls * (per_page + per_assets)
+
+
+def format_duration(seconds: float) -> str:
+    if seconds < 90:
+        return f"{seconds:.0f} secondi"
+    minutes = seconds / 60
+    if minutes < 90:
+        return f"{minutes:.0f} minuti"
+    hours = minutes / 60
+    if hours < 36:
+        return f"{hours:.1f} ore"
+    return f"{hours / 24:.1f} giorni"

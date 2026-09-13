@@ -68,11 +68,17 @@ class Fetcher:
         timeout: float = 30.0,
         max_retries: int = 3,
         accept_language: str = "it-IT,it;q=0.9",
+        asset_delay: float = 0.25,
     ) -> None:
         self.user_agent = user_agent
         self.timeout = timeout
         self.max_retries = max_retries
         self.limiter = RateLimiter(delay)
+        # Le immagini stanno su CDN dimensionate per il traffico dei browser:
+        # applicargli il delay pensato per le pagine moltiplicherebbe la durata
+        # del crawl per il numero di immagini per prodotto, senza alcun guadagno
+        # in cortesia. Restano comunque limitate, e sempre soggette a robots.txt.
+        self.asset_limiter = RateLimiter(asset_delay, jitter=0.05)
         self.stats = FetchStats()
         self._robots: dict[str, Optional[urllib.robotparser.RobotFileParser]] = {}
         self._robots_lock = threading.Lock()
@@ -131,14 +137,16 @@ class Fetcher:
             self.limiter.delay = declared
 
     # -- fetch ----------------------------------------------------------
-    def get(self, url: str, **kwargs) -> Optional[requests.Response]:
+    def get(self, url: str, asset: bool = False, **kwargs) -> Optional[requests.Response]:
+        """Scarica una URL. ``asset=True`` per immagini e altri file statici."""
         if not self.can_fetch(url):
             self.stats.blocked_by_robots += 1
             raise RobotsDisallowed(url)
 
+        limiter = self.asset_limiter if asset else self.limiter
         backoff = 2.0
         for attempt in range(1, self.max_retries + 1):
-            self.limiter.wait()
+            limiter.wait()
             try:
                 resp = self.session.get(url, timeout=self.timeout, **kwargs)
             except requests.RequestException as exc:

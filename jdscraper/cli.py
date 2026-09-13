@@ -17,7 +17,7 @@ from .export import export, stats
 from .extract import extract_product
 from .fetcher import DEFAULT_USER_AGENT, Fetcher, RobotsDisallowed
 from .parsing import extract_state_blobs, find_jsonld_product
-from .pipeline import crawl, ingest_directory
+from .pipeline import crawl, estimate_duration, format_duration, ingest_directory
 
 DEFAULT_DB = "sqlite:///catalogo.db"
 
@@ -59,6 +59,10 @@ def cmd_discover(args) -> int:
         limit=args.limit,
     )
     print(f"Trovate {len(urls)} URL prodotto.")
+    if urls:
+        eta = estimate_duration(len(urls), fetcher.limiter.delay)
+        print(f"Crawl stimato a delay {fetcher.limiter.delay:g}s: {format_duration(eta)}"
+              f" (con --images: {format_duration(estimate_duration(len(urls), fetcher.limiter.delay, 6))})")
     if args.out:
         Path(args.out).write_text("\n".join(urls), encoding="utf-8")
         print(f"Salvate in {args.out}")
@@ -98,7 +102,9 @@ def cmd_scrape(args) -> int:
     session_factory = make_session_factory(engine)
     images_dir = Path(args.download_images) if args.download_images else None
 
-    print(f"Avvio crawl su {len(urls)} URL (delay {fetcher.limiter.delay}s, {args.workers} worker)...")
+    eta = estimate_duration(len(urls), fetcher.limiter.delay, 6 if images_dir else 0)
+    print(f"Avvio crawl su {len(urls)} URL (delay {fetcher.limiter.delay:g}s).")
+    print(f"Durata stimata: {format_duration(eta)}. Ctrl+C interrompe senza perdere nulla.")
     summary = crawl(
         urls,
         config,

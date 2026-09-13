@@ -151,6 +151,32 @@ Note di comportamento:
 - `price_history` cresce solo quando prezzo, sconto o disponibilita' cambiano
   davvero, quindi ricrawlare ogni giorno non gonfia la tabella.
 
+## Quanto ci mette
+
+Il collo di bottiglia e' il rate limiter, non la banda: le richieste partono una
+ogni `--delay` secondi (default 3), e i worker non cambiano il conto. Quindi la
+durata e' `numero di prodotti x delay`, e basta contare le URL che restituisce
+`discover` per sapere in anticipo dove si va a finire — il comando la stampa da
+solo. Con delay 3s:
+
+| Prodotti | Solo dati | Con `--images` |
+|---|---|---|
+| 1.000  | ~52 minuti | ~80 minuti |
+| 10.000 | ~8,8 ore   | ~13 ore |
+| 20.000 | ~17,5 ore  | ~27 ore |
+| 40.000 | ~35 ore    | ~2,2 giorni |
+
+Le immagini hanno un limitatore separato e molto piu' rapido (`asset_delay`,
+0,25s): stanno su CDN dimensionate per il traffico dei browser, e applicargli il
+delay delle pagine moltiplicherebbe la durata per il numero di immagini per
+prodotto senza alcun guadagno in cortesia. Restano comunque soggette a robots.txt.
+
+Se `robots.txt` dichiara un `Crawl-delay` piu' alto di quello impostato, vince il
+suo e i tempi si allungano di conseguenza.
+
+Non serve fare tutto in una volta: il crawl e' interrompibile e riprendibile, e
+`--limit` permette di lavorare a blocchi.
+
 ## Come funziona l'estrazione
 
 Tre livelli in cascata, dal piu' stabile al piu' fragile:
@@ -175,7 +201,7 @@ Copia `jdscraper/config/jdsports_it.json`, cambia `source`, `root`,
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest tests/ -q      # 51 test, tutti offline
+python -m pytest tests/ -q      # 58 test, tutti offline
 ```
 
 I test coprono parsing prezzi in formato italiano, i tre livelli di estrazione,
