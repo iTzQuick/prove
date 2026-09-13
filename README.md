@@ -171,16 +171,54 @@ prodotti gia' completi di nome, brand, prezzo, prezzo pieno, sconto e immagine.
 `scrape` legge **una pagina per prodotto**: e' l'unico modo per avere taglie e
 descrizione, e costa esattamente una richiesta a testa.
 
-Per un catalogo da 20.000 prodotti, con 60 prodotti per pagina di categoria:
+### Il conto, passo per passo
 
-| | Richieste | A 3s | A ~1s (ritmo adattivo) |
-|---|---|---|---|
-| `harvest` (prezzi, sconti, immagini) | ~333 | ~17 min | **~6 min** |
-| `+ enrich` taglie di 1.000 prodotti | +1.000 | ~52 min | ~17 min |
-| `scrape` taglie di tutti e 20.000 | 20.000 | ~17,5 ore | ~5,8 ore |
+Due numeri e nient'altro: **quante richieste servono** e **quanto si aspetta fra
+una e l'altra**.
 
-Il salto sta nella prima riga: **due ordini di grandezza**, e la qualita' dei
-campi raccolti e' identica perche' arrivano dallo stesso JSON-LD. Cio' che il
+Il primo e' pura divisione. Una pagina di categoria non mostra un prodotto:
+mostra una griglia. Se ne mostra 60 e il catalogo ne ha 20.000, servono
+`20.000 / 60 = 334` richieste. La strada lenta ne chiede una per prodotto:
+20.000. Non c'e' altro dietro il salto.
+
+Il secondo lo detta il limitatore adattivo, che parte da 3s e scende a 0,5s in
+circa 220 richieste:
+
+```
+richiesta   #0     #50    #100   #150   #200   #250 in poi
+attesa      3,0s   2,17s  1,33s  0,96s  0,59s  0,50s
+```
+
+Quindi l'attesa media **dipende da quante richieste fai**: le prime sono care,
+poi il ritmo si assesta. Su 334 richieste la media e' 1,32s, su 1.000 e' 0,87s.
+
+`334 x 1,32s = 7 minuti e 20 secondi.`
+
+Il numero di prodotti per pagina cambia tutto, ed e' una cosa che sapremo solo
+guardando il sito vero:
+
+| Prodotti per pagina | Richieste | Durata |
+|---|---|---|
+| 24  | 834 | ~12m 45s |
+| 48  | 417 | ~8m 14s |
+| 60  | 334 | ~7m 20s |
+| 120 | 167 | ~5m 21s |
+
+Le taglie, che il listing non puo' dare, costano una richiesta a prodotto:
+
+| Prodotti da completare | Durata |
+|---|---|
+| 500    | ~9m |
+| 1.000  | ~15m |
+| 5.000  | ~58m |
+| 20.000 (tutti) | ~3,7 ore |
+
+Attenzione: **20.000 prodotti e' una mia stima**, non un dato — non ho potuto
+contare le URL nelle sitemap di JD. Il numero vero lo stampa `discover`, e da li'
+il conto e' quello sopra.
+
+Il salto e' di **due ordini di grandezza**, e la qualita' dei campi raccolti e'
+identica perche' arrivano dallo stesso JSON-LD della scheda prodotto. Cio' che il
 listing non puo' dare sono le taglie, e quelle si pagano per prodotto — ma solo
 per i prodotti che servono davvero:
 
