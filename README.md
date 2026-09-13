@@ -65,13 +65,31 @@ L'URL di origine, che una pagina salvata perde, viene ripreso dal
 affiancare un file `pagina.html.url` con dentro l'indirizzo. Serve a ricostruire
 `source_id` e a rendere assolute le immagini con percorso relativo.
 
-## Installazione
+## Il comando unico
+
+```bash
+./ottieni-catalogo.sh
+```
+
+Crea il virtualenv, installa le dipendenze, scopre le URL dalle sitemap,
+scarica i prodotti, costruisce `catalogo.db` ed esporta `catalogo.csv`,
+`catalogo.json` e `sconti.csv`. E' interrompibile con Ctrl+C — il database resta
+valido a meta' e rilanciando lo stesso comando riprende senza duplicare nulla,
+aggiornando prezzi e storico.
+
+```bash
+./ottieni-catalogo.sh --limit 200            # prova su 200 prodotti
+./ottieni-catalogo.sh --images               # scarica anche le immagini
+./ottieni-catalogo.sh --offline ./pagine     # da pagine salvate, senza rete
+```
+
+## Installazione manuale
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Uso
+## Uso comando per comando
 
 ```bash
 # 1. Verifica che i selettori reggano su una pagina prodotto reale

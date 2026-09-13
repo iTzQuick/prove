@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# artefatti prodotti dal crawl
+*.db
+catalogo.csv
+catalogo.json
+sconti.csv
+urls.txt
+immagini/
+pagine-salvate/
