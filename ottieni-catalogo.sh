@@ -56,8 +56,11 @@ else
 
   if ! python -m jdscraper discover "${DISCOVER_ARGS[@]}"; then
     warn "Scoperta fallita."
-    warn "Se il messaggio sopra parla di robots.txt irraggiungibile, il problema"
-    warn "e' la rete di QUESTA macchina (proxy/VPN/firewall), non il catalogo."
+    warn "Se il messaggio sopra parla di robots.txt irraggiungibile, non e' un"
+    warn "problema del catalogo: e' la rete da cui parte QUESTO processo."
+    warn "  - sul tuo computer: proxy aziendale, VPN o firewall"
+    warn "  - in un ambiente remoto/CI: policy di egress che blocca gli host esterni"
+    warn "    (cambiare Wi-Fi non serve: il processo non usa la tua connessione)"
     warn "Alternativa senza crawl: salva le pagine dal browser e lancia"
     warn "  ./ottieni-catalogo.sh --offline ./pagine-salvate"
     exit 1
