@@ -1,0 +1,75 @@
+{
+  "_README": [
+    "I selettori CSS sono l'ULTIMO livello di fallback: JSON-LD e blob di stato",
+    "coprono gia' la maggior parte dei campi e sono molto piu' stabili.",
+    "Quelli elencati qui sono CANDIDATI generici + varianti storiche di JD:",
+    "vanno verificati sul sito reale con `python -m jdscraper check-selectors <url>`",
+    "e corretti qui, senza toccare il codice."
+  ],
+  "source": "jdsports.it",
+  "root": "https://www.jdsports.it",
+  "product_url_pattern": "/product/",
+  "sitemap_pattern": "product",
+  "sitemaps": [],
+  "delay": 3.0,
+  "selectors": {
+    "name": [
+      {"selector": "h1[itemprop='name']"},
+      {"selector": ".itemTitle"},
+      {"selector": "h1.product-name"},
+      {"selector": "h1"}
+    ],
+    "brand": [
+      {"selector": "[itemprop='brand'] [itemprop='name']"},
+      {"selector": "[itemprop='brand']", "attr": "content"},
+      {"selector": ".brandTitle"},
+      {"selector": ".product-brand"}
+    ],
+    "price": [
+      {"selector": "[itemprop='price']", "attr": "content"},
+      {"selector": ".pri"},
+      {"selector": ".pdp-price .now"},
+      {"selector": ".price-sales"},
+      {"selector": ".product-price"}
+    ],
+    "list_price": [
+      {"selector": ".was"},
+      {"selector": ".pdp-price .was"},
+      {"selector": ".price-standard"},
+      {"selector": "del"},
+      {"selector": "s"}
+    ],
+    "colour": [
+      {"selector": "[itemprop='color']"},
+      {"selector": ".colourName"},
+      {"selector": ".product-colour"}
+    ],
+    "style_code": [
+      {"selector": "[itemprop='mpn']", "attr": "content"},
+      {"selector": ".styleCode"},
+      {"selector": ".product-style-code"}
+    ],
+    "description": [
+      {"selector": "[itemprop='description']"},
+      {"selector": "#productDetails"},
+      {"selector": ".product-description"}
+    ],
+    "images": [
+      {"selector": "[itemprop='image']", "attr": "content"},
+      {"selector": "#productImgs img", "attr": "src"},
+      {"selector": ".product-gallery img", "attr": "src"},
+      {"selector": ".swiper-slide img", "attr": "data-src"}
+    ],
+    "sizes": [
+      {"selector": "ul.sizeButtons li a", "label_attr": null, "available_attr": null},
+      {"selector": ".sizeButtons li", "label_attr": "data-size", "available_attr": "data-available"},
+      {"selector": "[data-e2e='pdp-size-list'] button", "label_attr": null, "available_attr": "aria-disabled"},
+      {"selector": ".size-selector button", "label_attr": null, "available_attr": "aria-disabled"}
+    ],
+    "breadcrumb": [
+      {"selector": "nav.breadcrumb li"},
+      {"selector": ".breadcrumbs a"},
+      {"selector": "[itemtype*='BreadcrumbList'] [itemprop='name']"}
+    ]
+  }
+}
