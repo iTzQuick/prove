@@ -22,6 +22,7 @@
   </script>
 </head>
 <body>
+  <header id="phoneHeader"></header>
   <header id="topbar">
     <div class="brand">◧ <span class="lbl">Blocking Studio <span class="sub">per Higgsfield</span></span></div>
     <div class="group" id="addMenu"></div>
@@ -94,8 +95,6 @@
     <div id="frameGuide"><div class="thirds"></div><div class="safe"></div></div>
     <div id="hud"></div>
     <div id="hint"></div>
-    <div id="floatTools"></div>
-    <div id="selChip" class="hidden"></div>
   </main>
 
   <aside id="right" class="sheet">
@@ -120,13 +119,9 @@
     <canvas id="tl"></canvas>
   </footer>
 
-  <nav id="tabbar">
-    <button data-sheet="scene"><span class="ico">📋</span>Scena</button>
-    <button data-sheet="obj"><span class="ico">🧍</span>Oggetto</button>
-    <button data-sheet="shot"><span class="ico">🎥</span>Shot</button>
-    <button data-sheet="beats"><span class="ico">🎬</span>Azione</button>
-    <button data-sheet="prompt" class="tb-primary"><span class="ico">✦</span>Prompt</button>
-  </nav>
+  <section id="phonePanel"></section>
+  <nav id="stepbar"></nav>
+  <div id="phoneSheet" class="hidden"></div>
 
   <div id="modal" class="hidden">
     <div class="modal-card">

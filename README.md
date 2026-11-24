@@ -16,15 +16,17 @@ Al primo avvio si apre una scena demo con due shot. *Progetto → Nuovo progetto
 
 ## Su iPhone
 
-Su schermi piccoli (provata su iPhone 15 Pro, in verticale e in orizzontale) l'app passa da sola al layout per telefono:
-- in basso c'è una barra con **Scena · Oggetto · Shot · Azione · Prompt**, e ogni voce apre un pannello che si chiude trascinandolo giù;
-- gli strumenti (sposta, ruota, scala, posa, vista, camera) sono pulsanti sul lato destro della vista 3D;
-- toccando un oggetto lo selezioni, e in basso compare una barretta con i comandi rapidi (modifica, key, duplica);
-- si naviga con un dito per ruotare la vista, due dita per zoom e spostamento;
-- quando esporti immagini e video si apre il menu Condividi di iOS, così salvi in Foto o File o li mandi all'app Higgsfield;
-- da Safari puoi usare *Condividi → Aggiungi alla schermata Home* per aprirla a tutto schermo come un'app.
+Sul telefono l'app diventa una **modalità guidata a 5 passi**: ogni schermata mostra solo ciò che serve.
 
-Per aprirla sul telefono l'app deve essere online (per esempio con GitHub Pages). Con `?layout=phone` o `?layout=desktop` nell'indirizzo forzi un layout.
+1. **Ambiente**: pulsanti grandi per aggiungere muri e arredi; tocchi un oggetto e lo trascini.
+2. **Attori**: aggiungi i personaggi, scegli la posa, colleghi l'Element; "Braccia e gambe" per pose a mano.
+3. **Camera**: inquadrature pronte (campo lungo, figura intera, piano medio, primo piano) e movimenti pronti (avvicina, allontana, laterale, gira attorno, gru, a mano): la camera si anima da sola.
+4. **Azione**: play, cursore del tempo e "Segna posizione" per far muovere i personaggi; sotto c'è il testo che finirà nel prompt.
+5. **Prompt**: scegli il modello e prendi prompt e file (primo frame, video di blocking, location vuota).
+
+In alto ci sono annulla, lo shot corrente (tocca per cambiarlo o crearne uno nuovo) e il menu ⋯ per progetto e impostazioni.
+Quando esporti si apre il menu Condividi di iOS; da Safari puoi usare *Condividi → Aggiungi alla schermata Home*.
+`?layout=desktop` nell'indirizzo apre la versione completa.
 
 ## Cosa fa
 

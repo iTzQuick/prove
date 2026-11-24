@@ -10,6 +10,7 @@ import {
   buildMcpRequests, findElement,
 } from './prompt.js';
 import { renderStill, download, recordBlockingVideo, locationPack, exportSize } from './export.js';
+import { initPhone } from './phone.js';
 
 const D2R = Math.PI / 180;
 const $ = (s) => document.querySelector(s);
@@ -153,7 +154,7 @@ async function loadLibrary() {
   try { const s = localStorage.getItem(LIB_KEY); if (s) setLibrary(JSON.parse(s)); } catch (e) { /* ignore */ }
   try {
     const r = await fetch('higgsfield/elements.json', { cache: 'no-store' });
-    if (r.ok) { const j = await r.json(); setLibrary(j.elements || j, 'higgsfield/elements.json'); }
+    if (r.ok) { const j = await r.json(); setLibrary(j.elements || j); }
   } catch (e) { /* file not present */ }
 }
 // Fill fixed description and height from the Element when the tag matches.
@@ -406,6 +407,7 @@ function changed(opts = {}) {
   saveTimer = setTimeout(() => { try { localStorage.setItem(STORE_KEY, JSON.stringify(S())); } catch (e) { /* ignore */ } }, 600);
   drawTimeline();
   if (opts.lists) { renderOutliner(); renderShots(); }
+  if (app.phone) app.phone.refresh();
 }
 
 function pushUndo() {
@@ -435,7 +437,8 @@ function select(id, joint = null) {
   attachGizmo();
   updatePaths();
   if (id) app.tab = 'obj';
-  renderOutliner(); renderInspector(); drawTimeline(); renderSelChip();
+  renderOutliner(); renderInspector(); drawTimeline();
+  if (app.phone) app.phone.onSelect();
 }
 
 function attachGizmo() {
@@ -449,7 +452,12 @@ function attachGizmo() {
     tc.attach(g);
     tc.setMode(app.tool); tc.setSpace(app.tool === 'scale' ? 'local' : 'world');
   }
-  tc.showY = true;
+  tc.showX = tc.showY = tc.showZ = true;
+  // Phones: only the handles that make sense with a finger (slide on the floor, turn around).
+  if (document.body.classList.contains('m') && !(app.poseMode && app.selJoint)) {
+    if (tc.mode === 'translate') tc.showY = o.role === 'prop';
+    if (tc.mode === 'rotate') { tc.showX = false; tc.showZ = false; }
+  }
 }
 
 const ray = new THREE.Raycaster();
@@ -469,7 +477,7 @@ canvas.addEventListener('pointerup', (e) => {
   let obj = hits[0].object, id = null;
   let p = obj; while (p && !id) { id = p.userData.objId; p = p.parent; }
   const o = S().objects.find(x => x.id === id);
-  if (o && o.kind === 'mannequin' && app.poseMode) { select(id, obj.userData.joint || 'hips'); renderSelChip(); }
+  if (o && o.kind === 'mannequin' && app.poseMode) { select(id, obj.userData.joint || 'hips'); }
   else select(id, null);
 });
 
@@ -479,7 +487,7 @@ function activeCam() { return app.viewMode === 'shot' ? shotCam : editorCam; }
 let shotOrbitBusy = false;
 shotOrbit.addEventListener('start', () => { pushUndo(); shotOrbitBusy = true; });
 shotOrbit.addEventListener('change', () => { if (shotOrbitBusy) { commitCam(camState()); updateHud(); } });
-shotOrbit.addEventListener('end', () => { shotOrbitBusy = false; renderInspectorIfShot(); });
+shotOrbit.addEventListener('end', () => { shotOrbitBusy = false; renderInspectorIfShot(); if (app.phone && isPhone()) app.phone.camEdited(); });
 
 // ---------------------------------------------------------------- view / resize
 function setView(mode) {
@@ -524,6 +532,7 @@ function loop(now) {
       if ($('#loopChk').checked) app.time = 0; else { app.time = shot().duration; togglePlay(false); }
     }
     app.needsApply = true; updateTimeLabel(); drawTimeline();
+    if (app.phone) app.phone.onTime();
   }
   if (app.needsApply && !tc.dragging) { applyTime(app.time); app.needsApply = false; }
   if (now - hudT > 200) { updateHud(); hudT = now; }
@@ -536,11 +545,13 @@ function togglePlay(force) {
   $('#playBtn').textContent = app.playing ? '❚❚' : '▶';
   shotOrbit.enabled = app.viewMode === 'shot' && !app.playing;
   if (app.playing) tc.detach(); else attachGizmo();
+  if (app.phone) app.phone.rerender();
 }
 
 function setTime(t) {
   app.time = Math.max(0, Math.min(shot().duration, t));
   app.needsApply = true; updateTimeLabel(); drawTimeline();
+  if (app.phone) app.phone.onTime();
   if (app.tab === 'obj') renderInspectorLight();
 }
 
@@ -749,7 +760,6 @@ function deleteShot(i) {
 }
 
 function renderOutliner() {
-  renderSelChip();
   const sh = shot();
   $('#outliner').replaceChildren(...S().objects.map(o => el('div', {
     class: 'list-item' + (o.id === app.sel ? ' sel' : ''), onclick: () => select(o.id),
@@ -1045,7 +1055,8 @@ function setPoseMode(on) {
   $('#poseBtn').classList.toggle('active', on);
   const o = selObj();
   if (on && o && o.kind === 'mannequin' && !app.selJoint) app.selJoint = 'head';
-  attachGizmo(); updateHint(); renderInspector(); renderSelChip();
+  attachGizmo(); updateHint(); renderInspector();
+  if (app.phone) app.phone.rerender();
 }
 
 function setTool(t) {
@@ -1406,50 +1417,38 @@ window.addEventListener('keydown', (e) => {
 });
 
 // ---------------------------------------------------------------- phone layout (iPhone etc.)
+// On phones the desktop panels are replaced by the guided interface in phone.js.
 const phoneMQ = window.matchMedia('(max-width: 760px), (max-height: 500px) and (pointer: coarse)');
-const toolsHome = $('#toolsHome');
-const toolsAnchor = document.createComment('tools');
-toolsHome.parentNode.insertBefore(toolsAnchor, toolsHome);
-let sheetOpen = null;
+const isPhone = () => document.body.classList.contains('m');
 
 function applyLayout() {
   const force = new URLSearchParams(location.search).get('layout');
   const m = force ? force === 'phone' : phoneMQ.matches;
   const land = m && window.innerWidth > window.innerHeight;
-  const changed = document.body.classList.contains('m') !== m;
+  const changed = isPhone() !== m;
   document.body.classList.toggle('m', m);
   document.body.classList.toggle('land', land);
-  if (m && toolsHome.parentNode !== $('#floatTools')) $('#floatTools').append(toolsHome);
-  if (!m && toolsHome.parentNode !== toolsAnchor.parentNode) toolsAnchor.parentNode.insertBefore(toolsHome, toolsAnchor.nextSibling);
-  tc.setSize(m ? 1.35 : 0.85);
-  if (changed) { closeSheets(); updateHud(); }
-  renderSelChip();
+  tc.setSize(m ? 1.5 : 0.85);
+  if (changed) { closeSheets(); updateHud(); attachGizmo(); }
+  if (m && app.phone) app.phone.rerender();
   resize();
 }
 
 function openSheet(name) {
-  if (name === 'prompt') { closeSheets(); openPrompt(); return; }
-  if (sheetOpen === name) { closeSheets(); return; }
   closeMenus();
-  sheetOpen = name;
   $('#left').classList.toggle('open', name === 'scene');
   $('#right').classList.toggle('open', name !== 'scene');
   if (name !== 'scene') {
     app.tab = name; renderInspector();
-    $('#rightTitle').textContent = { obj: 'Oggetto', shot: 'Shot e camera', beats: 'Azione (beat)' }[name];
+    $('#rightTitle').textContent = { obj: 'Dettagli oggetto', shot: 'Dettagli shot', beats: 'Testi dell\'azione' }[name];
     $('#right').scrollTop = 0;
   }
-  document.querySelectorAll('#tabbar button').forEach(b => b.classList.toggle('active', b.dataset.sheet === name));
 }
 function closeSheets() {
-  sheetOpen = null;
   document.querySelectorAll('.sheet.open').forEach(x => x.classList.remove('open'));
-  document.querySelectorAll('#tabbar button').forEach(b => b.classList.remove('active'));
+  if (app.phone) app.phone.rerender();
 }
-document.querySelectorAll('#tabbar button').forEach(b => b.addEventListener('click', () => openSheet(b.dataset.sheet)));
 document.querySelectorAll('.sheet-close').forEach(b => b.addEventListener('click', closeSheets));
-
-// Swipe a sheet down (or right in landscape) by its header to close it.
 document.querySelectorAll('.sheet-head').forEach(h => {
   let start = null;
   h.addEventListener('touchstart', (e) => { start = [e.touches[0].clientX, e.touches[0].clientY]; }, { passive: true });
@@ -1461,27 +1460,17 @@ document.querySelectorAll('.sheet-head').forEach(h => {
   });
 });
 
-// Floating chip with the current selection and the actions you need most on a phone.
-function renderSelChip() {
-  const chip = $('#selChip');
-  if (!chip) return;
-  const o = selObj();
-  if (!document.body.classList.contains('m') || !o) { chip.classList.add('hidden'); return; }
-  chip.classList.remove('hidden');
-  const jointTxt = app.poseMode && app.selJoint ? ` · ${JOINT_LABELS[app.selJoint]}` : '';
-  chip.replaceChildren(
-    el('span', { class: 'dot', style: `background:${o.color}` }),
-    el('span', { class: 'nm' }, o.name + jointTxt),
-    el('button', { title: 'Modifica', onclick: () => openSheet('obj') }, '✎'),
-    el('button', { title: 'Key qui', onclick: keyObject }, '◆'),
-    el('button', { title: 'Duplica', onclick: duplicateSelected }, '⧉'),
-    el('button', { title: 'Deseleziona', onclick: () => select(null) }, '✕'),
-  );
-}
-
 phoneMQ.addEventListener('change', applyLayout);
-window.addEventListener('resize', () => { const land = window.innerWidth > window.innerHeight; if (document.body.classList.contains('land') !== (document.body.classList.contains('m') && land)) applyLayout(); });
+window.addEventListener('resize', () => { if (isPhone() && document.body.classList.contains('land') !== (window.innerWidth > window.innerHeight)) applyLayout(); });
 window.addEventListener('orientationchange', () => setTimeout(applyLayout, 250));
+
+initPhone({
+  app, S, shot, selObj, select, addObject, deleteSelected, duplicateSelected, keyObject, deleteKey,
+  setTool, setView, setPoseMode, openPrompt, doExport, fileAction, switchShot, addShot, deleteShot,
+  commitCam, sampleCam, sampleObject, pushUndo, changed, togglePlay, setTime, undo, toast, resize,
+  closeSheets, openDetails: (tab) => openSheet(tab), openLeft: () => openSheet('scene'),
+  applyPose: (o, p) => { pushUndo(); const smp = sampleObject(o, shot(), app.time); smp.pose = clonePose(p); commitObject(o, smp); },
+});
 
 // ---------------------------------------------------------------- boot
 function renderAllUI() { renderMeta(); renderShots(); renderOutliner(); renderInspector(); updateTimeLabel(); updateHint(); }
