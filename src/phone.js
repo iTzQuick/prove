@@ -144,6 +144,20 @@ export function initPhone(api) {
     return seg([['translate', '✥ Sposta'], ['rotate', '⟳ Ruota']], app.poseMode ? '' : app.tool, (v) => { if (app.poseMode) api.setPoseMode(false); api.setTool(v); render(true); });
   }
 
+  // Up/down (the vertical axis: Z in Blender, Y here). Finger-friendly steps instead of a thin arrow.
+  function heightRow(o) {
+    const y = api.sampleObject(o, api.shot(), app.time).p[1];
+    const nudge = (d) => { api.setHeight(o, y + d); render(true); };
+    return el('div', { class: 'ph-height' },
+      el('div', { class: 'ph-height-top' },
+        el('span', {}, 'Altezza da terra'), el('b', { id: 'phHeight' }, `${y.toFixed(2)} m`),
+        big('Appoggia a terra', () => { api.setHeight(o, 0); render(true); }, 'mini-text')),
+      el('div', { class: 'ph-row' },
+        big('▼ 1 m', () => nudge(-1)), big('▼ 10 cm', () => nudge(-0.1)),
+        big('▲ 10 cm', () => nudge(0.1)), big('▲ 1 m', () => nudge(1))),
+      el('div', { class: 'ph-hint dim' }, 'Puoi anche trascinare la freccia verde verticale nella scena.'));
+  }
+
   // ------------------------------------------------------------ step: set
   function stepSet() {
     const o = api.selObj();
@@ -151,6 +165,7 @@ export function initPhone(api) {
     if (o && o.kind !== 'mannequin') {
       out.push(section(`Selezionato: ${o.name}`,
         moveRotateRow(o),
+        heightRow(o),
         el('div', { class: 'ph-row' },
           big('⧉ Duplica', api.duplicateSelected), big('Dettagli', () => api.openDetails('obj')),
           big('Elimina', api.deleteSelected, 'danger'), big('Fatto', () => api.select(null), 'primary'))));
@@ -176,6 +191,7 @@ export function initPhone(api) {
         render(true);
       }),
       app.poseMode ? el('div', { class: 'ph-hint' }, app.selJoint ? `Stai ruotando: ${JOINT_LABELS[app.selJoint]}. Tocca un altro arto per cambiarlo.` : 'Tocca un braccio, una gamba o la testa del manichino.') : null,
+      app.poseMode ? null : heightRow(o),
       el('div', { class: 'ph-row' }, big('⧉ Duplica', api.duplicateSelected), big('Elimina', api.deleteSelected, 'danger'))));
     return out;
   }

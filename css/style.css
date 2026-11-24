@@ -187,6 +187,13 @@ body.m[data-step="out"] #phonePanel, body.m[data-step="act"] #phonePanel { max-h
 .ph-chip { flex: none; display: flex; align-items: center; gap: 7px; min-height: 42px; border-radius: 21px; padding: 4px 14px 4px 10px; font-size: 15px; }
 .ph-chip .dot { width: 14px; height: 14px; border-radius: 50%; }
 .ph-chip.active { border-color: #fff; background: #2b3b52; }
+.ph-height { margin-top: 10px; background: #1b1e23; border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+.ph-height-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.ph-height-top span { color: var(--dim); font-size: 13.5px; }
+.ph-height-top b { flex: 1; font-size: 17px; font-variant-numeric: tabular-nums; }
+.ph-height .ph-btn { padding: 6px 4px; font-size: 14px; min-height: 44px; }
+.ph-btn.mini-text { min-height: 34px; padding: 4px 10px; font-size: 13px; flex: none; }
+.ph-hint.dim { color: var(--dim); }
 .ph-hint { margin-top: 8px; font-size: 13.5px; color: #f3c37a; line-height: 1.4; }
 .ph-empty { color: var(--dim); padding: 10px 2px; font-size: 14.5px; }
 .ph-lens { display: flex; align-items: center; gap: 12px; }

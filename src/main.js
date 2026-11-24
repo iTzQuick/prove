@@ -483,7 +483,6 @@ function attachGizmo() {
   tc.showX = tc.showY = tc.showZ = true;
   // Phones: only the handles that make sense with a finger (slide on the floor, turn around).
   if (document.body.classList.contains('m') && !(app.poseMode && app.selJoint)) {
-    if (tc.mode === 'translate') tc.showY = o.role === 'prop';
     if (tc.mode === 'rotate') { tc.showX = false; tc.showZ = false; }
   }
 }
@@ -1500,6 +1499,7 @@ initPhone({
   setTool, setView, setPoseMode, openPrompt, doExport, fileAction, switchShot, addShot, deleteShot,
   commitCam, sampleCam, sampleObject, pushUndo, changed, togglePlay, setTime, undo, toast, resize,
   closeSheets, openDetails: (tab) => openSheet(tab), openLeft: () => openSheet('scene'), frameAll,
+  setHeight: (o, y) => { pushUndo(); const smp = sampleObject(o, shot(), app.time); smp.p[1] = Math.max(-50, Math.min(300, +y.toFixed(2))); commitObject(o, smp); },
   applyPose: (o, p) => { pushUndo(); const smp = sampleObject(o, shot(), app.time); smp.pose = clonePose(p); commitObject(o, smp); },
 });
 
