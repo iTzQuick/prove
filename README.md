@@ -14,6 +14,18 @@ python3 -m http.server 8000
 
 Al primo avvio si apre una scena demo con due shot. *Progetto → Nuovo progetto* riparte da zero. Il lavoro si salva da solo nel browser; per conservarlo usa *Progetto → Salva progetto (.json)*.
 
+## Su iPhone
+
+Su schermi piccoli (provata su iPhone 15 Pro, in verticale e in orizzontale) l'app passa da sola al layout per telefono:
+- in basso c'è una barra con **Scena · Oggetto · Shot · Azione · Prompt**, e ogni voce apre un pannello che si chiude trascinandolo giù;
+- gli strumenti (sposta, ruota, scala, posa, vista, camera) sono pulsanti sul lato destro della vista 3D;
+- toccando un oggetto lo selezioni, e in basso compare una barretta con i comandi rapidi (modifica, key, duplica);
+- si naviga con un dito per ruotare la vista, due dita per zoom e spostamento;
+- quando esporti immagini e video si apre il menu Condividi di iOS, così salvi in Foto o File o li mandi all'app Higgsfield;
+- da Safari puoi usare *Condividi → Aggiungi alla schermata Home* per aprirla a tutto schermo come un'app.
+
+Per aprirla sul telefono l'app deve essere online (per esempio con GitHub Pages). Con `?layout=phone` o `?layout=desktop` nell'indirizzo forzi un layout.
+
 ## Cosa fa
 
 | Area | Funzioni |
