@@ -97,6 +97,7 @@ export function initPhone(api) {
       { label: 'Apri progetto…', run: () => api.fileAction('open') },
       { label: 'Importa libreria Elements…', run: () => api.fileAction('lib') },
       { label: 'Carica scena demo', run: () => api.fileAction('demo') },
+      { label: 'Carica arena (mappa)', run: () => api.fileAction('arena') },
       { label: 'Nuovo progetto', danger: true, run: () => api.fileAction('new') },
       '-',
       { label: 'Versione completa (desktop)', note: 'tutti i comandi', run: () => { location.search = '?layout=desktop'; } },

@@ -1,0 +1,577 @@
+{
+  "version": 1,
+  "meta": {
+    "project": "Arena",
+    "scene": "SC01",
+    "look": "realistic live action, large-format cinematography, natural daylight",
+    "styleLock": "Look: an idyllic, too-perfect artificial paradise: hyper-saturated wildflowers in magenta, orange, red, violet and yellow over lush emerald grass, jagged pale limestone peaks under a clean blue sky, retro-futurist 1970s design for every man-made object, beauty that feels dangerous; real-world materials and physics.",
+    "locationTag": "@loc_arena_meadow_v1",
+    "locationDesc": "a vast enclosed mountain-valley arena about 250 m across: an emerald meadow carpeted with saturated wildflowers; at the centre a round pale lawn with a white circular dais holding a golden metal blossom sculpture, ringed by 24 round metal launch plates; a dense dark forest along the west side; a narrow river running from the northern mountains down the forest edge and across the southern meadow into a small oval pond in the south-east; a wall of jagged limestone peaks along the north; a faint shimmering force-field at the outer edges",
+    "timeOfDay": "late morning, clear sky"
+  },
+  "objects": [
+    {
+      "id": "a0001",
+      "kind": "arena_meadow",
+      "name": "Prato arena",
+      "tag": "",
+      "role": "set",
+      "color": "#6fae3c",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -25,
+          0,
+          -17.625
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "a0002",
+      "kind": "arena_flowers",
+      "name": "Fiori",
+      "tag": "",
+      "role": "set",
+      "color": "#ff4f9a",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          0
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "a0003",
+      "kind": "arena_ridge",
+      "name": "Montagna e cresta",
+      "tag": "",
+      "role": "set",
+      "color": "#b9b2a4",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -25.625,
+          0,
+          -123.25
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "a0004",
+      "kind": "arena_forest",
+      "name": "Bosco",
+      "tag": "",
+      "role": "set",
+      "color": "#3f7a33",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -110,
+          0,
+          7
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "a0005",
+      "kind": "arena_river",
+      "name": "Fiume",
+      "tag": "",
+      "role": "set",
+      "color": "#3f86e0",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -23.125,
+          0,
+          -2.625
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "a0006",
+      "kind": "arena_pond",
+      "name": "Laghetto",
+      "tag": "",
+      "role": "set",
+      "color": "#3f86e0",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          58.75,
+          0,
+          85.25
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "a0007",
+      "kind": "arena_hub",
+      "name": "Centro (fiore di metallo)",
+      "tag": "",
+      "role": "set",
+      "color": "#d4a640",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          0
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "a0008",
+      "kind": "arena_plates",
+      "name": "24 pedane",
+      "tag": "",
+      "role": "set",
+      "color": "#b8bcc2",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          0
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "a0009",
+      "kind": "arena_shield",
+      "name": "Scudo (bordo)",
+      "tag": "",
+      "role": "set",
+      "color": "#7fe6d0",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -25,
+          0,
+          -17.625
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    }
+  ],
+  "shots": [
+    {
+      "id": "SC01_SH01",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "dolly",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Epic",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Anamorphic",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "az": -40,
+        "el": 42,
+        "intensity": 3,
+        "color": "#fff1d6",
+        "fill": 0.55,
+        "soft": 0.3
+      },
+      "camBase": {
+        "p": [
+          15,
+          1.7,
+          60.75
+        ],
+        "target": [
+          0,
+          4,
+          0
+        ],
+        "focal": 28
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            15,
+            1.7,
+            60.75
+          ],
+          "target": [
+            0,
+            4,
+            0
+          ],
+          "focal": 28
+        },
+        {
+          "t": 8,
+          "p": [
+            13.75,
+            1.7,
+            52
+          ],
+          "target": [
+            0,
+            4,
+            0
+          ],
+          "focal": 28
+        }
+      ],
+      "tracks": {},
+      "beats": [],
+      "purpose": "Establishing shot: from the southern wildflower meadow the camera looks north across the flowers to the golden metal blossom on its white dais and the ring of 24 metal plates, with the jagged limestone ridge filling the horizon",
+      "audio": "Wind through grass, distant birdsong, insects buzzing over the flowers. No music, no dialogue, no narration.",
+      "locks": "no vehicles; no buildings except the central dais and blossom sculpture",
+      "musicVideo": false,
+      "useBlockingVideo": true,
+      "useStartFrame": true,
+      "move": "push"
+    },
+    {
+      "id": "SC01_SH02",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "tripod",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Drama",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Anamorphic",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "az": -40,
+        "el": 42,
+        "intensity": 3,
+        "color": "#fff1d6",
+        "fill": 0.55,
+        "soft": 0.3
+      },
+      "camBase": {
+        "p": [
+          0.25,
+          1.7,
+          16.5
+        ],
+        "target": [
+          0.25,
+          1.2,
+          62
+        ],
+        "focal": 32
+      },
+      "camKeys": [],
+      "tracks": {},
+      "beats": [],
+      "purpose": "From the edge of the central dais, eye-level view looking south over the metal plates and the flower meadow toward the river and the oval pond",
+      "audio": "Wind through grass, distant birdsong, insects buzzing over the flowers. No music, no dialogue, no narration.",
+      "locks": "no vehicles; no buildings except the central dais and blossom sculpture",
+      "musicVideo": false,
+      "useBlockingVideo": true,
+      "useStartFrame": true,
+      "move": "static"
+    },
+    {
+      "id": "SC01_SH03",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "slider",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Drama",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Anamorphic",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "az": -40,
+        "el": 42,
+        "intensity": 3,
+        "color": "#fff1d6",
+        "fill": 0.55,
+        "soft": 0.3
+      },
+      "camBase": {
+        "p": [
+          73.25,
+          2,
+          47.75
+        ],
+        "target": [
+          0,
+          3,
+          0
+        ],
+        "focal": 50
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            73.25,
+            2,
+            47.75
+          ],
+          "target": [
+            0,
+            3,
+            0
+          ],
+          "focal": 50
+        },
+        {
+          "t": 8,
+          "p": [
+            71.25,
+            2,
+            51
+          ],
+          "target": [
+            0,
+            3,
+            0
+          ],
+          "focal": 50
+        }
+      ],
+      "tracks": {},
+      "beats": [],
+      "purpose": "From the south-east meadow a long lens looks north-west at the central blossom, compressing it against the mountains",
+      "audio": "Wind through grass, distant birdsong, insects buzzing over the flowers. No music, no dialogue, no narration.",
+      "locks": "no vehicles; no buildings except the central dais and blossom sculpture",
+      "musicVideo": false,
+      "useBlockingVideo": true,
+      "useStartFrame": true,
+      "move": "left"
+    },
+    {
+      "id": "SC01_SH04",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "handheld",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Drama",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Anamorphic",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "az": -40,
+        "el": 42,
+        "intensity": 3,
+        "color": "#fff1d6",
+        "fill": 0.55,
+        "soft": 0.3
+      },
+      "camBase": {
+        "p": [
+          -105.5,
+          1.6,
+          26.25
+        ],
+        "target": [
+          -60,
+          1,
+          62
+        ],
+        "focal": 24
+      },
+      "camKeys": [],
+      "tracks": {},
+      "beats": [],
+      "purpose": "Inside the edge of the dark forest, looking south-east through the trunks to where the river bends out of the trees into the sunlit meadow",
+      "audio": "Wind through grass, distant birdsong, insects buzzing over the flowers. No music, no dialogue, no narration.",
+      "locks": "no vehicles; no buildings except the central dais and blossom sculpture",
+      "musicVideo": false,
+      "useBlockingVideo": true,
+      "useStartFrame": true,
+      "move": "handheld"
+    },
+    {
+      "id": "SC01_SH05",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "drone",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Epic",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Anamorphic",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "az": -40,
+        "el": 42,
+        "intensity": 3,
+        "color": "#fff1d6",
+        "fill": 0.55,
+        "soft": 0.3
+      },
+      "camBase": {
+        "p": [
+          80,
+          72.41,
+          -107.8
+        ],
+        "target": [
+          -52.5,
+          12,
+          -54.8
+        ],
+        "focal": 24
+      },
+      "camKeys": [],
+      "tracks": {},
+      "beats": [],
+      "purpose": "Aerial view from above the eastern end of the mountain crest, looking west along the jagged ridge with the whole flower valley spread out below on the left",
+      "audio": "Wind through grass, distant birdsong, insects buzzing over the flowers. No music, no dialogue, no narration.",
+      "locks": "no vehicles; no buildings except the central dais and blossom sculpture",
+      "musicVideo": false,
+      "useBlockingVideo": true,
+      "useStartFrame": true,
+      "move": "static"
+    }
+  ],
+  "current": 0
+}

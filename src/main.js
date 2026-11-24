@@ -330,9 +330,16 @@ function updateLights(sh, c) {
   const place = (light, az) => {
     const a = az * D2R, e = L.el * D2R;
     const dir = back.clone().multiplyScalar(Math.cos(a)).add(right.clone().multiplyScalar(Math.sin(a))).normalize();
-    const pos = dir.multiplyScalar(Math.cos(e)).add(new THREE.Vector3(0, Math.sin(e), 0)).multiplyScalar(18).add(target);
+    const pos = dir.multiplyScalar(Math.cos(e)).add(new THREE.Vector3(0, Math.sin(e), 0)).multiplyScalar(lightDist).add(target);
     light.position.copy(pos); light.target.position.copy(target); light.target.updateMatrixWorld();
   };
+  // Shadow box follows the shot: tight for a room, wide for a landscape.
+  const span = Math.min(90, Math.max(12, Math.hypot(c.p[0] - c.target[0], c.p[1] - c.target[1], c.p[2] - c.target[2]) * 1.4));
+  const lightDist = Math.max(18, span * 2.5);
+  if (key.shadow.camera.right !== span) {
+    Object.assign(key.shadow.camera, { left: -span, right: span, top: span, bottom: -span, far: lightDist * 3 });
+    key.shadow.camera.updateProjectionMatrix();
+  }
   key.color.set(L.color); key.intensity = L.intensity * 1.2;
   place(key, L.az);
   const cross = L.cross || sh.panel.light === 'Soft cross';
@@ -422,6 +429,27 @@ function undo(redo = false) {
   app.state = JSON.parse(from.pop());
   afterLoad();
 }
+// Fit the free camera to the whole set (used after loading big scenes such as the arena).
+function frameAll() {
+  const box = new THREE.Box3();
+  for (const o of S().objects) if (!o.hidden && !CATALOG[o.kind].lock) box.expandByObject(app.groups.get(o.id));
+  if (box.isEmpty()) return;
+  const c = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3()).length();
+  editorOrbit.target.set(c.x, 0, c.z);
+  editorCam.position.set(c.x + size * 0.45, size * 0.38, c.z + size * 0.55);
+  editorCam.far = Math.max(500, size * 4); editorCam.updateProjectionMatrix();
+  editorOrbit.update();
+}
+
+async function loadBundledProject(file) {
+  try {
+    const r = await fetch(file, { cache: 'no-store' });
+    if (!r.ok) throw new Error(r.status);
+    pushUndo(); app.state = await r.json(); app.sel = null; tc.detach(); afterLoad(); frameAll();
+    toast('Arena caricata: 5 shot dalle frecce della mappa');
+  } catch (e) { toast('Impossibile caricare ' + file); }
+}
+
 function afterLoad() {
   if (!S().shots.length) S().shots.push(newShot('SC01_SH01'));
   S().current = Math.min(S().current || 0, S().shots.length - 1);
@@ -471,7 +499,7 @@ canvas.addEventListener('pointerup', (e) => {
   const ndc = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
   ray.setFromCamera(ndc, activeCam());
   const targets = [];
-  for (const [id, g] of app.groups) { const o = S().objects.find(x => x.id === id); if (o && !o.hidden) targets.push(g); }
+  for (const [id, g] of app.groups) { const o = S().objects.find(x => x.id === id); if (o && !o.hidden && !CATALOG[o.kind].lock) targets.push(g); }
   const hits = ray.intersectObjects(targets, true).filter(h => !(h.object.isSprite));
   if (!hits.length) { if (!app.poseMode) select(null); return; }
   let obj = hits[0].object, id = null;
@@ -628,6 +656,7 @@ function buildAddMenu() {
     ['Forme', ['cube', 'sphere', 'cylinder', 'cone']],
     ['Set', ['plane', 'wall', 'doorway', 'window', 'stairs', 'column', 'table', 'chair', 'sofa', 'bed', 'tree', 'lamp']],
     ['Oggetti', ['car', 'phone', 'bottle', 'case']],
+    ['Arena (dalla mappa)', ['arena_meadow', 'arena_flowers', 'arena_ridge', 'arena_forest', 'arena_river', 'arena_pond', 'arena_hub', 'arena_plates', 'arena_shield']],
   ];
   const menu = el('div', { class: 'menu left', id: 'addMenuList' });
   for (const [cat, kinds] of cats) {
@@ -648,7 +677,8 @@ function addObject(kind) {
   pushUndo();
   const r = makeRecord(kind, {}, S().objects);
   const t = app.viewMode === 'shot' ? shotOrbit.target : editorOrbit.target;
-  if (kind !== 'plane') r.base.p = [+t.x.toFixed(2), 0, +t.z.toFixed(2)];
+  if (CATALOG[kind].at) r.base.p = CATALOG[kind].at.slice();
+  else if (kind !== 'plane') r.base.p = [+t.x.toFixed(2), 0, +t.z.toFixed(2)];
   if (['phone', 'bottle', 'case'].includes(kind)) r.base.p[1] = 0.76;
   S().objects.push(r);
   buildGroup(r);
@@ -1324,6 +1354,7 @@ function fileAction(act) {
   else if (act === 'save') deliverFiles([toFile(`${(S().meta.project || 'progetto').replace(/[^\w-]+/g, '_')}.blocking.json`, JSON.stringify(S(), null, 2), 'application/json')]);
   else if (act === 'open') $('#fileInput').click();
   else if (act === 'lib') $('#libInput').click();
+  else if (act === 'arena') loadBundledProject('projects/arena.blocking.json');
 }
 $('#fileInput').addEventListener('change', async (e) => {
   const f = e.target.files[0]; if (!f) return;
@@ -1468,7 +1499,7 @@ initPhone({
   app, S, shot, selObj, select, addObject, deleteSelected, duplicateSelected, keyObject, deleteKey,
   setTool, setView, setPoseMode, openPrompt, doExport, fileAction, switchShot, addShot, deleteShot,
   commitCam, sampleCam, sampleObject, pushUndo, changed, togglePlay, setTime, undo, toast, resize,
-  closeSheets, openDetails: (tab) => openSheet(tab), openLeft: () => openSheet('scene'),
+  closeSheets, openDetails: (tab) => openSheet(tab), openLeft: () => openSheet('scene'), frameAll,
   applyPose: (o, p) => { pushUndo(); const smp = sampleObject(o, shot(), app.time); smp.pose = clonePose(p); commitObject(o, smp); },
 });
 

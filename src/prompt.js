@@ -176,7 +176,7 @@ export function cameraMove(shot, t0, t1) {
   }
   const ax = Object.entries(comp).sort((x, y) => Math.abs(y[1]) - Math.abs(x[1]))[0];
   const m = r1(Math.abs(ax[1]));
-  if (ax[0] === 'forward') return { kind: ax[1] > 0 ? 'push' : 'pull', text: ax[1] > 0 ? `${spd} push-in of ${m} m toward the subject` : `${spd} pull-back of ${m} m away from the subject` };
+  if (ax[0] === 'forward') return { kind: ax[1] > 0 ? 'push' : 'pull', text: ax[1] > 0 ? `${spd} push-in of ${m} m forward` : `${spd} pull-back of ${m} m` };
   if (ax[0] === 'lateral') return { kind: 'truck', text: `${spd} lateral tracking move of ${m} m to the ${ax[1] > 0 ? 'right' : 'left'}, parallel to the action` };
   return { kind: ax[1] > 0 ? 'crane-up' : 'crane-down', text: `${spd} ${ax[1] > 0 ? 'rise' : 'descent'} of ${m} m (pedestal/crane ${ax[1] > 0 ? 'up' : 'down'})` };
 }
@@ -201,7 +201,7 @@ function shotProps(state, shot) {
     return q.z < 1 && Math.abs(q.x) < 1 && Math.abs(q.y) < 1;
   }));
 }
-function setPieces(state) { return state.objects.filter(o => o.role === 'set' && !o.hidden && !['plane'].includes(o.kind)); }
+function setPieces(state) { return state.objects.filter(o => o.role === 'set' && !o.hidden && !['plane', 'arena_meadow', 'arena_flowers', 'arena_shield'].includes(o.kind)); }
 
 function mainSubject(state, shot, t) {
   let best = null, bd = Infinity;
@@ -351,7 +351,7 @@ export function autoBeats(state, shot) {
     const lines = [];
     for (const o of people) { const l = describeCharacterBeat(state, shot, o, t0, t1); if (l) lines.push(l); }
     for (const p of things) { const l = describePropBeat(state, shot, p, t0, t1); if (l) lines.push(l); }
-    return { t0, t1, text: lines.join('. ') + (lines.length ? '.' : 'The scene holds; ambient movement only.') };
+    return { t0, t1, text: lines.length ? lines.join('. ') + '.' : ambientText(state) };
   });
 }
 
@@ -371,7 +371,32 @@ export function getBeats(state, shot) {
   return user.length ? user : autoBeats(state, shot);
 }
 
+// Scenes without people: what moves on its own.
+function isOutdoor(state) { return state.objects.some(o => !o.hidden && /^arena_|^tree$/.test(o.kind)); }
+function ambientText(state) {
+  return isOutdoor(state)
+    ? 'A light breeze ripples across the grass and the flowers sway; leaves tremble; the location stays empty.'
+    : 'The room stays still; only faint dust drifts through the light; the location stays empty.';
+}
+function framePieces(state, shot, t) {
+  const { cam } = camAt(shot, t);
+  const out = [];
+  for (const o of setPieces(state)) {
+    if (!o.tag && ['wall', 'cube', 'cylinder', 'cone', 'sphere'].includes(o.kind)) continue;
+    const p = V(o.base.p).add(new THREE.Vector3(0, 0.5, 0)).project(cam);
+    if (p.z > 1 || Math.abs(p.x) > 1.1 || Math.abs(p.y) > 1.2) continue;
+    const where = p.x < -0.33 ? 'frame-left' : p.x > 0.33 ? 'frame-right' : 'centre frame';
+    const d = V(o.base.p).distanceTo(V(sampleCam(shot, t).p));
+    out.push(`${refName(o).replace(/^the /, 'a ')} ${where}${d > 60 ? ' in the distance' : ''}`);
+  }
+  return out;
+}
+
 function firstFrameText(state, shot, t) {
+  if (!cast(state, shot).length) {
+    const pieces = framePieces(state, shot, t);
+    return `The empty location, no people${pieces.length ? '; in frame: ' + pieces.slice(0, 6).join(', ') : ''}.`;
+  }
   const lines = [];
   for (const o of cast(state, shot)) {
     const f = frameInfo(o, shot, t);
@@ -436,6 +461,11 @@ function physicsText(state, shot, beats) {
   if (/sits down|kneels|crouches/.test(all)) out.push('the body lowers under control, weight settles and the surface compresses');
   if (/picks up|puts down| in the (left|right) hand/.test(all)) out.push('objects have mass: hands grip before lifting, wrists take the weight');
   if (/falls/.test(all)) out.push('falling objects accelerate with gravity and bounce once on impact');
+  if (!cast(state, shot).length) {
+    return (isOutdoor(state)
+      ? 'grass, flowers and leaves sway in a light breeze; water surfaces ripple and reflect the sky'
+      : 'nothing moves except air and light') + '; real-world physics, no slow motion.';
+  }
   if (!out.length) out.push('subtle breathing, small weight shifts, no frozen poses');
   out.push('clothing and hair react to movement; real-world physics, no slow motion');
   return out.join('; ') + '.';
@@ -486,8 +516,13 @@ function referencesBlock(state, shot, { video, image } = {}) {
     L.push(`${refName(p)} is one single object, about ${size} cm${h ? `, held in ${refName(h.o)}'s ${h.side} hand` : ''}.`);
   }
   for (const o of setPieces(state)) if (o.tag) L.push(`${refName(o)} controls that set piece's shape and material only.`);
-  if (image) L.push(`${image} is a grey 3D blockout: it controls only composition, camera angle, lens, character positions, facing directions, poses and scale. Do not copy its grey materials, mannequin bodies, floor grid or flat lighting. In ${image} ${colourMap(state, shot)}.`);
-  if (video) L.push(`${video} controls camera path, blocking and pacing only. It is a grey 3D blockout with coloured mannequins: do not copy its shapes, grey materials, mannequin bodies, colours, floor grid or flat lighting. In ${video} ${colourMap(state, shot)}.`);
+  const cmap = colourMap(state, shot);
+  if (image) L.push(cmap
+    ? `${image} is a grey 3D blockout: it controls only composition, camera angle, lens, character positions, facing directions, poses and scale. Do not copy its grey materials, mannequin bodies, floor grid or flat lighting. In ${image} ${cmap}.`
+    : `${image} is a simple 3D blockout of the set: it controls only composition, camera angle, lens, layout and scale of the landscape and objects. Do not copy its flat colours, low-polygon shapes, plain sky or flat lighting.`);
+  if (video) L.push(cmap
+    ? `${video} controls camera path, blocking and pacing only. It is a grey 3D blockout with coloured mannequins: do not copy its shapes, grey materials, mannequin bodies, colours, floor grid or flat lighting. In ${video} ${cmap}.`
+    : `${video} controls camera path and pacing only. It is a simple 3D blockout: do not copy its flat colours, low-polygon shapes, plain sky or flat lighting.`);
   return L;
 }
 
@@ -511,7 +546,7 @@ function cameraLines(state, shot, beats) {
     const mv = cameraMove(shot, b.t0, b.t1);
     const subjA = mainSubject(state, shot, b.t0), subjB = mainSubject(state, shot, b.t1);
     const rig = RIGS[shot.rig] || shot.rig;
-    let framing = subjA ? `${subjA.f.size} of ${refName(subjA.o)}` : 'frame on the set';
+    let framing = subjA ? `${subjA.f.size} of ${refName(subjA.o)}` : (cd.c.focal < 40 ? 'wide view of the location' : 'compressed view of the location');
     let txt = `${b.t0}-${b.t1}s: ${mv.text}, ${rig}, ${lensWords(cd.c.focal)}, ${framing}, camera at ${cd.height} (${cd.heightM} m)${cd.angle ? ', ' + cd.angle : ''}`;
     if (subjA && mv.kind !== 'static') {
       const endSize = frameInfo(subjA.o, shot, b.t1).size;

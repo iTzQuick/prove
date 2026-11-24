@@ -1,6 +1,8 @@
 // Primitive and set-piece factory. Every object is a THREE.Group whose origin sits on the floor.
 import * as THREE from 'three';
 import { buildMannequin } from './mannequin.js';
+import { buildArenaPiece, isArenaKind } from './arena.js';
+import { KIT_CENTER } from './arena-map.js';
 
 // Named colours: the prompt maps a mannequin colour to its Element tag, so names must be unambiguous.
 export const CHAR_COLORS = [
@@ -43,7 +45,18 @@ export const CATALOG = {
   phone: { label: 'Oggetto piccolo', role: 'prop', color: '#333333', en: 'small object' },
   bottle: { label: 'Bottiglia', role: 'prop', color: '#2f7a5a', en: 'bottle' },
   case: { label: 'Valigetta', role: 'prop', color: '#5a4030', en: 'case' },
+  // Arena kit (built from the arena plan; each piece knows where it belongs: `at`).
+  arena_meadow: { label: 'Prato arena', role: 'set', color: '#6fae3c', en: 'flower meadow', lock: true, arena: true },
+  arena_flowers: { label: 'Fiori', role: 'set', color: '#ff4f9a', en: 'wildflower drifts', lock: true, arena: true },
+  arena_ridge: { label: 'Montagna e cresta', role: 'set', color: '#b9b2a4', en: 'jagged limestone mountain ridge', arena: true },
+  arena_forest: { label: 'Bosco', role: 'set', color: '#3f7a33', en: 'dense forest', arena: true },
+  arena_river: { label: 'Fiume', role: 'set', color: '#3f86e0', en: 'river', arena: true },
+  arena_pond: { label: 'Laghetto', role: 'set', color: '#3f86e0', en: 'pond', arena: true },
+  arena_hub: { label: 'Centro (fiore di metallo)', role: 'set', color: '#d4a640', en: 'golden metal blossom sculpture on a round white dais', arena: true },
+  arena_plates: { label: '24 pedane', role: 'set', color: '#b8bcc2', en: 'ring of 24 round metal launch plates', arena: true },
+  arena_shield: { label: 'Scudo (bordo)', role: 'set', color: '#7fe6d0', en: 'force-field boundary', lock: true, arena: true },
 };
+for (const [k, v] of Object.entries(CATALOG)) if (v.arena) v.at = [KIT_CENTER[k][0], 0, KIT_CENTER[k][1]];
 
 function std(color, extra = {}) {
   return new THREE.MeshStandardMaterial({ color, roughness: 0.8, metalness: 0, ...extra });
@@ -60,6 +73,7 @@ function cyl(g, mat, rt, rb, h, x = 0, y = h / 2, z = 0, seg = 24) {
 
 export function buildObject(kind, color) {
   if (kind === 'mannequin') return buildMannequin(color);
+  if (isArenaKind(kind)) return buildArenaPiece(kind, color);
   const g = new THREE.Group();
   const mat = std(color);
   g.userData.materials = [mat];

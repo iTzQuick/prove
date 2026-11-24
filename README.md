@@ -28,6 +28,19 @@ In alto ci sono annulla, lo shot corrente (tocca per cambiarlo o crearne uno nuo
 Quando esporti si apre il menu Condividi di iOS; da Safari puoi usare *Condividi → Aggiungi alla schermata Home*.
 `?layout=desktop` nell'indirizzo apre la versione completa.
 
+## Arena (dalla mappa)
+
+*Progetto → Carica arena (mappa)* apre un'arena costruita dalla piantina disegnata a mano:
+- prato fiorito di circa 250 × 275 m;
+- montagne frastagliate a nord e bosco a ovest;
+- fiume che scende dalle montagne e finisce in un laghetto a sud-est;
+- al centro un fiore di metallo dorato su una pedana bianca, con 24 pedane intorno;
+- scudo ai bordi.
+
+I 5 numeri della mappa sono i 5 shot: il numero è la posizione della camera, la freccia è dove guarda.
+I pezzi sono nel menu *Aggiungi → Arena*. Per rigenerare il progetto: `node tools/make-arena.mjs`. Le misure della piantina sono in `src/arena-map.js`.
+Nei prompt lo stile è descritto con parole generiche (paradiso artificiale, fiori saturi, design retro-futurista anni '70), senza nomi di film né di franchise.
+
 ## Cosa fa
 
 | Area | Funzioni |
