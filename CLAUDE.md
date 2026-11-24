@@ -41,3 +41,8 @@ Comandi tipici dell'utente: "aggiorna libreria", "genera keyframe SC01_SH02", "g
 
 ## Test
 Server: `python3 -m http.server 8765`; Playwright è preinstallato (`require('playwright')`).
+
+## Aggiornamenti e cache del telefono
+Dopo ogni modifica ai file dell'app esegui `node tools/stamp-version.cjs` prima del commit: mette una versione
+negli URL di CSS e moduli (import map), così Safari e l'app sulla schermata Home scaricano i file nuovi.
+La versione si legge nel menu ⋯ del telefono ("Ricarica l'app").

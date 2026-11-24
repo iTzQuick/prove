@@ -101,6 +101,7 @@ export function initPhone(api) {
       { label: 'Nuovo progetto', danger: true, run: () => api.fileAction('new') },
       '-',
       { label: 'Versione completa (desktop)', note: 'tutti i comandi', run: () => { location.search = '?layout=desktop'; } },
+      { label: 'Ricarica l\'app', note: 'versione ' + (document.querySelector('meta[name=app-version]')?.content || '?'), run: () => location.reload() },
     ]);
   }
 
