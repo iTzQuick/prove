@@ -365,7 +365,7 @@ export function initPhone(api) {
           big('Primo frame', () => api.doExport('still-start')),
           big('Ultimo frame', () => api.doExport('still-end')),
           big('Video blocking', () => api.doExport('video')),
-          big('Location vuota', () => api.doExport('locpack')))),
+          big('Location dallo shot', () => api.doExport('locshot')))),
     ];
   }
 

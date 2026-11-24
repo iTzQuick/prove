@@ -7,9 +7,9 @@ import { sampleObject, sampleCam, setKey, removeKeyNear, ASPECTS, applyCamToThre
 import {
   MODELS, RIGS, PANEL, LIGHT_PRESETS, refName, autoBeats, getBeats, cameraMove, buildVideoPrompt, buildKeyframePrompt,
   buildLocationPrompts, buildSheetPrompt, buildSettings, buildAssetBible, buildShotListMarkdown, hudInfo, risks, costEstimate,
-  buildMcpRequests, findElement,
+  buildMcpRequests, findElement, buildShotLocationPrompts,
 } from './prompt.js';
-import { renderStill, download, recordBlockingVideo, locationPack, exportSize } from './export.js';
+import { renderStill, download, recordBlockingVideo, locationPack, shotLocationViews, exportSize } from './export.js';
 import { initPhone } from './phone.js';
 
 const D2R = Math.PI / 180;
@@ -1256,7 +1256,10 @@ function renderModal() {
     }
   } else if (modalTab === 'location') {
     B.push(el('div', { class: 'note', html: '1. <b>Esporta → Location pack vuoto</b>: 3 PNG (wide 3/4, reverse, 3/4 opposto) senza personaggi né oggetti di scena.<br>2. Per ogni vista allega il PNG come @Image 1 e usa il prompt corrispondente (Nano Banana Pro / Seedream 5.0 Pro).<br>3. Crea un Element Location per stanza con le immagini approvate. Ora del giorno in ogni prompt.' }));
-    for (const v of buildLocationPrompts(st)) B.push(...outBlock(`${v.file}`, v.prompt, 9));
+    B.push(el('div', { class: 'note', html: '<b>Consigliato:</b> <b>Esporta → Location dallo shot</b>: la location vuota vista dalla camera di questo shot (inizio, metà, fine del movimento + una vista più larga). Sono esattamente gli sfondi che il video deve ricostruire.' }));
+    for (const v of buildShotLocationPrompts(st, sh)) B.push(...outBlock(`${v.file}`, v.prompt, 8));
+    B.push(el('div', { class: 'note' }, 'Viste generiche della location (alternativa):'));
+    for (const v of buildLocationPrompts(st)) B.push(...outBlock(`${v.file}`, v.prompt, 8));
   } else if (modalTab === 'shotlist') {
     B.push(...outBlock('Shot list (Markdown)', buildShotListMarkdown(st), 20));
   } else {
@@ -1327,6 +1330,8 @@ async function doExport(act) {
       const f = toFile(`${sh.id}_blocking.${ext}`, blob);
       if (document.body.classList.contains('m')) offerFiles([f]); else await deliverFiles([f]); // recording outlives the tap: ask again
       if (ext === 'webm') toast('Video WebM: se Higgsfield lo rifiuta, convertilo in MP4');
+    } else if (act === 'locshot') {
+      await deliverFiles(shotLocationViews(app, sh).map(v => toFile(`${sh.id}_loc_${v.id}.png`, v.url)));
     } else if (act === 'locpack') {
       await deliverFiles(locationPack(app, sh).map(v => toFile(`${S().meta.scene}_loc_${v.id}.png`, v.url)));
     } else if (act === 'shotlist') {
@@ -1381,6 +1386,20 @@ window.blocking = {
   loadProject(st) { app.state = st; app.sel = null; tc.detach(); afterLoad(); return S().shots.map(s => s.id); },
   setLibrary(list) { setLibrary(list); },
   shotIds() { return S().shots.map(s => s.id); },
+  shotLocation(id) {
+    const i = Math.max(0, S().shots.findIndex(s => s.id === id));
+    S().current = i; app.time = 0;
+    const files = {};
+    for (const v of shotLocationViews(app, shot())) files[`${shot().id}_loc_${v.id}.png`] = v.url.split(',')[1];
+    return { files, prompts: buildShotLocationPrompts(S(), shot()) };
+  },
+  locationPack(id) {
+    const i = Math.max(0, S().shots.findIndex(s => s.id === id));
+    S().current = i; app.time = 0;
+    const files = {};
+    for (const v of locationPack(app, shot())) files[`${S().meta.scene}_loc_${v.id}.png`] = v.url.split(',')[1];
+    return { files, prompts: buildLocationPrompts(S()) };
+  },
   async exportShot(id, { video = true } = {}) {
     const i = S().shots.findIndex(s => s.id === id);
     if (i < 0) throw new Error('shot non trovato: ' + id);

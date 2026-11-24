@@ -678,6 +678,27 @@ export function buildLocationPrompts(state) {
   }));
 }
 
+// Location views taken from a shot's own camera (start/mid/end of the move + a wider pull-back).
+export function buildShotLocationPrompts(state, shot) {
+  const m = state.meta;
+  const desc = m.locationDesc || 'describe the place here';
+  const views = [
+    ['start', `the exact view of the first frame of shot ${shot.id}`],
+    ['mid', `the exact view halfway through the camera move of shot ${shot.id}`],
+    ['end', `the exact view of the last frame of shot ${shot.id}`],
+    ['wide', `a wider establishing view in the same direction as shot ${shot.id}, camera pulled back`],
+  ];
+  return views.map(([id, what]) => ({
+    id, file: `${shot.id}_loc_${id}.png`,
+    prompt: clean([
+      'References: @Image 1 is a simple 3D blockout of the empty location. It controls only the camera angle, lens, horizon line, layout and scale of the landscape and objects. Do not copy its flat colours, low-polygon shapes, plain grey sky or flat lighting.',
+      `Image: ${what}, ${shot.aspect}. ${desc.replace(/\.$/, '')}. Time of day: ${m.timeOfDay || 'day'}, in the final scene light.`,
+      m.styleLock ? 'Style: ' + m.styleLock : 'Style: real photographic materials, natural light falloff.',
+      'Empty location: no people, no animals, no text, no logos, no watermarks.',
+    ].join('\n\n')),
+  }));
+}
+
 export function buildSheetPrompt(state, o) {
   const style = state.meta.styleLock || '';
   if (o.kind === 'mannequin') {

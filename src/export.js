@@ -146,3 +146,25 @@ export function locationPack(app, shot) {
     return { id, url: renderStill(app, shot, 0, { size: [w, h], camera: cam, hideCharacters: true }) };
   });
 }
+
+// Empty location seen from the shot's own camera: start, middle and end of the move, plus a wider
+// pull-back in the same direction for context. These match exactly the background the video needs.
+export function shotLocationViews(app, shot) {
+  const [w, h] = exportSize(shot, '1080p');
+  const views = [];
+  const dur = shot.duration;
+  for (const [id, t] of [['start', 0], ['mid', dur / 2], ['end', dur]]) {
+    views.push({ id, url: renderStill(app, shot, t, { size: [w, h], hideCharacters: true }) });
+  }
+  const c = sampleCam(shot, 0);
+  const p = new THREE.Vector3(...c.p), tg = new THREE.Vector3(...c.target);
+  const back = p.clone().sub(tg); back.y = 0;
+  const dist = Math.max(8, back.length() * 3.5);
+  back.setLength(dist);
+  const cam = new THREE.PerspectiveCamera(focalToVFov(24, w / h), w / h, 0.05, 1000);
+  cam.position.set(tg.x + back.x, Math.max(p.y, 1.7), tg.z + back.z);
+  cam.lookAt(tg.x, Math.max(1.2, tg.y), tg.z); cam.updateMatrixWorld(true);
+  views.push({ id: 'wide', url: renderStill(app, shot, 0, { size: [w, h], camera: cam, hideCharacters: true }) });
+  app.applyTime(app.time);
+  return views;
+}
