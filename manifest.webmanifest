@@ -1,0 +1,13 @@
+{
+  "name": "Blocking Studio",
+  "short_name": "Blocking",
+  "description": "Regia 3D con forme e manichini per Higgsfield",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#17191d",
+  "theme_color": "#17191d",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

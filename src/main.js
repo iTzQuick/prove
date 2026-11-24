@@ -435,7 +435,7 @@ function select(id, joint = null) {
   attachGizmo();
   updatePaths();
   if (id) app.tab = 'obj';
-  renderOutliner(); renderInspector(); drawTimeline();
+  renderOutliner(); renderInspector(); drawTimeline(); renderSelChip();
 }
 
 function attachGizmo() {
@@ -456,7 +456,8 @@ const ray = new THREE.Raycaster();
 let downPos = null;
 canvas.addEventListener('pointerdown', (e) => { downPos = [e.clientX, e.clientY]; });
 canvas.addEventListener('pointerup', (e) => {
-  if (!downPos || Math.hypot(e.clientX - downPos[0], e.clientY - downPos[1]) > 4) return;
+  const tol = e.pointerType === 'touch' ? 12 : 4; // fingers jitter more than a mouse
+  if (!downPos || Math.hypot(e.clientX - downPos[0], e.clientY - downPos[1]) > tol) return;
   if (performance.now() - lastDragEnd < 150 || tc.dragging) return;
   const r = canvas.getBoundingClientRect();
   const ndc = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
@@ -468,7 +469,7 @@ canvas.addEventListener('pointerup', (e) => {
   let obj = hits[0].object, id = null;
   let p = obj; while (p && !id) { id = p.userData.objId; p = p.parent; }
   const o = S().objects.find(x => x.id === id);
-  if (o && o.kind === 'mannequin' && app.poseMode) select(id, obj.userData.joint || 'hips');
+  if (o && o.kind === 'mannequin' && app.poseMode) { select(id, obj.userData.joint || 'hips'); renderSelChip(); }
   else select(id, null);
 });
 
@@ -548,6 +549,10 @@ function updateTimeLabel() { $('#timeLabel').textContent = `${app.time.toFixed(1
 function updateHud() {
   const sh = shot();
   const info = hudInfo(S(), sh, app.time);
+  if (document.body.classList.contains('m')) {
+    $('#hud').innerHTML = `<b>${esc(sh.id)}</b> · ${sh.aspect} · ${info.focal}mm<br>${esc(info.size)}`;
+    return;
+  }
   $('#hud').innerHTML = `<b>${esc(sh.id)}</b> · ${MODELS[sh.model].label} · ${sh.aspect}<br>` +
     `${info.focal}mm · camera ${info.height} m · ${esc(info.size)}` +
     (app.viewMode === 'free' ? '<br><span style="color:#8b929c">camera dello shot in arancione</span>' : '');
@@ -618,9 +623,10 @@ function buildAddMenu() {
     menu.append(el('div', { class: 'cat' }, cat));
     menu.append(el('div', { class: 'grid' }, ...kinds.map(k => el('button', { onclick: () => { addObject(k); closeMenus(); } }, CATALOG[k].label))));
   }
-  const dd = el('div', { class: 'dropdown' }, el('button', { class: 'primary', onclick: (e) => { e.stopPropagation(); toggleMenu(menu); } }, '＋ Aggiungi'), menu);
+  menu.prepend(el('div', { class: 'menu-title' }, 'Aggiungi alla scena'));
+  const dd = el('div', { class: 'dropdown' }, el('button', { class: 'primary', title: 'Aggiungi', onclick: (e) => { e.stopPropagation(); toggleMenu(menu); } }, '＋', el('span', { class: 'lbl' }, ' Aggiungi')), menu);
   $('#addMenu').append(dd,
-    el('button', { title: 'Aggiungi manichino', onclick: () => addObject('mannequin') }, '🧍 Manichino'));
+    el('button', { title: 'Aggiungi manichino', onclick: () => addObject('mannequin') }, '🧍', el('span', { class: 'lbl' }, ' Manichino')));
 }
 
 function toggleMenu(m) { const open = m.classList.contains('open'); closeMenus(); if (!open) m.classList.add('open'); }
@@ -743,6 +749,7 @@ function deleteShot(i) {
 }
 
 function renderOutliner() {
+  renderSelChip();
   const sh = shot();
   $('#outliner').replaceChildren(...S().objects.map(o => el('div', {
     class: 'list-item' + (o.id === app.sel ? ' sel' : ''), onclick: () => select(o.id),
@@ -1038,8 +1045,7 @@ function setPoseMode(on) {
   $('#poseBtn').classList.toggle('active', on);
   const o = selObj();
   if (on && o && o.kind === 'mannequin' && !app.selJoint) app.selJoint = 'head';
-  if (!on) app.selJoint = app.selJoint; // keep slider joint
-  attachGizmo(); updateHint(); renderInspector();
+  attachGizmo(); updateHint(); renderInspector(); renderSelChip();
 }
 
 function setTool(t) {
@@ -1075,14 +1081,14 @@ function frameSelection() {
 // ---------------------------------------------------------------- timeline
 const tl = $('#tl');
 const tg = tl.getContext('2d');
-const TL_LEFT = 90;
+const tlLeft = () => (document.body.classList.contains('m') ? 52 : 90);
 function sizeTimeline() {
   const r = tl.getBoundingClientRect();
   tl.width = Math.max(10, r.width * devicePixelRatio); tl.height = Math.max(10, r.height * devicePixelRatio);
   drawTimeline();
 }
-function tX(t) { const w = tl.width / devicePixelRatio; return TL_LEFT + (t / shot().duration) * (w - TL_LEFT - 14); }
-function xT(x) { const w = tl.width / devicePixelRatio; return ((x - TL_LEFT) / (w - TL_LEFT - 14)) * shot().duration; }
+function tX(t) { const w = tl.width / devicePixelRatio; return tlLeft() + (t / shot().duration) * (w - tlLeft() - 14); }
+function xT(x) { const w = tl.width / devicePixelRatio; return ((x - tlLeft()) / (w - tlLeft() - 14)) * shot().duration; }
 
 function drawTimeline() {
   const dpr = devicePixelRatio, W = tl.width / dpr, H = tl.height / dpr;
@@ -1097,9 +1103,10 @@ function drawTimeline() {
     tg.fillRect(x, 0, 1, s % 5 === 0 ? 10 : 6);
     if (s % (sh.duration > 15 ? 5 : 1) === 0) tg.fillText(s + 's', x + 3, 8);
   }
-  const rows = [['Camera', 22], [selObj() ? selObj().name.slice(0, 12) : 'Oggetto', 42], ['Beat', 62]];
+  const short = document.body.classList.contains('m');
+  const rows = [[short ? 'Cam' : 'Camera', 22], [selObj() ? selObj().name.slice(0, short ? 6 : 12) : (short ? 'Ogg.' : 'Oggetto'), 42], ['Beat', 62]];
   for (const [label, y] of rows) {
-    tg.fillStyle = '#20242a'; tg.fillRect(TL_LEFT, y - 8, W - TL_LEFT - 14, 16);
+    tg.fillStyle = '#20242a'; tg.fillRect(tlLeft(), y - 8, W - tlLeft() - 14, 16);
     tg.fillStyle = '#8b929c'; tg.fillText(label, 8, y);
   }
   const diamond = (x, y, c) => { tg.fillStyle = c; tg.beginPath(); tg.moveTo(x, y - 6); tg.lineTo(x + 6, y); tg.lineTo(x, y + 6); tg.lineTo(x - 6, y); tg.fill(); };
@@ -1146,7 +1153,14 @@ function tlMove(e) {
 
 // ---------------------------------------------------------------- prompt modal
 function copyBtn(getText) {
-  return el('button', { onclick: async () => { try { await navigator.clipboard.writeText(getText()); toast('Copiato'); } catch { toast('Copia non riuscita: seleziona e copia a mano'); } } }, 'Copia');
+  return el('button', { onclick: async () => {
+    const text = getText();
+    try { await navigator.clipboard.writeText(text); toast('Copiato'); return; } catch { /* fall back below */ }
+    const ta = el('textarea', { style: 'position:fixed;top:0;left:0;opacity:0' }, text);
+    document.body.append(ta); ta.focus(); ta.setSelectionRange(0, text.length);
+    const ok = document.execCommand && document.execCommand('copy'); ta.remove();
+    toast(ok ? 'Copiato' : 'Copia non riuscita: tieni premuto sul testo e copia');
+  } }, 'Copia');
 }
 function outBlock(title, text, rows = 18) {
   const ta = el('textarea', { class: 'out', style: `min-height:${rows * 18}px` }, text);
@@ -1230,6 +1244,35 @@ $('#modalClose').addEventListener('click', () => $('#modal').classList.add('hidd
 $('#modal').addEventListener('click', (e) => { if (e.target.id === 'modal') $('#modal').classList.add('hidden'); });
 
 // ---------------------------------------------------------------- export / file menus
+// ---------------------------------------------------------------- file delivery
+// On iPhone the share sheet lets you save straight to Photos/Files or send to the Higgsfield app.
+function toFile(name, data, type) {
+  const blob = data instanceof Blob ? data : (typeof data === 'string' && data.startsWith('data:'))
+    ? (() => { const [h, b] = data.split(','); const bin = atob(b); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], { type: h.match(/:(.*?);/)[1] }); })()
+    : new Blob([data], { type: type || 'text/plain' });
+  return new File([blob], name, { type: blob.type });
+}
+function canShareFiles(files) {
+  try { return document.body.classList.contains('m') && navigator.canShare && navigator.canShare({ files }); } catch { return false; }
+}
+async function deliverFiles(files) {
+  if (canShareFiles(files)) {
+    try { await navigator.share({ files }); return; } catch (e) {
+      if (e && e.name === 'AbortError') return;
+      if (e && e.name === 'NotAllowedError') { offerFiles(files); return; } // user gesture expired (e.g. after recording)
+    }
+  }
+  for (const f of files) { download(f.name, f); await new Promise(r => setTimeout(r, 350)); }
+}
+function offerFiles(files) {
+  const bar = $('#fileOffer');
+  bar.replaceChildren(
+    el('span', {}, files.length > 1 ? `${files.length} file pronti` : `${files[0].name} pronto`),
+    el('button', { class: 'primary', onclick: () => { bar.classList.add('hidden'); deliverFiles(files); } }, 'Salva / Condividi'),
+    el('button', { onclick: () => bar.classList.add('hidden') }, '✕'));
+  bar.classList.remove('hidden');
+}
+
 async function doExport(act) {
   const sh = shot();
   const keepT = app.time;
@@ -1237,18 +1280,17 @@ async function doExport(act) {
     if (act === 'still-start' || act === 'still-end' || act === 'still-depth') {
       const t = act === 'still-end' ? sh.duration : 0;
       const url = renderStill(app, sh, t, { res: '1080p', mode: act === 'still-depth' ? 'depth' : 'studio' });
-      download(`${sh.id}_${act === 'still-end' ? 'end' : 'start'}${act === 'still-depth' ? '_depth' : ''}_blockout.png`, url);
-      toast('PNG esportato');
+      await deliverFiles([toFile(`${sh.id}_${act === 'still-end' ? 'end' : 'start'}${act === 'still-depth' ? '_depth' : ''}_blockout.png`, url)]);
     } else if (act === 'video') {
       toast(`Registrazione in tempo reale: ${sh.duration} s…`);
       const { blob, ext } = await recordBlockingVideo(app, sh, (p) => { $('#timeLabel').textContent = `REC ${Math.round(p * 100)}%`; });
-      download(`${sh.id}_blocking.${ext}`, blob);
-      toast(ext === 'webm' ? 'Video WebM esportato: se Higgsfield lo rifiuta, convertilo in MP4' : 'Video MP4 esportato');
+      const f = toFile(`${sh.id}_blocking.${ext}`, blob);
+      if (document.body.classList.contains('m')) offerFiles([f]); else await deliverFiles([f]); // recording outlives the tap: ask again
+      if (ext === 'webm') toast('Video WebM: se Higgsfield lo rifiuta, convertilo in MP4');
     } else if (act === 'locpack') {
-      for (const v of locationPack(app, sh)) download(`${S().meta.scene}_loc_${v.id}.png`, v.url);
-      toast('Location pack esportato (3 PNG)');
+      await deliverFiles(locationPack(app, sh).map(v => toFile(`${S().meta.scene}_loc_${v.id}.png`, v.url)));
     } else if (act === 'shotlist') {
-      download(`${S().meta.scene}_shotlist.md`, buildShotListMarkdown(S()), 'text/markdown');
+      await deliverFiles([toFile(`${S().meta.scene}_shotlist.md`, buildShotListMarkdown(S()), 'text/markdown')]);
     } else if (act === 'package') {
       const pkg = {
         generator: 'Blocking Studio', shot: sh.id, settings: buildSettings(S(), sh),
@@ -1256,7 +1298,7 @@ async function doExport(act) {
         beats: getBeats(S(), sh), risks: risks(S(), sh, getBeats(S(), sh)), assetBible: buildAssetBible(S()),
         higgsfield: buildMcpRequests(S(), sh, app.lib), project: S(),
       };
-      download(`${sh.id}_package.json`, JSON.stringify(pkg, null, 2), 'application/json');
+      await deliverFiles([toFile(`${sh.id}_package.json`, JSON.stringify(pkg, null, 2), 'application/json')]);
     }
   } catch (err) {
     console.error(err); toast('Errore esportazione: ' + err.message);
@@ -1268,7 +1310,7 @@ async function doExport(act) {
 function fileAction(act) {
   if (act === 'new') { if (!confirm('Nuovo progetto? Le modifiche non salvate in un file andranno perse.')) return; pushUndo(); app.state = newProject(); app.sel = null; tc.detach(); afterLoad(); }
   else if (act === 'demo') { pushUndo(); app.state = demoProject(); app.sel = null; tc.detach(); afterLoad(); }
-  else if (act === 'save') download(`${(S().meta.project || 'progetto').replace(/[^\w-]+/g, '_')}.blocking.json`, JSON.stringify(S(), null, 2), 'application/json');
+  else if (act === 'save') deliverFiles([toFile(`${(S().meta.project || 'progetto').replace(/[^\w-]+/g, '_')}.blocking.json`, JSON.stringify(S(), null, 2), 'application/json')]);
   else if (act === 'open') $('#fileInput').click();
   else if (act === 'lib') $('#libInput').click();
 }
@@ -1358,10 +1400,88 @@ window.addEventListener('keydown', (e) => {
   else if (k === 'f') focusSel();
   else if (k === ' ') { e.preventDefault(); togglePlay(); }
   else if (k === 'delete' || k === 'backspace') deleteSelected();
-  else if (k === 'escape') { if (!$('#modal').classList.contains('hidden')) $('#modal').classList.add('hidden'); else select(null); }
+  else if (k === 'escape') { if (!$('#modal').classList.contains('hidden')) $('#modal').classList.add('hidden'); else if (document.querySelector('.sheet.open')) closeSheets(); else select(null); }
   else if (k === 'arrowright') setTime(app.time + (e.shiftKey ? 1 : 0.1));
   else if (k === 'arrowleft') setTime(app.time - (e.shiftKey ? 1 : 0.1));
 });
+
+// ---------------------------------------------------------------- phone layout (iPhone etc.)
+const phoneMQ = window.matchMedia('(max-width: 760px), (max-height: 500px) and (pointer: coarse)');
+const toolsHome = $('#toolsHome');
+const toolsAnchor = document.createComment('tools');
+toolsHome.parentNode.insertBefore(toolsAnchor, toolsHome);
+let sheetOpen = null;
+
+function applyLayout() {
+  const force = new URLSearchParams(location.search).get('layout');
+  const m = force ? force === 'phone' : phoneMQ.matches;
+  const land = m && window.innerWidth > window.innerHeight;
+  const changed = document.body.classList.contains('m') !== m;
+  document.body.classList.toggle('m', m);
+  document.body.classList.toggle('land', land);
+  if (m && toolsHome.parentNode !== $('#floatTools')) $('#floatTools').append(toolsHome);
+  if (!m && toolsHome.parentNode !== toolsAnchor.parentNode) toolsAnchor.parentNode.insertBefore(toolsHome, toolsAnchor.nextSibling);
+  tc.setSize(m ? 1.35 : 0.85);
+  if (changed) { closeSheets(); updateHud(); }
+  renderSelChip();
+  resize();
+}
+
+function openSheet(name) {
+  if (name === 'prompt') { closeSheets(); openPrompt(); return; }
+  if (sheetOpen === name) { closeSheets(); return; }
+  closeMenus();
+  sheetOpen = name;
+  $('#left').classList.toggle('open', name === 'scene');
+  $('#right').classList.toggle('open', name !== 'scene');
+  if (name !== 'scene') {
+    app.tab = name; renderInspector();
+    $('#rightTitle').textContent = { obj: 'Oggetto', shot: 'Shot e camera', beats: 'Azione (beat)' }[name];
+    $('#right').scrollTop = 0;
+  }
+  document.querySelectorAll('#tabbar button').forEach(b => b.classList.toggle('active', b.dataset.sheet === name));
+}
+function closeSheets() {
+  sheetOpen = null;
+  document.querySelectorAll('.sheet.open').forEach(x => x.classList.remove('open'));
+  document.querySelectorAll('#tabbar button').forEach(b => b.classList.remove('active'));
+}
+document.querySelectorAll('#tabbar button').forEach(b => b.addEventListener('click', () => openSheet(b.dataset.sheet)));
+document.querySelectorAll('.sheet-close').forEach(b => b.addEventListener('click', closeSheets));
+
+// Swipe a sheet down (or right in landscape) by its header to close it.
+document.querySelectorAll('.sheet-head').forEach(h => {
+  let start = null;
+  h.addEventListener('touchstart', (e) => { start = [e.touches[0].clientX, e.touches[0].clientY]; }, { passive: true });
+  h.addEventListener('touchend', (e) => {
+    if (!start) return;
+    const t = e.changedTouches[0]; const dx = t.clientX - start[0], dy = t.clientY - start[1];
+    if (dy > 60 || (document.body.classList.contains('land') && dx > 60)) closeSheets();
+    start = null;
+  });
+});
+
+// Floating chip with the current selection and the actions you need most on a phone.
+function renderSelChip() {
+  const chip = $('#selChip');
+  if (!chip) return;
+  const o = selObj();
+  if (!document.body.classList.contains('m') || !o) { chip.classList.add('hidden'); return; }
+  chip.classList.remove('hidden');
+  const jointTxt = app.poseMode && app.selJoint ? ` · ${JOINT_LABELS[app.selJoint]}` : '';
+  chip.replaceChildren(
+    el('span', { class: 'dot', style: `background:${o.color}` }),
+    el('span', { class: 'nm' }, o.name + jointTxt),
+    el('button', { title: 'Modifica', onclick: () => openSheet('obj') }, '✎'),
+    el('button', { title: 'Key qui', onclick: keyObject }, '◆'),
+    el('button', { title: 'Duplica', onclick: duplicateSelected }, '⧉'),
+    el('button', { title: 'Deseleziona', onclick: () => select(null) }, '✕'),
+  );
+}
+
+phoneMQ.addEventListener('change', applyLayout);
+window.addEventListener('resize', () => { const land = window.innerWidth > window.innerHeight; if (document.body.classList.contains('land') !== (document.body.classList.contains('m') && land)) applyLayout(); });
+window.addEventListener('orientationchange', () => setTimeout(applyLayout, 250));
 
 // ---------------------------------------------------------------- boot
 function renderAllUI() { renderMeta(); renderShots(); renderOutliner(); renderInspector(); updateTimeLabel(); updateHint(); }
@@ -1369,6 +1489,7 @@ buildAddMenu();
 loadLibrary();
 rebuildAll();
 setTool('translate');
+applyLayout();
 setView('free');
 renderAllUI();
 updatePaths();
