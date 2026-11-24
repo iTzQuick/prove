@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blocking Studio</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    { "imports": {
+        "three": "./vendor/three/three.module.js",
+        "three/addons/": "./vendor/three/addons/"
+    } }
+  </script>
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">◧ Blocking Studio <span class="sub">per Higgsfield</span></div>
+    <div class="group" id="addMenu"></div>
+    <div class="sep"></div>
+    <div class="group seg" id="toolSeg">
+      <button data-tool="translate" title="Sposta (W)">Sposta</button>
+      <button data-tool="rotate" title="Ruota (E)">Ruota</button>
+      <button data-tool="scale" title="Scala (R)">Scala</button>
+    </div>
+    <button id="poseBtn" class="toggle" title="Modalità posa: clicca un arto del manichino e ruotalo (P)">Posa</button>
+    <div class="sep"></div>
+    <div class="group seg" id="viewSeg">
+      <button data-view="free" title="Vista libera (V)">Vista libera</button>
+      <button data-view="shot" title="Guarda dalla camera dello shot (V)">Camera shot</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="group">
+      <button id="undoBtn" title="Annulla (Ctrl+Z)">↶</button>
+      <button id="redoBtn" title="Ripeti (Ctrl+Shift+Z)">↷</button>
+      <div class="dropdown">
+        <button id="fileBtn">Progetto ▾</button>
+        <div class="menu" id="fileMenu">
+          <button data-act="new">Nuovo progetto</button>
+          <button data-act="open">Apri progetto (.json)…</button>
+          <button data-act="save">Salva progetto (.json)</button>
+          <hr>
+          <button data-act="demo">Carica scena demo</button>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button id="exportBtn">Esporta ▾</button>
+        <div class="menu" id="exportMenu">
+          <button data-act="still-start">Start frame blockout (PNG)</button>
+          <button data-act="still-end">End frame blockout (PNG)</button>
+          <button data-act="still-depth">Depth map start frame (PNG)</button>
+          <button data-act="video">Video di blocking (@Video 1)</button>
+          <button data-act="locpack">Location pack vuoto (3 viste PNG)</button>
+          <hr>
+          <button data-act="shotlist">Shot list (.md)</button>
+          <button data-act="package">Pacchetto shot completo (.json)</button>
+        </div>
+      </div>
+      <button id="promptBtn" class="primary">Prompt Higgsfield</button>
+    </div>
+  </header>
+
+  <aside id="left">
+    <section>
+      <h3>Progetto</h3>
+      <div id="metaForm"></div>
+    </section>
+    <section>
+      <h3>Shot <button id="addShotBtn" class="mini" title="Nuovo shot">+</button><button id="dupShotBtn" class="mini" title="Duplica shot">⧉</button></h3>
+      <div id="shotList"></div>
+    </section>
+    <section class="grow">
+      <h3>Scena</h3>
+      <div id="outliner"></div>
+    </section>
+  </aside>
+
+  <main id="viewport">
+    <canvas id="c"></canvas>
+    <div id="frameGuide"><div class="thirds"></div><div class="safe"></div></div>
+    <div id="hud"></div>
+    <div id="hint"></div>
+  </main>
+
+  <aside id="right">
+    <div class="tabs" id="inspTabs">
+      <button data-tab="obj">Oggetto</button>
+      <button data-tab="shot">Shot</button>
+      <button data-tab="beats">Azione</button>
+    </div>
+    <div id="inspector"></div>
+  </aside>
+
+  <footer id="timeline">
+    <div class="tl-controls">
+      <button id="playBtn" title="Play/Pausa (Spazio)">▶</button>
+      <span id="timeLabel">0.0 / 8 s</span>
+      <button id="keyObjBtn" title="Key per l'oggetto selezionato al tempo attuale (K)">◆ Key oggetto</button>
+      <button id="keyCamBtn" title="Key per la camera dello shot (C)">◆ Key camera</button>
+      <button id="delKeyBtn" title="Elimina key al tempo attuale">✕ Key</button>
+      <label class="chk"><input type="checkbox" id="loopChk" checked> loop</label>
+    </div>
+    <canvas id="tl"></canvas>
+  </footer>
+
+  <div id="modal" class="hidden">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="modalTitle">Prompt Higgsfield</h2>
+        <button id="modalClose">✕</button>
+      </div>
+      <div class="tabs" id="modalTabs"></div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <input type="file" id="fileInput" accept=".json,application/json" hidden>
+  <div id="toast"></div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

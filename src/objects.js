@@ -1,0 +1,135 @@
+// Primitive and set-piece factory. Every object is a THREE.Group whose origin sits on the floor.
+import * as THREE from 'three';
+import { buildMannequin } from './mannequin.js';
+
+// Named colours: the prompt maps a mannequin colour to its Element tag, so names must be unambiguous.
+export const CHAR_COLORS = [
+  { name: 'red', hex: '#e0453a' }, { name: 'blue', hex: '#3a6fe0' }, { name: 'yellow', hex: '#e8c22e' },
+  { name: 'green', hex: '#3fae5a' }, { name: 'orange', hex: '#ee8a2c' }, { name: 'purple', hex: '#8a4fd8' },
+  { name: 'cyan', hex: '#2fc0cf' }, { name: 'magenta', hex: '#d64598' }, { name: 'white', hex: '#eeeeee' },
+  { name: 'black', hex: '#2a2a2a' },
+];
+
+export function colorName(hex) {
+  const c = new THREE.Color(hex);
+  let best = 'grey', bd = Infinity;
+  for (const k of CHAR_COLORS) {
+    const d = new THREE.Color(k.hex); const dist = (c.r - d.r) ** 2 + (c.g - d.g) ** 2 + (c.b - d.b) ** 2;
+    if (dist < bd) { bd = dist; best = k.name; }
+  }
+  return bd < 0.08 ? best : 'grey';
+}
+
+export const CATALOG = {
+  // kind, label (IT), default role, default colour, English noun for the prompt
+  mannequin: { label: 'Manichino', role: 'character', color: '#e0453a', en: 'person' },
+  cube: { label: 'Cubo', role: 'set', color: '#9a9a9a', en: 'box' },
+  sphere: { label: 'Sfera', role: 'prop', color: '#9a9a9a', en: 'sphere' },
+  cylinder: { label: 'Cilindro', role: 'set', color: '#9a9a9a', en: 'cylinder' },
+  cone: { label: 'Cono', role: 'set', color: '#9a9a9a', en: 'cone' },
+  plane: { label: 'Pavimento', role: 'set', color: '#7d7d7d', en: 'floor' },
+  wall: { label: 'Muro', role: 'set', color: '#b9b4ab', en: 'wall' },
+  doorway: { label: 'Muro con porta', role: 'set', color: '#b9b4ab', en: 'wall with a doorway' },
+  window: { label: 'Muro con finestra', role: 'set', color: '#b9b4ab', en: 'wall with a window' },
+  stairs: { label: 'Scale', role: 'set', color: '#a5a5a5', en: 'staircase' },
+  column: { label: 'Colonna', role: 'set', color: '#b0b0b0', en: 'column' },
+  table: { label: 'Tavolo', role: 'set', color: '#8b6b4a', en: 'table' },
+  chair: { label: 'Sedia', role: 'set', color: '#8b6b4a', en: 'chair' },
+  sofa: { label: 'Divano', role: 'set', color: '#6b6f80', en: 'sofa' },
+  bed: { label: 'Letto', role: 'set', color: '#c9c3b8', en: 'bed' },
+  car: { label: 'Auto', role: 'prop', color: '#4a5a70', en: 'car' },
+  tree: { label: 'Albero', role: 'set', color: '#4f7a45', en: 'tree' },
+  lamp: { label: 'Luce pratica', role: 'set', color: '#ffd27a', en: 'practical lamp' },
+  phone: { label: 'Oggetto piccolo', role: 'prop', color: '#333333', en: 'small object' },
+  bottle: { label: 'Bottiglia', role: 'prop', color: '#2f7a5a', en: 'bottle' },
+  case: { label: 'Valigetta', role: 'prop', color: '#5a4030', en: 'case' },
+};
+
+function std(color, extra = {}) {
+  return new THREE.MeshStandardMaterial({ color, roughness: 0.8, metalness: 0, ...extra });
+}
+
+function box(g, mat, w, h, d, x = 0, y = h / 2, z = 0) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+  m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; g.add(m); return m;
+}
+function cyl(g, mat, rt, rb, h, x = 0, y = h / 2, z = 0, seg = 24) {
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat);
+  m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; g.add(m); return m;
+}
+
+export function buildObject(kind, color) {
+  if (kind === 'mannequin') return buildMannequin(color);
+  const g = new THREE.Group();
+  const mat = std(color);
+  g.userData.materials = [mat];
+  switch (kind) {
+    case 'cube': box(g, mat, 1, 1, 1); break;
+    case 'sphere': { const m = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 20), mat); m.position.y = 0.5; m.castShadow = m.receiveShadow = true; g.add(m); break; }
+    case 'cylinder': cyl(g, mat, 0.5, 0.5, 1); break;
+    case 'cone': { const m = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1, 32), mat); m.position.y = 0.5; m.castShadow = m.receiveShadow = true; g.add(m); break; }
+    case 'plane': { const m = new THREE.Mesh(new THREE.BoxGeometry(10, 0.02, 10), mat); m.position.y = -0.01; m.receiveShadow = true; g.add(m); break; }
+    case 'wall': box(g, mat, 4, 2.8, 0.15); break;
+    case 'doorway':
+      box(g, mat, 1.5, 2.8, 0.15, -1.25); box(g, mat, 1.5, 2.8, 0.15, 1.25); box(g, mat, 1.0, 0.7, 0.15, 0, 2.45); break;
+    case 'window':
+      box(g, mat, 1.4, 2.8, 0.15, -1.3); box(g, mat, 1.4, 2.8, 0.15, 1.3);
+      box(g, mat, 1.2, 0.9, 0.15, 0, 0.45); box(g, mat, 1.2, 0.6, 0.15, 0, 2.5); break;
+    case 'stairs':
+      for (let i = 0; i < 8; i++) box(g, mat, 1.2, 0.18 * (i + 1), 0.28, 0, 0.09 * (i + 1), -i * 0.28);
+      break;
+    case 'column': cyl(g, mat, 0.22, 0.25, 3); break;
+    case 'table':
+      box(g, mat, 1.6, 0.05, 0.9, 0, 0.75);
+      for (const [x, z] of [[-0.72, -0.37], [0.72, -0.37], [-0.72, 0.37], [0.72, 0.37]]) box(g, mat, 0.06, 0.73, 0.06, x, 0.365, z);
+      break;
+    case 'chair':
+      box(g, mat, 0.45, 0.05, 0.45, 0, 0.45); box(g, mat, 0.45, 0.5, 0.05, 0, 0.72, -0.2);
+      for (const [x, z] of [[-0.2, -0.2], [0.2, -0.2], [-0.2, 0.2], [0.2, 0.2]]) box(g, mat, 0.04, 0.43, 0.04, x, 0.215, z);
+      break;
+    case 'sofa':
+      box(g, mat, 2.0, 0.42, 0.9, 0, 0.21); box(g, mat, 2.0, 0.45, 0.2, 0, 0.62, -0.35);
+      box(g, mat, 0.2, 0.25, 0.9, -0.9, 0.54); box(g, mat, 0.2, 0.25, 0.9, 0.9, 0.54); break;
+    case 'bed':
+      box(g, mat, 1.6, 0.5, 2.0, 0, 0.25); box(g, mat, 1.6, 0.6, 0.08, 0, 0.8, -1.0); break;
+    case 'car': {
+      box(g, mat, 1.8, 0.65, 4.4, 0, 0.6);
+      box(g, mat, 1.6, 0.5, 2.2, 0, 1.15, -0.2);
+      const wm = std('#1c1c1c');
+      for (const [x, z] of [[-0.85, 1.4], [0.85, 1.4], [-0.85, -1.4], [0.85, -1.4]]) {
+        const w = new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.33, 0.22, 20), wm);
+        w.rotation.z = Math.PI / 2; w.position.set(x, 0.33, z); w.castShadow = true; g.add(w);
+      }
+      break;
+    }
+    case 'tree': {
+      cyl(g, std('#6b4b32'), 0.12, 0.18, 2.2);
+      const c = new THREE.Mesh(new THREE.SphereGeometry(1.2, 16, 12), mat); c.position.y = 3; c.castShadow = true; g.add(c);
+      break;
+    }
+    case 'lamp': {
+      cyl(g, std('#555555'), 0.02, 0.02, 1.5);
+      cyl(g, std('#444444'), 0.15, 0.15, 0.03);
+      const shade = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.22, 0.25, 20, 1, true), std(color, { emissive: color, emissiveIntensity: 0.6, side: THREE.DoubleSide }));
+      shade.position.y = 1.55; g.add(shade);
+      const light = new THREE.PointLight(color, 4, 8, 1.6);
+      light.position.y = 1.5; light.castShadow = false; g.add(light);
+      g.userData.light = light;
+      g.userData.materials = [shade.material];
+      break;
+    }
+    case 'phone': box(g, mat, 0.075, 0.15, 0.01, 0, 0.075); break;
+    case 'bottle': cyl(g, mat, 0.035, 0.04, 0.3, 0, 0.15, 0, 16); break;
+    case 'case': box(g, mat, 0.45, 0.33, 0.1, 0, 0.165); break;
+    default: box(g, mat, 1, 1, 1);
+  }
+  return g;
+}
+
+export function setObjectColor(group, color) {
+  for (const m of group.userData.materials || []) {
+    m.color.set(color);
+    if (m.emissive && m.emissiveIntensity > 0) m.emissive.set(color);
+  }
+  if (group.userData.light) group.userData.light.color.set(color);
+}
