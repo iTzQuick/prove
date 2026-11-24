@@ -40,6 +40,15 @@ Al primo avvio si apre una scena demo con due shot. *Progetto → Nuovo progetto
 
 Il prompt sa da solo **chi è in campo** e conta solo quello. È la regola della skill: ciò che è fuori campo non esiste. Mappa il colore di ogni manichino sul suo `@tag`, così il video di blocking guida camera e blocking senza che il modello ne copi forme o materiali.
 
+## Collegamento al connettore Higgsfield
+
+Il browser non può chiamare Higgsfield direttamente: fa da ponte Claude, in una sessione collegata al connettore.
+
+- **Libreria Elements**: `higgsfield/elements.json` (sincronizzato dal connettore, escluso da git) oppure *Progetto → Importa libreria Elements*. Il campo @tag suggerisce i tuoi Element, segnala con ✓/⚠ se esistono e compila descrizione e altezza dall'Element.
+- **Prompt Higgsfield → tab Connettore**: parametri pronti per `generate_image` (keyframe GPT Image 2.6, Element come `<<<id>>>`) e `generate_video` (Seedance 2.5 / Cinema Studio 4.0, `omni_reference`, start frame, Element come `@Image N`, blocking come `@Video 1`, bozza a 480p).
+- **Esportatore**: `node tools/handoff.cjs [progetto.json] [--shots SC01_SH02]` crea `handoff/<SHOT>/` con blockout PNG, video di blocking e `request.json`.
+- Poi chiedi a Claude, ad esempio, *"genera keyframe SC01_SH02"* o *"genera bozza SC01_SH02"*. Claude carica i file, risolve gli Element, ti mostra il costo e **chiede conferma prima di spendere crediti**. La procedura è in `CLAUDE.md`.
+
 ## Scorciatoie
 
 `W` `E` `R` sposta/ruota/scala · `P` posa · `K` key oggetto · `C` key camera · `V` vista libera/camera · `F` centra · `Spazio` play · `←` `→` scorri (Shift = 1 s) · `Ctrl+Z` / `Ctrl+Shift+Z` · `Ctrl+D` duplica · `Canc` elimina

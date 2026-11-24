@@ -568,7 +568,8 @@ export function buildVideoPrompt(state, shot, opts = {}) {
   const refs = referencesBlock(state, shot, { video: useVideo ? '@Video 1' : null });
   const charTxt = cast(state, shot).map(o => {
     const h = (+(o.height || 1.8)).toFixed(2);
-    return `${refName(o)}${o.desc ? ': ' + o.desc.trim().replace(/\.$/, '') : ''}, ${h} m tall`;
+    const d = (o.desc || '').trim().replace(/\s*No (people, )?(no )?text\.?$/i, '').replace(/\.$/, '');
+    return `${refName(o)}${d ? ': ' + d : ''}, ${h} m tall`;
   }).join('. ');
   const subj = mainSubject(state, shot, 0);
   const scene = shot.purpose && shot.purpose.trim() ? shot.purpose.trim().replace(/\.$/, '') + '.' :
@@ -728,4 +729,84 @@ export function hudInfo(state, shot, t) {
   const subj = mainSubject(state, shot, t);
   const c = sampleCam(shot, t);
   return { size: subj ? `${subj.f.size} · ${refName(subj.o)}` : 'nessun personaggio in campo', focal: Math.round(c.focal), height: r1(c.p[1]) };
+}
+
+// ---------- Higgsfield connector (MCP) requests ----------
+// Parameters verified with models_explore on 24 Nov 2026:
+//  seedance_2_5 / cinematic_studio_video_4_0: mode omni_reference, duration 4-30, resolution, aspect_ratio,
+//  generate_audio, draft (Seedance only); media roles start_image, end_image, image_references,
+//  video_references, audio_references. gpt_image_2_6: quality, resolution, image_references (max 16),
+//  Element placeholders <<<element_id>>> honoured in the prompt.
+export const MCP_VIDEO_MODEL = { seedance_2_5: 'seedance_2_5', cs4: 'cinematic_studio_video_4_0' };
+
+const bare = (t) => (t || '').trim().replace(/^@/, '');
+export function findElement(lib, tag) {
+  const n = bare(tag).toLowerCase();
+  if (!n || !lib) return null;
+  return lib.find(e => e.name.toLowerCase() === n || bare(e.display_name || '').toLowerCase() === n) || null;
+}
+
+function shotTags(state, shot) {
+  const tags = [...cast(state, shot), ...shotProps(state, shot), ...setPieces(state)].filter(o => o.tag).map(o => refName(o));
+  if (state.meta.locationTag) tags.push(refName({ tag: state.meta.locationTag }));
+  return [...new Set(tags)];
+}
+
+function replaceTag(text, tag, rep) {
+  const esc = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return text.replace(new RegExp(esc + '(?![a-z0-9_])', 'g'), rep);
+}
+
+export function buildMcpRequests(state, shot, lib) {
+  const tags = shotTags(state, shot);
+  const found = [], missing = [];
+  for (const t of tags) { const e = findElement(lib, t); if (e) found.push({ tag: t, element: e }); else missing.push(t); }
+  const notes = [];
+  if (missing.length) notes.push(`Element non trovati nella libreria: ${missing.join(', ')}. Crea gli Element o correggi i tag prima delle finali.`);
+
+  // Keyframe: GPT Image 2.6 with the blockout as @Image 1, Elements through <<<id>>> placeholders.
+  let kfPrompt = buildKeyframePrompt(state, shot, 'start');
+  for (const f of found) kfPrompt = replaceTag(kfPrompt, f.tag, `<<<${f.element.id}>>>`);
+  const keyframe = {
+    tool: 'generate_image',
+    params: {
+      model: 'gpt_image_2_6', aspect_ratio: shot.aspect, quality: 'high', resolution: '2k',
+      prompt: kfPrompt,
+      medias: [{ role: 'image_references', value: `upload:${shot.id}_start_blockout.png` }],
+    },
+  };
+
+  // Video: Seedance 2.5 / Cinema Studio 4.0. Elements go as image_references, bound as @Image N.
+  let video = null;
+  const model = MCP_VIDEO_MODEL[shot.model];
+  if (!model) {
+    notes.push(`${MODELS[shot.model].label}: richiesta via connettore preparata solo per Seedance 2.5 e Cinema Studio 4.0. Usa il prompt del tab Video nell'interfaccia web.`);
+  } else {
+    // Director's Panel ids are not exposed through the connector: send the full-text prompt
+    // (style, lens and lighting written out) instead of relying on panel settings.
+    let vPrompt = buildVideoPrompt(state, { ...shot, model: 'seedance_2_5' });
+    const medias = [];
+    if (shot.useStartFrame) medias.push({ role: 'start_image', value: `job:${shot.id}_keyframe_start` });
+    found.forEach((f, i) => {
+      medias.push({ role: 'image_references', value: `element:${f.element.id}` });
+      vPrompt = replaceTag(vPrompt, f.tag, `@Image ${i + 1}`);
+    });
+    if (shot.useBlockingVideo) medias.push({ role: 'video_references', value: `upload:${shot.id}_blocking.mp4` });
+    const params = {
+      model, mode: 'omni_reference', duration: Math.round(shot.duration), aspect_ratio: shot.aspect,
+      resolution: '480p', generate_audio: !shot.musicVideo, prompt: vPrompt, medias,
+    };
+    if (model === 'seedance_2_5') params.draft = true;
+    video = { tool: 'generate_video', params, final: model === 'seedance_2_5' ? { draft_job_id: 'job:<bozza approvata>', resolution: shot.resolution } : { resolution: shot.resolution } };
+    if (found.length) notes.push(`Legami: ${found.map((f, i) => `@Image ${i + 1} = ${f.tag}`).join(', ')}${shot.useBlockingVideo ? ', @Video 1 = blocking' : ''}.`);
+  }
+  return {
+    shot: shot.id, keyframe, video, notes,
+    elements: found.map(f => ({ tag: f.tag, id: f.element.id, category: f.element.category })), missing,
+    placeholders: {
+      'upload:<file>': 'file del pacchetto da caricare con media_upload + media_confirm',
+      'element:<id>': 'immagine dell\'Element (elements_get → image_url → media_import_url)',
+      'job:<nome>': 'job_id della generazione precedente approvata',
+    },
+  };
 }

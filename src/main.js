@@ -7,12 +7,14 @@ import { sampleObject, sampleCam, setKey, removeKeyNear, ASPECTS, applyCamToThre
 import {
   MODELS, RIGS, PANEL, LIGHT_PRESETS, refName, autoBeats, getBeats, cameraMove, buildVideoPrompt, buildKeyframePrompt,
   buildLocationPrompts, buildSheetPrompt, buildSettings, buildAssetBible, buildShotListMarkdown, hudInfo, risks, costEstimate,
+  buildMcpRequests, findElement,
 } from './prompt.js';
-import { renderStill, download, recordBlockingVideo, locationPack } from './export.js';
+import { renderStill, download, recordBlockingVideo, locationPack, exportSize } from './export.js';
 
 const D2R = Math.PI / 180;
 const $ = (s) => document.querySelector(s);
 const STORE_KEY = 'blocking-studio-v1';
+const LIB_KEY = 'blocking-studio-elements';
 
 // ---------------------------------------------------------------- state
 function uid() { return 'o' + Math.random().toString(36).slice(2, 9); }
@@ -133,6 +135,53 @@ const app = {
   sel: null, selJoint: null, needsApply: true, exporting: false, tab: 'obj', undo: [], redo: [],
 };
 window.app = app; // handy for debugging from the console
+
+// ---------------------------------------------------------------- Higgsfield Elements library
+// Synced from the Higgsfield connector into higgsfield/elements.json (git-ignored), or imported by hand.
+app.lib = [];
+function setLibrary(list, source) {
+  app.lib = (list || []).filter(e => e && e.id && e.name);
+  try { localStorage.setItem(LIB_KEY, JSON.stringify(app.lib)); } catch (e) { /* ignore */ }
+  const dl = document.getElementById('elementsList'), dlLoc = document.getElementById('elementsLocList');
+  const opt = (e) => el('option', { value: '@' + e.name }, `${e.category.replace('auto:', '')} · ${e.description.slice(0, 70)}`);
+  dl.replaceChildren(...app.lib.filter(e => !/environment/.test(e.category)).map(opt));
+  dlLoc.replaceChildren(...app.lib.filter(e => /environment/.test(e.category)).map(opt));
+  if (source) toast(`Libreria Elements: ${app.lib.length} elementi (${source})`);
+  if (typeof renderInspector === 'function' && document.getElementById('inspector')) { renderInspector(); renderMeta(); }
+}
+async function loadLibrary() {
+  try { const s = localStorage.getItem(LIB_KEY); if (s) setLibrary(JSON.parse(s)); } catch (e) { /* ignore */ }
+  try {
+    const r = await fetch('higgsfield/elements.json', { cache: 'no-store' });
+    if (r.ok) { const j = await r.json(); setLibrary(j.elements || j, 'higgsfield/elements.json'); }
+  } catch (e) { /* file not present */ }
+}
+// Fill fixed description and height from the Element when the tag matches.
+function applyElementToObject(o) {
+  const e = findElement(app.lib, o.tag);
+  if (!e) return;
+  o.desc = e.description; // the Element is the source of truth for what must stay fixed
+  const cm = /(\d{3})\s?cm/.exec(e.description);
+  if (o.kind === 'mannequin' && cm && !/with tail|with ears/.test(e.description)) o.height = +(cm[1] / 100).toFixed(2);
+}
+// Keep hand-written beats and loglines in sync when a tag is renamed.
+function renameTagEverywhere(oldTag, newTag) {
+  if (!oldTag || !newTag || oldTag === newTag) return;
+  const re = new RegExp(oldTag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![a-z0-9_])', 'g');
+  for (const sh of S().shots) {
+    sh.purpose = (sh.purpose || '').replace(re, newTag);
+    sh.audio = (sh.audio || '').replace(re, newTag);
+    sh.locks = (sh.locks || '').replace(re, newTag);
+    for (const b of sh.beats || []) b.text = b.text.replace(re, newTag);
+  }
+}
+function libPill(tag) {
+  if (!tag) return null;
+  if (!app.lib.length) return el('div', { class: 'field-help' }, 'Libreria Elements non caricata: Progetto → Importa libreria Elements.');
+  const e = findElement(app.lib, tag);
+  return e ? el('div', { class: 'field-help', style: 'color:#7fd18f' }, `✓ Element trovato su Higgsfield (${e.category.replace('auto:', '')})`)
+    : el('div', { class: 'field-help', style: 'color:#f3c37a' }, '⚠ Non è nella tua libreria Elements: crealo o correggi il tag.');
+}
 const S = () => app.state;
 const shot = () => S().shots[S().current] || S().shots[0];
 
@@ -624,7 +673,15 @@ function renderMeta() {
     ...row('Look', input(m.look, set('look'), { placeholder: 'realistic live action' })),
     el('label', {}, 'Style lock (riga identica in ogni prompt)'),
     textarea(m.styleLock, set('styleLock'), { rows: 2, placeholder: 'es. Look: strongly faceted low-poly 3D, …' }),
-    ...row('Location @', input(m.locationTag, set('locationTag'), { placeholder: '@loc_room_time_v1' })),
+    ...row('Location @', input(m.locationTag, (v) => {
+      const old = m.locationTag;
+      m.locationTag = v.trim() ? '@' + v.trim().replace(/^@/, '') : '';
+      renameTagEverywhere(old, m.locationTag);
+      const e = findElement(app.lib, m.locationTag);
+      if (e) m.locationDesc = e.description.replace(/\s*No people, no text\.?$/i, '');
+      changed(); renderMeta();
+    }, { placeholder: '@loc_room_time_v1', list: 'elementsLocList' })),
+    libPill(m.locationTag),
     el('label', {}, 'Descrizione location (EN)'),
     textarea(m.locationDesc, set('locationDesc'), { rows: 2, placeholder: 'architecture, materials, key furniture' }),
     ...row('Ora del giorno', input(m.timeOfDay, set('timeOfDay'), { placeholder: 'dusk, noon, night…' })),
@@ -734,7 +791,8 @@ function inspectorObject() {
   const info = el('div', { class: 'box' },
     el('h4', {}, el('span', {}, CATALOG[o.kind].label), sh.tracks[o.id]?.length ? el('span', { class: 'pill' }, `${sh.tracks[o.id].length} key in ${sh.id}`) : el('span', { class: 'pill' }, 'statico')),
     ...row('Nome', input(o.name, v => { o.name = v; refreshLabel(o); changed({ lists: true }); })),
-    ...row('@tag Element', input(o.tag, v => { o.tag = v.trim() ? '@' + v.trim().replace(/^@/, '').toLowerCase().replace(/[^a-z0-9_]+/g, '_') : ''; refreshLabel(o); changed({ lists: true }); renderInspector(); }, { placeholder: o.kind === 'mannequin' ? '@char_nome_look_v1' : '@prop_oggetto_v1' })),
+    ...row('@tag Element', input(o.tag, v => { const old = o.tag; o.tag = v.trim() ? '@' + v.trim().replace(/^@/, '').toLowerCase().replace(/[^a-z0-9_]+/g, '_') : ''; renameTagEverywhere(old, o.tag); applyElementToObject(o); refreshLabel(o); changed({ lists: true }); renderInspector(); }, { placeholder: o.kind === 'mannequin' ? '@char_nome_look_v1' : '@prop_oggetto_v1', list: 'elementsList' })),
+    libPill(o.tag),
     o.kind === 'mannequin' ? null : row('Ruolo', select_(o.role, [['set', 'Set / arredo'], ['prop', 'Oggetto di scena']], v => { o.role = v; changed(); })),
     el('label', {}, 'Descrizione fissa (EN, cosa non deve cambiare)'),
     textarea(o.desc, v => { o.desc = v; changed(); }, { rows: 2, placeholder: o.kind === 'mannequin' ? 'age, hair, outfit head to toe, shoes, accessories' : 'size, materials, colours, unique details' }),
@@ -1104,7 +1162,7 @@ function openPrompt(tab) {
 function renderModal() {
   const sh = shot();
   $('#modalTitle').textContent = `Prompt Higgsfield — ${sh.id}`;
-  const tabs = [['video', 'Video'], ['keyframe', 'Keyframe'], ['elements', 'Elements'], ['location', 'Location'], ['shotlist', 'Shot list'], ['workflow', 'Flusso di lavoro']];
+  const tabs = [['video', 'Video'], ['keyframe', 'Keyframe'], ['higgsfield', 'Connettore'], ['elements', 'Elements'], ['location', 'Location'], ['shotlist', 'Shot list'], ['workflow', 'Flusso di lavoro']];
   $('#modalTabs').replaceChildren(...tabs.map(([k, l]) => el('button', { class: k === modalTab ? 'active' : '', onclick: () => { modalTab = k; renderModal(); } }, l)));
   const body = $('#modalBody');
   const st = S();
@@ -1122,6 +1180,18 @@ function renderModal() {
     B.push(el('div', { class: 'note', html: '1. <b>Esporta → Start frame blockout</b> (PNG pulito, senza griglia né gizmo).<br>2. In <b>GPT Image 2.6</b> o <b>Nano Banana Pro</b> allega il PNG come <b>@Image 1</b> + gli Element dei personaggi e della location.<br>3. Approva il keyframe e usalo come start frame nello shot video. Riusare lo stesso keyframe mantiene la continuità tra clip.' }));
     B.push(...outBlock('Keyframe START (EN)', buildKeyframePrompt(st, sh, 'start'), 16));
     B.push(...outBlock('Keyframe END (EN) — per start/end frame', buildKeyframePrompt(st, sh, 'end'), 16));
+  } else if (modalTab === 'higgsfield') {
+    const req = buildMcpRequests(st, sh, app.lib);
+    B.push(el('div', { class: 'note', html:
+      `Richieste pronte per il <b>connettore Higgsfield</b>. In una sessione Claude collegata a Higgsfield scrivi:<br><span class="kbd">genera bozza ${esc(sh.id)}</span> · <span class="kbd">genera keyframe ${esc(sh.id)}</span> · <span class="kbd">finalizza ${esc(sh.id)}</span><br>` +
+      'Claude esporta il pacchetto (blockout + video di blocking), carica i file, calcola il costo e <b>chiede conferma prima di spendere crediti</b>.' }));
+    B.push(el('div', { class: 'out-head' }, el('b', {}, `Elements (${req.elements.length} trovati, ${req.missing.length} mancanti)`)));
+    B.push(el('ul', { class: 'settings' },
+      ...req.elements.map(e => el('li', {}, `✓ ${e.tag} → ${e.id}`)),
+      ...req.missing.map(t => el('li', { style: 'color:#f3c37a' }, `⚠ ${t} — non trovato`))));
+    req.notes.forEach(n => B.push(el('div', { class: 'risk' }, n)));
+    B.push(...outBlock('1. Keyframe — generate_image', JSON.stringify(req.keyframe, null, 2), 12));
+    if (req.video) B.push(...outBlock('2. Video bozza — generate_video', JSON.stringify(req.video, null, 2), 16));
   } else if (modalTab === 'elements') {
     const rows = buildAssetBible(st);
     B.push(el('div', { class: 'note' }, 'Asset bible: un Element per ogni personaggio, oggetto ricorrente e location. Mai sovrascrivere: crea _v2.'));
@@ -1183,7 +1253,8 @@ async function doExport(act) {
       const pkg = {
         generator: 'Blocking Studio', shot: sh.id, settings: buildSettings(S(), sh),
         prompts: { video: buildVideoPrompt(S(), sh), keyframeStart: buildKeyframePrompt(S(), sh, 'start'), keyframeEnd: buildKeyframePrompt(S(), sh, 'end') },
-        beats: getBeats(S(), sh), risks: risks(S(), sh, getBeats(S(), sh)), assetBible: buildAssetBible(S()), project: S(),
+        beats: getBeats(S(), sh), risks: risks(S(), sh, getBeats(S(), sh)), assetBible: buildAssetBible(S()),
+        higgsfield: buildMcpRequests(S(), sh, app.lib), project: S(),
       };
       download(`${sh.id}_package.json`, JSON.stringify(pkg, null, 2), 'application/json');
     }
@@ -1199,6 +1270,7 @@ function fileAction(act) {
   else if (act === 'demo') { pushUndo(); app.state = demoProject(); app.sel = null; tc.detach(); afterLoad(); }
   else if (act === 'save') download(`${(S().meta.project || 'progetto').replace(/[^\w-]+/g, '_')}.blocking.json`, JSON.stringify(S(), null, 2), 'application/json');
   else if (act === 'open') $('#fileInput').click();
+  else if (act === 'lib') $('#libInput').click();
 }
 $('#fileInput').addEventListener('change', async (e) => {
   const f = e.target.files[0]; if (!f) return;
@@ -1210,6 +1282,47 @@ $('#fileInput').addEventListener('change', async (e) => {
   } catch (err) { toast('Impossibile aprire: ' + err.message); }
   e.target.value = '';
 });
+
+$('#libInput').addEventListener('change', async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  try { const j = JSON.parse(await f.text()); setLibrary(j.elements || j, f.name); } catch (err) { toast('File libreria non valido'); }
+  e.target.value = '';
+});
+
+// ---------------------------------------------------------------- headless API (tools/handoff.mjs)
+// Used by the exporter that prepares files for the Higgsfield connector.
+function blobToBase64(blob) {
+  return new Promise((res) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.readAsDataURL(blob); });
+}
+window.blocking = {
+  loadProject(st) { app.state = st; app.sel = null; tc.detach(); afterLoad(); return S().shots.map(s => s.id); },
+  setLibrary(list) { setLibrary(list); },
+  shotIds() { return S().shots.map(s => s.id); },
+  async exportShot(id, { video = true } = {}) {
+    const i = S().shots.findIndex(s => s.id === id);
+    if (i < 0) throw new Error('shot non trovato: ' + id);
+    S().current = i; app.time = 0;
+    const sh = shot();
+    const out = {
+      files: {
+        [`${sh.id}_start_blockout.png`]: renderStill(app, sh, 0, { res: '1080p' }).split(',')[1],
+        [`${sh.id}_end_blockout.png`]: renderStill(app, sh, sh.duration, { res: '1080p' }).split(',')[1],
+      },
+    };
+    if (video) {
+      const { blob, ext } = await recordBlockingVideo(app, sh);
+      out.files[`${sh.id}_blocking.${ext}`] = await blobToBase64(blob);
+    }
+    const beats = getBeats(S(), sh);
+    out.package = {
+      generator: 'Blocking Studio', shot: sh.id, exportSize: exportSize(sh, '1080p'),
+      settings: buildSettings(S(), sh),
+      prompts: { video: buildVideoPrompt(S(), sh), keyframeStart: buildKeyframePrompt(S(), sh, 'start'), keyframeEnd: buildKeyframePrompt(S(), sh, 'end') },
+      beats, risks: risks(S(), sh, beats), higgsfield: buildMcpRequests(S(), sh, app.lib),
+    };
+    return out;
+  },
+};
 
 $('#exportBtn').addEventListener('click', (e) => { e.stopPropagation(); toggleMenu($('#exportMenu')); });
 $('#fileBtn').addEventListener('click', (e) => { e.stopPropagation(); toggleMenu($('#fileMenu')); });
@@ -1253,6 +1366,7 @@ window.addEventListener('keydown', (e) => {
 // ---------------------------------------------------------------- boot
 function renderAllUI() { renderMeta(); renderShots(); renderOutliner(); renderInspector(); updateTimeLabel(); updateHint(); }
 buildAddMenu();
+loadLibrary();
 rebuildAll();
 setTool('translate');
 setView('free');

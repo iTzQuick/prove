@@ -38,6 +38,7 @@
           <button data-act="new">Nuovo progetto</button>
           <button data-act="open">Apri progetto (.json)…</button>
           <button data-act="save">Salva progetto (.json)</button>
+          <button data-act="lib">Importa libreria Elements (.json)…</button>
           <hr>
           <button data-act="demo">Carica scena demo</button>
         </div>
@@ -114,6 +115,9 @@
   </div>
 
   <input type="file" id="fileInput" accept=".json,application/json" hidden>
+  <input type="file" id="libInput" accept=".json,application/json" hidden>
+  <datalist id="elementsList"></datalist>
+  <datalist id="elementsLocList"></datalist>
   <div id="toast"></div>
   <script type="module" src="src/main.js"></script>
 </body>
