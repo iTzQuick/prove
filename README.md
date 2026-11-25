@@ -41,6 +41,22 @@ I 5 numeri della mappa sono i 5 shot: il numero è la posizione della camera, la
 I pezzi sono nel menu *Aggiungi → Arena*. Per rigenerare il progetto: `node tools/make-arena.mjs`. Le misure della piantina sono in `src/arena-map.js`.
 Nei prompt lo stile è descritto con parole generiche (paradiso artificiale, fiori saturi, design retro-futurista anni '70), senza nomi di film né di franchise.
 
+## Persia (mappa low-poly)
+
+*Progetto → Carica Persia (mappa low-poly)* apre l'intera città persiana costruita dagli Element low-poly di Higgsfield:
+- città murata di circa 380 × 400 m con porta a sud, case in argilla con cupolette e torri del vento;
+- **palazzo** con iwan turchese e oro, due minareti sul portale e cupola d'oro su base alta;
+- **giardino del palazzo** (chahar bagh): vasca lunga, fontana ottagonale turchese, due file di cipressi, aiuole di rose rosse, viali in cotto, 12 lanterne accese, portale verso la piazza;
+- **piazza** con portici a due piani e vasca centrale;
+- **bazar coperto** con volte a campate e lame di sole, banco degli ottoni a sinistra, banco di tappeti e spezie a destra, tende zafferano e indaco; in fondo il portale turchese della **moschea** (cupola turchese, due minareti) con il santuario dalla cupola d'oro;
+- **terrazza sul bazar** con due tende a righe, tre lanterne, panca, due giare e kilim viola arrotolato;
+- fuori: dune, tre piramidi a sud-ovest, montagne blu a nord, nuvole sfaccettate e cielo al tramonto con il sole a ovest.
+
+I 4 shot sono le 4 location Element: `SC01_SH01` aerea al tramonto (`@loc_lp_persia_sky_sunset_v1`), `SC01_SH02` giardino all'ora blu (`@loc_lp_palace_garden_bluehour_v1`), `SC01_SH03` vicolo del bazar (`@loc_lp_bazar_alley_sunset_v1`), `SC01_SH04` terrazza (`@loc_lp_bazar_rooftop_sunset_v1`).
+Ogni shot ha la sua **Location di questo shot** (tab *Shot*): vuota = usa quella del progetto. Il campo JSON `onlyPieces` dice quali pezzi sono davvero visibili nello shot, così il prompt non cita ciò che è coperto dai muri.
+Principessa, Lova persiano, Djinn, tappeto volante e lampada magica sono già sulla terrazza con il loro `@tag`, **nascosti**: tocca l'occhio nella lista *Scena* per usarli.
+I pezzi sono nel menu *Aggiungi → Persia*. Per rigenerare il progetto: `node tools/make-persia.mjs`; le misure sono in `src/persia-map.js`.
+
 ## Cosa fa
 
 | Area | Funzioni |
@@ -90,6 +106,8 @@ src/mannequin.js    manichino articolato e pose
 src/objects.js      forme, set e oggetti
 src/anim.js         keyframe, interpolazione, lente/campo visivo
 src/prompt.js       analisi della scena e scrittura dei prompt Higgsfield
+src/arena*.js       kit Arena (piantina + pezzi)
+src/persia*.js      kit Persia low-poly (piantina + pezzi)
 src/export.js       frame puliti, depth, video di blocking, location pack
 vendor/three/       Three.js r160 (MIT)
 ```

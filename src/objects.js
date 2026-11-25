@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import { buildMannequin } from './mannequin.js';
 import { buildArenaPiece, isArenaKind } from './arena.js';
 import { KIT_CENTER } from './arena-map.js';
+import { buildPersiaPiece, isPersiaKind } from './persia.js';
+import { PERSIA_CENTER } from './persia-map.js';
 
 // Named colours: the prompt maps a mannequin colour to its Element tag, so names must be unambiguous.
 export const CHAR_COLORS = [
@@ -55,8 +57,32 @@ export const CATALOG = {
   arena_hub: { label: 'Centro (fiore di metallo)', role: 'set', color: '#d4a640', en: 'golden metal blossom sculpture on a round white dais', arena: true },
   arena_plates: { label: '24 pedane', role: 'set', color: '#b8bcc2', en: 'ring of 24 round metal launch plates', arena: true },
   arena_shield: { label: 'Scudo (bordo)', role: 'set', color: '#7fe6d0', en: 'force-field boundary', lock: true, arena: true },
+  // Persia kit (low-poly city from the Higgsfield Elements; each piece knows where it belongs: `at`).
+  persia_sky: { label: 'Cielo al tramonto', role: 'set', color: '#c54b8d', en: 'sunset sky', lock: true, persia: true, far: true },
+  persia_desert: { label: 'Deserto e dune', role: 'set', color: '#e4c48c', en: 'desert dunes', lock: true, persia: true, far: true },
+  persia_clouds: { label: 'Nuvole', role: 'set', color: '#ff8fa8', en: 'faceted sunset clouds', lock: true, persia: true, far: true },
+  persia_mountains: { label: 'Montagne blu', role: 'set', color: '#3f5693', en: 'blue mountains on the horizon', lock: true, persia: true, far: true },
+  persia_pyramids: { label: 'Tre piramidi', role: 'set', color: '#d9b071', en: 'three pyramids in the desert', lock: true, persia: true, far: true },
+  persia_ground: { label: 'Terreno città', role: 'set', color: '#e8cfa2', en: 'city ground', lock: true, persia: true },
+  persia_walls: { label: 'Mura e porta sud', role: 'set', color: '#b98f63', en: 'city walls with the main gate', persia: true },
+  persia_houses: { label: 'Case della città', role: 'set', color: '#d8b88a', en: 'flat-roofed clay houses with small domes and wind towers', persia: true },
+  persia_meydan: { label: 'Piazza e portici', role: 'set', color: '#d3c3a0', en: 'great square with arcades and a long pool', persia: true },
+  persia_palace: { label: 'Palazzo, iwan e cupola d\'oro', role: 'set', color: '#e3ad3b', en: 'palace with a turquoise-and-gold iwan and a gold dome', persia: true },
+  persia_garden: { label: 'Giardino del palazzo', role: 'set', color: '#5d8e3c', en: 'palace garden with a reflecting pool, fountain and cypresses', persia: true },
+  persia_bazaar: { label: 'Bazar coperto', role: 'set', color: '#f2a01f', en: 'covered bazaar alley', persia: true },
+  persia_rooftop: { label: 'Terrazza sul bazar', role: 'set', color: '#c0623a', en: 'rooftop terrace above the bazaar', persia: true },
+  persia_mosque: { label: 'Moschea turchese e minareti', role: 'set', color: '#24aeb0', en: 'mosque with a turquoise dome, two minarets and a gold-domed shrine', persia: true },
+  persia_carpet: { label: 'Tappeto volante', role: 'prop', color: '#2b3a8f', en: 'flying carpet', tag: '@prop_flying_carpet_lp_v1', cm: 200 },
+  persia_lamp: { label: 'Lampada magica', role: 'prop', color: '#c99a3e', en: 'brass oil lamp', tag: '@prop_magic_lamp_lp_v1', cm: 30 },
 };
-for (const [k, v] of Object.entries(CATALOG)) if (v.arena) v.at = [KIT_CENTER[k][0], 0, KIT_CENTER[k][1]];
+for (const [k, v] of Object.entries(CATALOG)) {
+  if (v.arena) v.at = [KIT_CENTER[k][0], 0, KIT_CENTER[k][1]];
+  if (v.persia) v.at = [PERSIA_CENTER[k][0], 0, PERSIA_CENTER[k][1]];
+}
+// Far clip needed by the scene: the Persia sky and horizon sit kilometres away.
+export function sceneFar(state) {
+  return state && state.objects.some(o => !o.hidden && CATALOG[o.kind] && CATALOG[o.kind].far) ? 9500 : 500;
+}
 
 function std(color, extra = {}) {
   return new THREE.MeshStandardMaterial({ color, roughness: 0.8, metalness: 0, ...extra });
@@ -74,6 +100,7 @@ function cyl(g, mat, rt, rb, h, x = 0, y = h / 2, z = 0, seg = 24) {
 export function buildObject(kind, color) {
   if (kind === 'mannequin') return buildMannequin(color);
   if (isArenaKind(kind)) return buildArenaPiece(kind, color);
+  if (isPersiaKind(kind)) return buildPersiaPiece(kind, color);
   const g = new THREE.Group();
   const mat = std(color);
   g.userData.materials = [mat];

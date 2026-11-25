@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import { POSES, JOINTS, JOINT_LABELS, applyPose, readPose, clonePose, setMannequinColor } from './mannequin.js';
-import { CATALOG, CHAR_COLORS, buildObject, setObjectColor, colorName } from './objects.js';
+import { CATALOG, CHAR_COLORS, buildObject, setObjectColor, colorName, sceneFar } from './objects.js';
 import { sampleObject, sampleCam, setKey, removeKeyNear, ASPECTS, applyCamToThree } from './anim.js';
 import {
   MODELS, RIGS, PANEL, LIGHT_PRESETS, refName, autoBeats, getBeats, cameraMove, buildVideoPrompt, buildKeyframePrompt,
@@ -51,7 +51,7 @@ function makeRecord(kind, opts = {}, existing = []) {
   }
   const n = existing.filter(o => o.kind === kind).length + 1;
   return {
-    id: uid(), kind, name: opts.name || `${cat.label} ${n}`, tag: opts.tag || '', role: cat.role, color: opts.color || color,
+    id: uid(), kind, name: opts.name || `${cat.label} ${n}`, tag: opts.tag || cat.tag || '', role: cat.role, color: opts.color || color,
     desc: opts.desc || '', height: kind === 'mannequin' ? (opts.height || 1.8) : undefined, hidden: false,
     base: { p: opts.p || [0, 0, 0], r: opts.r || [0, 0, 0], s: opts.s || [1, 1, 1], pose: kind === 'mannequin' ? clonePose(opts.pose || POSES.stand) : null },
   };
@@ -311,7 +311,11 @@ function applyTime(t) {
   for (const o of S().objects) applyObj(o, sampleObject(o, sh, t));
   const aspect = ASPECTS[sh.aspect] || 16 / 9;
   const c = sampleCam(sh, t);
+  const far = sceneFar(S()); // the Persia sky and horizon are kilometres away
+  if (shotCam.far !== far) shotCam.far = far;
+  if (editorCam.far < far) { editorCam.far = far; editorCam.updateProjectionMatrix(); }
   applyCamToThree(shotCam, c, aspect);
+  shotCam.updateProjectionMatrix();
   if (!shotOrbitBusy) { shotOrbit.target.set(...c.target); }
   proxyCam.position.copy(shotCam.position); proxyCam.quaternion.copy(shotCam.quaternion);
   proxyCam.fov = shotCam.fov; proxyCam.aspect = aspect; proxyCam.updateProjectionMatrix(); proxyCam.updateMatrixWorld(true);
@@ -437,16 +441,16 @@ function frameAll() {
   const c = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3()).length();
   editorOrbit.target.set(c.x, 0, c.z);
   editorCam.position.set(c.x + size * 0.45, size * 0.38, c.z + size * 0.55);
-  editorCam.far = Math.max(500, size * 4); editorCam.updateProjectionMatrix();
+  editorCam.far = Math.max(sceneFar(S()), size * 4); editorCam.updateProjectionMatrix();
   editorOrbit.update();
 }
 
-async function loadBundledProject(file) {
+async function loadBundledProject(file, msg = 'Arena caricata: 5 shot dalle frecce della mappa') {
   try {
     const r = await fetch(file, { cache: 'no-store' });
     if (!r.ok) throw new Error(r.status);
     pushUndo(); app.state = await r.json(); app.sel = null; tc.detach(); afterLoad(); frameAll();
-    toast('Arena caricata: 5 shot dalle frecce della mappa');
+    toast(msg);
   } catch (e) { toast('Impossibile caricare ' + file); }
 }
 
@@ -656,6 +660,7 @@ function buildAddMenu() {
     ['Set', ['plane', 'wall', 'doorway', 'window', 'stairs', 'column', 'table', 'chair', 'sofa', 'bed', 'tree', 'lamp']],
     ['Oggetti', ['car', 'phone', 'bottle', 'case']],
     ['Arena (dalla mappa)', ['arena_meadow', 'arena_flowers', 'arena_ridge', 'arena_forest', 'arena_river', 'arena_pond', 'arena_hub', 'arena_plates', 'arena_shield']],
+    ['Persia (mappa low-poly)', ['persia_palace', 'persia_garden', 'persia_meydan', 'persia_bazaar', 'persia_rooftop', 'persia_mosque', 'persia_houses', 'persia_walls', 'persia_ground', 'persia_desert', 'persia_pyramids', 'persia_mountains', 'persia_clouds', 'persia_sky', 'persia_carpet', 'persia_lamp']],
   ];
   const menu = el('div', { class: 'menu left', id: 'addMenuList' });
   for (const [cat, kinds] of cats) {
@@ -954,6 +959,22 @@ function inspectorShot() {
     ...row('Formato', select_(sh.aspect, Object.keys(ASPECTS), set('aspect', true))),
     ...row('Risoluzione', select_(sh.resolution, M.res, set('resolution', true))),
     el('div', { class: 'field-help' }, costEstimate(sh) ? `Costo indicativo finale ~${costEstimate(sh)} crediti (bozza 480p molto meno). Verifica su Generate.` : 'Costo: verifica sul pulsante Generate.'),
+  ));
+  // Per-shot location: maps with several places (Persia) use a different location Element per shot.
+  const SL = sh.loc || {}, pm = S().meta;
+  const setL = (k) => (v) => { sh.loc = { ...(sh.loc || {}), [k]: v }; changed({ lists: true }); };
+  out.push(el('div', { class: 'box' }, el('h4', {}, 'Location di questo shot'),
+    el('div', { class: 'field-help' }, 'Vuoto = usa la location del progetto. Serve quando la mappa ha più luoghi.'),
+    ...row('Location @', input(SL.tag || '', (v) => {
+      const tag = v.trim() ? '@' + v.trim().replace(/^@/, '') : '';
+      const e = findElement(app.lib, tag);
+      sh.loc = { ...(sh.loc || {}), tag, ...(e ? { desc: e.description.replace(/\s*No people, no text\.?$/i, '') } : {}) };
+      changed({ lists: true }); renderInspector();
+    }, { placeholder: pm.locationTag || '@loc_…', list: 'elementsLocList' })),
+    libPill(SL.tag),
+    el('label', {}, 'Descrizione location (EN)'),
+    textarea(SL.desc || '', setL('desc'), { rows: 2, placeholder: SL.tag ? 'architecture, materials, key objects' : (pm.locationDesc || '') }),
+    ...row('Ora del giorno', input(SL.time || '', setL('time'), { placeholder: pm.timeOfDay || '' })),
   ));
   const focal = el('input', { type: 'range', min: 12, max: 200, step: 1, value: c.focal });
   const fl = el('span', { class: 'meta' }, Math.round(c.focal) + 'mm');
@@ -1386,6 +1407,7 @@ function fileAction(act) {
   else if (act === 'open') $('#fileInput').click();
   else if (act === 'lib') $('#libInput').click();
   else if (act === 'arena') loadBundledProject('projects/arena.blocking.json');
+  else if (act === 'persia') loadBundledProject('projects/persia.blocking.json', 'Persia caricata: 4 shot, uno per ogni Element location');
 }
 $('#fileInput').addEventListener('change', async (e) => {
   const f = e.target.files[0]; if (!f) return;
