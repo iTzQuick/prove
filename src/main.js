@@ -781,7 +781,7 @@ function addShot(dup) {
 }
 
 function deleteShot(i) {
-  if (!confirm(`Eliminare lo shot ${S().shots[i].id}?`)) return;
+  if (!askConfirm(`Eliminare lo shot ${S().shots[i].id}?`)) return;
   pushUndo();
   S().shots.splice(i, 1);
   S().current = Math.max(0, Math.min(S().current, S().shots.length - 1));
@@ -1298,7 +1298,34 @@ function toFile(name, data, type) {
 function canShareFiles(files) {
   try { return document.body.classList.contains('m') && navigator.canShare && navigator.canShare({ files }); } catch { return false; }
 }
+// Inside a claude.ai artifact the frame blocks page-started downloads, the share sheet and confirm():
+// show the files instead, to save with right-click / long-press or copy as text.
+const EMBEDDED = (() => { try { return window.self !== window.top; } catch { return true; } })();
+function askConfirm(msg) { return EMBEDDED ? true : confirm(msg); } // undo (↶) covers the embedded case
+
+function showFiles(files) {
+  const items = files.map(f => {
+    const url = URL.createObjectURL(f);
+    const head = el('div', { class: 'out-head' }, el('b', {}, f.name));
+    if (f.type.startsWith('image/')) return [head, el('img', { src: url, alt: f.name, style: 'max-width:100%;border-radius:8px;display:block' })];
+    if (f.type.startsWith('video/')) return [head, el('video', { src: url, controls: true, playsinline: true, style: 'max-width:100%;border-radius:8px;display:block' })];
+    const ta = el('textarea', { class: 'out', style: 'min-height:220px' });
+    f.text().then(t => { ta.value = t; });
+    head.append(el('button', { onclick: async () => {
+      try { await navigator.clipboard.writeText(ta.value); toast('Copiato'); } catch { ta.focus(); ta.select(); toast('Testo selezionato: copialo'); }
+    } }, 'Copia'));
+    return [head, ta];
+  });
+  $('#modalTitle').textContent = files.length > 1 ? `${files.length} file pronti` : 'File pronto';
+  $('#modalTabs').replaceChildren();
+  $('#modalBody').replaceChildren(
+    el('div', { class: 'note' }, 'Questa pagina gira dentro claude.ai, che blocca i download automatici. Immagini e video: tasto destro (o tieni premuto sul telefono) → Salva. Testi e progetto: Copia e incolla in un file.'),
+    ...items.flat());
+  $('#modal').classList.remove('hidden');
+}
+
 async function deliverFiles(files) {
+  if (EMBEDDED) { showFiles(files); return; }
   if (canShareFiles(files)) {
     try { await navigator.share({ files }); return; } catch (e) {
       if (e && e.name === 'AbortError') return;
@@ -1353,7 +1380,7 @@ async function doExport(act) {
 }
 
 function fileAction(act) {
-  if (act === 'new') { if (!confirm('Nuovo progetto? Le modifiche non salvate in un file andranno perse.')) return; pushUndo(); app.state = newProject(); app.sel = null; tc.detach(); afterLoad(); }
+  if (act === 'new') { if (!askConfirm('Nuovo progetto? Le modifiche non salvate in un file andranno perse.')) return; pushUndo(); app.state = newProject(); app.sel = null; tc.detach(); afterLoad(); }
   else if (act === 'demo') { pushUndo(); app.state = demoProject(); app.sel = null; tc.detach(); afterLoad(); }
   else if (act === 'save') deliverFiles([toFile(`${(S().meta.project || 'progetto').replace(/[^\w-]+/g, '_')}.blocking.json`, JSON.stringify(S(), null, 2), 'application/json')]);
   else if (act === 'open') $('#fileInput').click();

@@ -46,3 +46,9 @@ Server: `python3 -m http.server 8765`; Playwright è preinstallato (`require('pl
 Dopo ogni modifica ai file dell'app esegui `node tools/stamp-version.cjs` prima del commit: mette una versione
 negli URL di CSS e moduli (import map), così Safari e l'app sulla schermata Home scaricano i file nuovi.
 La versione si legge nel menu ⋯ del telefono ("Ricarica l'app").
+
+## Versione online (claude.ai)
+Link privato: https://claude.ai/artifact/9PLHmeN6d7aX3WbCzYDxVJ
+Per aggiornarla: `node tools/stamp-version.cjs && node tools/build-artifact.cjs`, poi ripubblica
+`dist/artifact/index.html` con gli stessi `files` (src/*.js, projects/arena.blocking.json, higgsfield/elements.json).
+Dentro claude.ai i download automatici sono bloccati: `deliverFiles` mostra i file in una finestra (salva con tasto destro / pressione lunga).
