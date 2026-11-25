@@ -8,6 +8,8 @@ e routing dei modelli usa la skill `higgsfield-director`.
 - `src/prompt.js` — analisi scena e prompt; `buildMcpRequests()` crea i parametri per il connettore.
 - `src/main.js` — UI; `window.blocking` è l'API headless usata da `tools/handoff.cjs`.
 - `tools/handoff.cjs` — esporta per ogni shot blockout PNG, video di blocking e `request.json` in `handoff/<SHOT>/`.
+- `src/persia-map.js` + `src/persia.js` — mappa Persia low-poly; `tools/make-persia.mjs` scrive `projects/persia.blocking.json`.
+  Ogni shot può avere `loc` (`tag`, `desc`, `time`) e `onlyPieces`: `shotLoc()` in `prompt.js` sceglie la location dello shot.
 - `higgsfield/elements.json` — copia locale della libreria "My elements" (git-ignored: contiene progetti dell'utente).
 
 ## Connettore Higgsfield: procedura

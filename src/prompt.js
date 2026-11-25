@@ -47,6 +47,19 @@ export const LIGHT_PRESETS = {
 const BANNED = /\b(cinematic|stunning|breathtaking|masterpiece|epic|seamless|mesmeri[sz]ing|vibrant tapestry|elevate|unleash|high quality|8k)\b/gi;
 
 // ---------- helpers ----------
+// Location of one shot: its own (maps with several places, e.g. Persia) or the project's.
+export function shotLoc(state, shot) {
+  const m = state.meta, l = (shot && shot.loc) || {};
+  const own = (l.tag || '').trim();
+  return {
+    tag: own || m.locationTag || '',
+    desc: (l.desc || '').trim() || (own ? '' : m.locationDesc || ''),
+    time: (l.time || '').trim() || m.timeOfDay || '',
+  };
+}
+// Low-poly projects: the blockout's faceting is wanted, so the references must not ban it.
+const lowPoly = (state) => /low-poly|low poly|faceted/i.test(`${state.meta.look} ${state.meta.styleLock}`);
+
 export function refName(o) {
   if (o.tag && o.tag.trim()) return o.tag.trim().startsWith('@') ? o.tag.trim() : '@' + o.tag.trim();
   if (o.kind === 'mannequin') {
@@ -201,7 +214,11 @@ function shotProps(state, shot) {
     return q.z < 1 && Math.abs(q.x) < 1 && Math.abs(q.y) < 1;
   }));
 }
-function setPieces(state) { return state.objects.filter(o => o.role === 'set' && !o.hidden && !['plane', 'arena_meadow', 'arena_flowers', 'arena_shield'].includes(o.kind)); }
+const GROUND_KINDS = ['plane', 'arena_meadow', 'arena_flowers', 'arena_shield', 'persia_ground', 'persia_desert', 'persia_sky', 'persia_clouds'];
+function setPieces(state, shot) {
+  const only = shot && Array.isArray(shot.onlyPieces) ? shot.onlyPieces : null; // pieces really visible in this shot
+  return state.objects.filter(o => o.role === 'set' && !o.hidden && !GROUND_KINDS.includes(o.kind) && (!only || only.includes(o.kind)));
+}
 
 function mainSubject(state, shot, t) {
   let best = null, bd = Infinity;
@@ -351,7 +368,7 @@ export function autoBeats(state, shot) {
     const lines = [];
     for (const o of people) { const l = describeCharacterBeat(state, shot, o, t0, t1); if (l) lines.push(l); }
     for (const p of things) { const l = describePropBeat(state, shot, p, t0, t1); if (l) lines.push(l); }
-    return { t0, t1, text: lines.length ? lines.join('. ') + '.' : ambientText(state) };
+    return { t0, t1, text: lines.length ? lines.join('. ') + '.' : ambientText(state, shot) };
   });
 }
 
@@ -372,8 +389,25 @@ export function getBeats(state, shot) {
 }
 
 // Scenes without people: what moves on its own.
-function isOutdoor(state) { return state.objects.some(o => !o.hidden && /^arena_|^tree$/.test(o.kind)); }
-function ambientText(state) {
+function isOutdoor(state) { return state.objects.some(o => !o.hidden && /^(arena|persia)_|^tree$/.test(o.kind)); }
+const isPersia = (state) => state.objects.some(o => !o.hidden && /^persia_/.test(o.kind) && o.role === 'set');
+const PERSIA_AMBIENT = {
+  persia_garden: 'A soft breeze sways the cypress tips and ripples the long pool; the fountain splashes and the lantern flames flicker; the garden stays empty.',
+  persia_bazaar: 'Dust motes drift through the sun shafts; the striped canopies and hanging kilims stir gently; the alley stays empty.',
+  persia_rooftop: 'A warm wind lifts the striped awnings; the lantern flames flicker; the terrace stays empty.',
+};
+const PERSIA_PHYSICS = {
+  persia_garden: 'cypress tips sway in a light breeze; the pool surface ripples and reflects the sky; the fountain water falls with real weight; lantern flames flicker',
+  persia_bazaar: 'canopies and kilims sway slightly; dust drifts slowly through the sun shafts; hanging lamps swing a little on their chains',
+  persia_rooftop: 'the awning fabric ripples in the wind; lantern flames flicker; the rolled kilim and the jars stay still',
+};
+function ambientText(state, shot) {
+  if (isPersia(state)) {
+    const only = (shot && shot.onlyPieces) || [];
+    const k = Object.keys(PERSIA_AMBIENT).find(x => only.includes(x));
+    if (k) return PERSIA_AMBIENT[k];
+    return 'The faceted clouds drift slowly below the camera; the city stays still in the low sun; no people anywhere.';
+  }
   return isOutdoor(state)
     ? 'A light breeze ripples across the grass and the flowers sway; leaves tremble; the location stays empty.'
     : 'The room stays still; only faint dust drifts through the light; the location stays empty.';
@@ -381,7 +415,7 @@ function ambientText(state) {
 function framePieces(state, shot, t) {
   const { cam } = camAt(shot, t);
   const out = [];
-  for (const o of setPieces(state)) {
+  for (const o of setPieces(state, shot)) {
     if (!o.tag && ['wall', 'cube', 'cylinder', 'cone', 'sphere'].includes(o.kind)) continue;
     const p = V(o.base.p).add(new THREE.Vector3(0, 0.5, 0)).project(cam);
     if (p.z > 1 || Math.abs(p.x) > 1.1 || Math.abs(p.y) > 1.2) continue;
@@ -412,10 +446,10 @@ function firstFrameText(state, shot, t) {
 }
 
 function locationText(state, shot) {
-  const m = state.meta;
+  const m = shotLoc(state, shot);
   const { cam } = camAt(shot, 0);
   const pieces = [];
-  for (const o of setPieces(state)) {
+  for (const o of setPieces(state, shot)) {
     if (!o.tag && ['wall', 'cube', 'cylinder', 'cone', 'sphere'].includes(o.kind)) continue;
     const p = V(o.base.p).add(new THREE.Vector3(0, 0.5, 0)).project(cam);
     if (p.z > 1 || Math.abs(p.x) > 1.1 || Math.abs(p.y) > 1.2) continue;
@@ -423,9 +457,9 @@ function locationText(state, shot) {
     pieces.push(`${refName(o).replace(/^the /, 'a ')} ${where}`);
   }
   const parts = [];
-  if (m.locationDesc) parts.push(m.locationDesc.trim().replace(/\.$/, ''));
+  if (m.desc) parts.push(m.desc.trim().replace(/\.$/, ''));
   if (pieces.length) parts.push('key objects: ' + pieces.slice(0, 6).join(', '));
-  parts.push(`time of day: ${m.timeOfDay || 'day'}`);
+  parts.push(`time of day: ${m.time || 'day'}`);
   return parts.join('; ') + '. No people in the location description.';
 }
 
@@ -462,6 +496,11 @@ function physicsText(state, shot, beats) {
   if (/picks up|puts down| in the (left|right) hand/.test(all)) out.push('objects have mass: hands grip before lifting, wrists take the weight');
   if (/falls/.test(all)) out.push('falling objects accelerate with gravity and bounce once on impact');
   if (!cast(state, shot).length) {
+    if (isPersia(state)) {
+      const only = shot.onlyPieces || [];
+      const k = Object.keys(PERSIA_PHYSICS).find(x => only.includes(x));
+      return (k ? PERSIA_PHYSICS[k] : 'the clouds drift slowly and keep their faceted shapes; the city below stays perfectly still') + '; real-world physics, no slow motion.';
+    }
     return (isOutdoor(state)
       ? 'grass, flowers and leaves sway in a light breeze; water surfaces ripple and reflect the sky'
       : 'nothing moves except air and light') + '; real-world physics, no slow motion.';
@@ -507,22 +546,24 @@ function referencesBlock(state, shot, { video, image } = {}) {
     if (!o.tag) continue;
     L.push(`${refName(o)} controls identity and outfit only. It is a multi-view sheet: show one single character; do not copy the sheet layout, grey background or pose.`);
   }
-  if (state.meta.locationTag) L.push(`${refName({ tag: state.meta.locationTag })} controls the place, architecture and materials only. Do not copy its camera angle.`);
+  const loc = shotLoc(state, shot).tag;
+  if (loc) L.push(`${refName({ tag: loc })} controls the place, architecture and materials only. Do not copy its camera angle.`);
   for (const p of shotProps(state, shot)) {
     if (!p.tag) continue;
     const s = sampleObject(p, shot, 0);
-    const size = Math.round(Math.max(...p.base.s.map(Math.abs)) * (p.kind === 'phone' ? 15 : p.kind === 'bottle' ? 30 : p.kind === 'case' ? 45 : 100) * (s.s[1] || 1));
+    const size = Math.round(Math.max(...p.base.s.map(Math.abs)) * (CATALOG[p.kind].cm || (p.kind === 'phone' ? 15 : p.kind === 'bottle' ? 30 : p.kind === 'case' ? 45 : 100)) * (s.s[1] || 1));
     const h = holder(state, shot, p, 0);
     L.push(`${refName(p)} is one single object, about ${size} cm${h ? `, held in ${refName(h.o)}'s ${h.side} hand` : ''}.`);
   }
-  for (const o of setPieces(state)) if (o.tag) L.push(`${refName(o)} controls that set piece's shape and material only.`);
+  for (const o of setPieces(state, shot)) if (o.tag) L.push(`${refName(o)} controls that set piece's shape and material only.`);
+  const lp = lowPoly(state);
   const cmap = colourMap(state, shot);
   if (image) L.push(cmap
     ? `${image} is a grey 3D blockout: it controls only composition, camera angle, lens, character positions, facing directions, poses and scale. Do not copy its grey materials, mannequin bodies, floor grid or flat lighting. In ${image} ${cmap}.`
-    : `${image} is a simple 3D blockout of the set: it controls only composition, camera angle, lens, layout and scale of the landscape and objects. Do not copy its flat colours, low-polygon shapes, plain sky or flat lighting.`);
+    : `${image} is a simple 3D blockout of the set: it controls only composition, camera angle, lens, layout and scale of the landscape and objects. ${lp ? 'Do not copy its flat colours, simplified shapes or flat lighting; the faceted low-poly finish follows the Style line.' : 'Do not copy its flat colours, low-polygon shapes, plain sky or flat lighting.'}`);
   if (video) L.push(cmap
     ? `${video} controls camera path, blocking and pacing only. It is a grey 3D blockout with coloured mannequins: do not copy its shapes, grey materials, mannequin bodies, colours, floor grid or flat lighting. In ${video} ${cmap}.`
-    : `${video} controls camera path and pacing only. It is a simple 3D blockout: do not copy its flat colours, low-polygon shapes, plain sky or flat lighting.`);
+    : `${video} controls camera path and pacing only. It is a simple 3D blockout: ${lp ? 'do not copy its flat colours, simplified shapes or flat lighting; the faceted low-poly finish follows the Style line.' : 'do not copy its flat colours, low-polygon shapes, plain sky or flat lighting.'}`);
   return L;
 }
 
@@ -579,7 +620,7 @@ export function risks(state, shot, beats) {
   }
   if (shot.model === 'veo31' && shot.duration > 8) R.push('Veo 3.1 arriva a 8 s: accorcia lo shot o cambia modello.');
   if (!chars.some(o => o.tag) && chars.length) R.push('Personaggi senza Element: l\'identità cambierà tra uno shot e l\'altro. Crea gli Element prima dei final.');
-  if (!state.meta.locationTag) R.push('Nessun Element location: la stanza può cambiare tra shot. Usa il Location pack per crearla.');
+  if (!shotLoc(state, shot).tag) R.push('Nessun Element location: la stanza può cambiare tra shot. Usa il Location pack per crearla.');
   if (!R.length) R.push('Nessun rischio evidente: verifica inizio, metà e fine della clip.');
   return R.slice(0, 3);
 }
@@ -608,7 +649,7 @@ export function buildVideoPrompt(state, shot, opts = {}) {
   }).join('. ');
   const subj = mainSubject(state, shot, 0);
   const scene = shot.purpose && shot.purpose.trim() ? shot.purpose.trim().replace(/\.$/, '') + '.' :
-    `${cast(state, shot).map(refName).join(' and ') || 'The empty set'} at ${state.meta.locationTag ? refName({ tag: state.meta.locationTag }) : 'the location'}, ${state.meta.timeOfDay || 'day'}.`;
+    `${cast(state, shot).map(refName).join(' and ') || 'The empty set'} at ${shotLoc(state, shot).tag ? refName({ tag: shotLoc(state, shot).tag }) : 'the location'}, ${shotLoc(state, shot).time || 'day'}.`;
 
   if (shot.model === 'veo31') {
     const beat = beats.map(b => b.text).join(' ');
@@ -680,8 +721,8 @@ export function buildLocationPrompts(state) {
 
 // Location views taken from a shot's own camera (start/mid/end of the move + a wider pull-back).
 export function buildShotLocationPrompts(state, shot) {
-  const m = state.meta;
-  const desc = m.locationDesc || 'describe the place here';
+  const m = state.meta, L = shotLoc(state, shot);
+  const desc = L.desc || 'describe the place here';
   const views = [
     ['start', `the exact view of the first frame of shot ${shot.id}`],
     ['mid', `the exact view halfway through the camera move of shot ${shot.id}`],
@@ -691,8 +732,8 @@ export function buildShotLocationPrompts(state, shot) {
   return views.map(([id, what]) => ({
     id, file: `${shot.id}_loc_${id}.png`,
     prompt: clean([
-      'References: @Image 1 is a simple 3D blockout of the empty location. It controls only the camera angle, lens, horizon line, layout and scale of the landscape and objects. Do not copy its flat colours, low-polygon shapes, plain grey sky or flat lighting.',
-      `Image: ${what}, ${shot.aspect}. ${desc.replace(/\.$/, '')}. Time of day: ${m.timeOfDay || 'day'}, in the final scene light.`,
+      `References: @Image 1 is a simple 3D blockout of the empty location. It controls only the camera angle, lens, horizon line, layout and scale of the landscape and objects. ${lowPoly(state) ? 'Do not copy its flat colours, simplified shapes or flat lighting; the faceted low-poly finish follows the Style line.' : 'Do not copy its flat colours, low-polygon shapes, plain grey sky or flat lighting.'}`,
+      `Image: ${what}, ${shot.aspect}. ${desc.replace(/\.$/, '')}. Time of day: ${L.time || 'day'}, in the final scene light.`,
       m.styleLock ? 'Style: ' + m.styleLock : 'Style: real photographic materials, natural light falloff.',
       'Empty location: no people, no animals, no text, no logos, no watermarks.',
     ].join('\n\n')),
@@ -738,8 +779,8 @@ export function buildSettings(state, shot) {
   const files = [];
   if (shot.useStartFrame) files.push(`Start frame: ${shot.id}_keyframe_start.png (generato dal prompt Keyframe, approvato)`);
   if (shot.useBlockingVideo) files.push(`@Video 1: ${shot.id}_blocking.mp4/.webm`);
-  const tags = [...cast(state, shot), ...shotProps(state, shot), ...setPieces(state).filter(o => o.tag)].filter(o => o.tag).map(refName);
-  if (state.meta.locationTag) tags.push(refName({ tag: state.meta.locationTag }));
+  const tags = [...cast(state, shot), ...shotProps(state, shot), ...setPieces(state, shot).filter(o => o.tag)].filter(o => o.tag).map(refName);
+  if (shotLoc(state, shot).tag) tags.push(refName({ tag: shotLoc(state, shot).tag }));
   if (tags.length) files.push('Elements: ' + [...new Set(tags)].join(', '));
   const cost = costEstimate(shot);
   if (cost) L.push(`Costo indicativo finale: ~${cost} crediti (x2-x3 per i retake; verifica sul pulsante Generate)`);
@@ -755,7 +796,9 @@ export function buildAssetBible(state) {
     else if (o.role === 'prop') rows.push({ tag: refName(o), type: 'Prop', desc: o.desc || '—', how: 'Sheet 2x2 → Element', model: 'GPT Image 2.6 / Nano Banana Pro' });
     else if (o.tag) rows.push({ tag: refName(o), type: 'Prop/Set', desc: o.desc || '—', how: 'Sheet 2x2 → Element', model: 'GPT Image 2.6' });
   }
-  if (state.meta.locationTag) rows.push({ tag: refName({ tag: state.meta.locationTag }), type: 'Location', desc: state.meta.locationDesc || '—', how: 'Location pack (wide, reverse, 3/4) → img2img → Element', model: 'Nano Banana Pro / Seedream 5.0 Pro' });
+  const locs = new Map();
+  for (const l of [shotLoc(state, null), ...state.shots.map(sh => shotLoc(state, sh))]) if (l.tag && !locs.has(refName({ tag: l.tag }))) locs.set(refName({ tag: l.tag }), l);
+  for (const [tag, l] of locs) rows.push({ tag, type: 'Location', desc: l.desc || '—', how: 'Location pack (wide, reverse, 3/4) → img2img → Element', model: 'Nano Banana Pro / Seedream 5.0 Pro' });
   if (state.meta.styleLock) rows.push({ tag: '@style_' + (state.meta.project || 'project').toLowerCase().replace(/[^a-z0-9]+/g, '_') + '_v1', type: 'Style lock', desc: state.meta.styleLock, how: 'Riga identica in ogni prompt', model: '—' });
   return rows;
 }
@@ -772,7 +815,7 @@ export function buildShotListMarkdown(state) {
     const beats = getBeats(state, shot);
     const subj = mainSubject(state, shot, 0);
     const mv = cameraMove(shot, 0, shot.duration);
-    const assets = [...cast(state, shot), ...shotProps(state, shot)].filter(o => o.tag).map(refName).concat(state.meta.locationTag ? [refName({ tag: state.meta.locationTag })] : []);
+    const assets = [...cast(state, shot), ...shotProps(state, shot)].filter(o => o.tag).map(refName).concat(shotLoc(state, shot).tag ? [refName({ tag: shotLoc(state, shot).tag })] : []);
     const action = (shot.purpose || beats[0]?.text || '').replace(/\|/g, '/').slice(0, 90);
     lines.push(`| ${shot.id} | ${fmt(tc)}-${fmt(tc + shot.duration)} | ${shot.duration}s | ${action} | ${subj ? subj.f.size : '—'}, ${mv.text} | ${assets.join(', ') || '—'} | ${MODELS[shot.model].label} | ${shot.musicVideo ? 'off' : 'nativo'} | ${risks(state, shot, beats)[0].replace(/\|/g, '/')} |`);
     tc += shot.duration;
@@ -803,8 +846,8 @@ export function findElement(lib, tag) {
 }
 
 function shotTags(state, shot) {
-  const tags = [...cast(state, shot), ...shotProps(state, shot), ...setPieces(state)].filter(o => o.tag).map(o => refName(o));
-  if (state.meta.locationTag) tags.push(refName({ tag: state.meta.locationTag }));
+  const tags = [...cast(state, shot), ...shotProps(state, shot), ...setPieces(state, shot)].filter(o => o.tag).map(o => refName(o));
+  if (shotLoc(state, shot).tag) tags.push(refName({ tag: shotLoc(state, shot).tag }));
   return [...new Set(tags)];
 }
 

@@ -1,6 +1,7 @@
 // Clean exports for Higgsfield: no grid, gizmos, camera frustums, paths or labels (skill: "export without axes, cones and paths").
 import * as THREE from 'three';
 import { ASPECTS, applyCamToThree, sampleCam, focalToVFov } from './anim.js';
+import { sceneFar } from './objects.js';
 
 let xr = null; // export renderer
 function exportRenderer() {
@@ -49,7 +50,7 @@ export function renderStill(app, shot, t, opts = {}) {
   r.setSize(w, h, false);
   app.applyTime(t);
   const cam = opts.camera || (() => {
-    const c = new THREE.PerspectiveCamera(40, w / h, 0.05, 500);
+    const c = new THREE.PerspectiveCamera(40, w / h, 0.05, sceneFar(app.state));
     applyCamToThree(c, sampleCam(shot, t), w / h);
     return c;
   })();
@@ -90,7 +91,7 @@ export function recordBlockingVideo(app, shot, onProgress) {
     const [w, h] = exportSize(shot, '720p');
     const r = exportRenderer();
     r.setSize(w, h, false);
-    const cam = new THREE.PerspectiveCamera(40, w / h, 0.05, 500);
+    const cam = new THREE.PerspectiveCamera(40, w / h, 0.05, sceneFar(app.state));
     const stream = r.domElement.captureStream(30);
     const mime = pickMime();
     const rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 8_000_000 });
@@ -127,7 +128,9 @@ export function locationPack(app, shot) {
   let any = false;
   for (const o of app.state.objects) {
     if (o.hidden || o.kind === 'mannequin' || o.role === 'prop' || o.kind === 'plane') continue;
-    box.expandByObject(app.groups.get(o.id)); any = true;
+    const g = app.groups.get(o.id);
+    if (!g || g.userData.backdrop) continue; // sky, desert, far horizon: not part of the set
+    box.expandByObject(g); any = true;
   }
   if (!any) box.set(new THREE.Vector3(-5, 0, -5), new THREE.Vector3(5, 3, 5));
   const c = box.getCenter(new THREE.Vector3());
@@ -141,7 +144,7 @@ export function locationPack(app, shot) {
   return views.map(([id, deg]) => {
     const d = dir.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), deg * Math.PI / 180);
     const p = c.clone().sub(d.clone().multiplyScalar(R)); p.y = 1.6;
-    const cam = new THREE.PerspectiveCamera(focalToVFov(20, w / h), w / h, 0.05, 500);
+    const cam = new THREE.PerspectiveCamera(focalToVFov(20, w / h), w / h, 0.05, sceneFar(app.state));
     cam.position.copy(p); cam.lookAt(c.x, 1.3, c.z); cam.updateMatrixWorld(true);
     return { id, url: renderStill(app, shot, 0, { size: [w, h], camera: cam, hideCharacters: true }) };
   });
@@ -161,7 +164,7 @@ export function shotLocationViews(app, shot) {
   const back = p.clone().sub(tg); back.y = 0;
   const dist = Math.max(8, back.length() * 3.5);
   back.setLength(dist);
-  const cam = new THREE.PerspectiveCamera(focalToVFov(24, w / h), w / h, 0.05, 1000);
+  const cam = new THREE.PerspectiveCamera(focalToVFov(24, w / h), w / h, 0.05, Math.max(1000, sceneFar(app.state)));
   cam.position.set(tg.x + back.x, Math.max(p.y, 1.7), tg.z + back.z);
   cam.lookAt(tg.x, Math.max(1.2, tg.y), tg.z); cam.updateMatrixWorld(true);
   views.push({ id: 'wide', url: renderStill(app, shot, 0, { size: [w, h], camera: cam, hideCharacters: true }) });

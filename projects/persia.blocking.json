@@ -1,0 +1,950 @@
+{
+  "version": 1,
+  "meta": {
+    "project": "Persia",
+    "scene": "SC01",
+    "look": "stylised low-poly 3D animated film",
+    "styleLock": "Look: strongly faceted low-poly 3D world with flat-shaded polygons and crisp edges; clean geometric Persian architecture with turquoise and gold tilework, gold domes, sand clay walls, terracotta paving, saffron and indigo textiles; saturated sunset palette of magenta, violet and orange; soft real light and shadows, no outlines.",
+    "locationTag": "@loc_lp_persia_sky_sunset_v1",
+    "locationDesc": "a walled low-poly Persian city in the desert: a palace with a turquoise-and-gold iwan and a gold dome behind a long garden with a reflecting pool; a great arcaded square; a covered bazaar leading to a turquoise-domed mosque with two minarets and a gold-domed shrine; flat-roofed clay houses with wind towers; dunes, three pyramids to the south-west and blue mountains to the north",
+    "timeOfDay": "sunset"
+  },
+  "objects": [
+    {
+      "id": "p0001",
+      "kind": "persia_sky",
+      "name": "Cielo al tramonto",
+      "tag": "",
+      "role": "set",
+      "color": "#c54b8d",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          0
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0002",
+      "kind": "persia_desert",
+      "name": "Deserto e dune",
+      "tag": "",
+      "role": "set",
+      "color": "#e4c48c",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          0
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0003",
+      "kind": "persia_mountains",
+      "name": "Montagne blu",
+      "tag": "",
+      "role": "set",
+      "color": "#3f5693",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -820.8483439816047,
+          0,
+          -2255.26228988618
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0004",
+      "kind": "persia_pyramids",
+      "name": "Tre piramidi",
+      "tag": "",
+      "role": "set",
+      "color": "#d9b071",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -1230,
+          0,
+          860
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0005",
+      "kind": "persia_clouds",
+      "name": "Nuvole",
+      "tag": "",
+      "role": "set",
+      "color": "#ff8fa8",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          0
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0006",
+      "kind": "persia_ground",
+      "name": "Terreno città",
+      "tag": "",
+      "role": "set",
+      "color": "#e8cfa2",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          -30
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0007",
+      "kind": "persia_walls",
+      "name": "Mura e porta sud",
+      "tag": "",
+      "role": "set",
+      "color": "#b98f63",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          170
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0008",
+      "kind": "persia_houses",
+      "name": "Case della città",
+      "tag": "",
+      "role": "set",
+      "color": "#d8b88a",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          70,
+          0,
+          90
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0009",
+      "kind": "persia_meydan",
+      "name": "Piazza e portici",
+      "tag": "",
+      "role": "set",
+      "color": "#d3c3a0",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          25
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000a",
+      "kind": "persia_palace",
+      "name": "Palazzo, iwan e cupola d'oro",
+      "tag": "",
+      "role": "set",
+      "color": "#e3ad3b",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          -172
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000b",
+      "kind": "persia_garden",
+      "name": "Giardino del palazzo",
+      "tag": "",
+      "role": "set",
+      "color": "#5d8e3c",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          -87
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000c",
+      "kind": "persia_bazaar",
+      "name": "Bazar coperto",
+      "tag": "",
+      "role": "set",
+      "color": "#f2a01f",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -86,
+          0,
+          25
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000d",
+      "kind": "persia_rooftop",
+      "name": "Terrazza sul bazar",
+      "tag": "",
+      "role": "set",
+      "color": "#c0623a",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -81,
+          0,
+          38
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000e",
+      "kind": "persia_mosque",
+      "name": "Moschea turchese e minareti",
+      "tag": "",
+      "role": "set",
+      "color": "#24aeb0",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -132,
+          0,
+          25
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000f",
+      "kind": "mannequin",
+      "name": "Principessa",
+      "tag": "@char_persian_princess_v1",
+      "role": "character",
+      "color": "#d64598",
+      "desc": "Low-poly strikingly beautiful adult woman, 172 cm, slim hourglass figure, original face with high cheekbones, full lips, winged kohl eyes, olive skin, glossy black side braid on the left shoulder, gold diadem with one ruby, rose-pink veil, fitted burgundy tunic with gold embroidery, saffron sash, wide saffron trousers, gold slippers, two gold bangles per wrist.",
+      "hidden": true,
+      "height": 1.72,
+      "base": {
+        "p": [
+          -84,
+          6.56,
+          37
+        ],
+        "r": [
+          0,
+          -90,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": {
+          "j": {
+            "shoulder_l": [
+              0,
+              0,
+              8
+            ],
+            "shoulder_r": [
+              0,
+              0,
+              -8
+            ]
+          },
+          "hipsY": 0
+        }
+      }
+    },
+    {
+      "id": "p000g",
+      "kind": "mannequin",
+      "name": "Lova",
+      "tag": "@char_lova_persian_v1",
+      "role": "character",
+      "color": "#3a6fe0",
+      "desc": "Low-poly Lova in Persian streetwear: short dark hair, thin moustache and chin beard, slim red-lens sunglasses with gold temples, pearl-bead necklace with one white broken-heart pendant, open deep indigo hoodie with gold arabesques and a gold Simurgh on the back, white tee, one watch per wrist, very baggy cream jeans with turquoise tile graphics, silver wallet chain, tan work boots.",
+      "hidden": true,
+      "height": 1.8,
+      "base": {
+        "p": [
+          -82.5,
+          6.56,
+          37.5
+        ],
+        "r": [
+          0,
+          -90,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": {
+          "j": {
+            "shoulder_l": [
+              0,
+              0,
+              8
+            ],
+            "shoulder_r": [
+              0,
+              0,
+              -8
+            ]
+          },
+          "hipsY": 0
+        }
+      }
+    },
+    {
+      "id": "p000h",
+      "kind": "mannequin",
+      "name": "Djinn",
+      "tag": "@char_djinn_v1",
+      "role": "character",
+      "color": "#2fc0cf",
+      "desc": "Low-poly djinn, adult man, about 260 cm with tail, original face, copper skin with glowing turquoise lines, turquoise eyes, white beard in two braids, white-and-saffron turban with one emerald, one silver chain across the bare chest, no legs: violet faceted smoke tail. Empty hands.",
+      "hidden": true,
+      "height": 2.2,
+      "base": {
+        "p": [
+          -81,
+          6.56,
+          39
+        ],
+        "r": [
+          0,
+          -90,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": {
+          "j": {
+            "shoulder_l": [
+              0,
+              0,
+              8
+            ],
+            "shoulder_r": [
+              0,
+              0,
+              -8
+            ]
+          },
+          "hipsY": 0
+        }
+      }
+    },
+    {
+      "id": "p000i",
+      "kind": "persia_carpet",
+      "name": "Tappeto volante",
+      "tag": "@prop_flying_carpet_lp_v1",
+      "role": "prop",
+      "color": "#2b3a8f",
+      "desc": "One single low-poly flying carpet, 2 x 1.4 m, 2 cm thick, deep indigo field, one terracotta-and-gold eight-pointed star medallion in the centre, gold geometric border, exactly four gold corner tassels, plain indigo underside.",
+      "hidden": true,
+      "base": {
+        "p": [
+          -87,
+          7.46,
+          39
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000j",
+      "kind": "persia_lamp",
+      "name": "Lampada magica",
+      "tag": "@prop_magic_lamp_lp_v1",
+      "role": "prop",
+      "color": "#c99a3e",
+      "desc": "One single low-poly brass oil lamp, 30 cm long, boat-shaped body on a round foot, long spout on the right, curled handle on the left, hinged dome lid with one turquoise stone on top, one band of engraved arabesques around the body.",
+      "hidden": true,
+      "base": {
+        "p": [
+          -82.6,
+          7.04,
+          39.85
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    }
+  ],
+  "shots": [
+    {
+      "id": "SC01_SH01",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "drone",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Epic",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "az": 180,
+        "el": 6,
+        "intensity": 2.6,
+        "color": "#ffae6e",
+        "fill": 0.5,
+        "soft": 0.35
+      },
+      "camBase": {
+        "p": [
+          520,
+          240,
+          60
+        ],
+        "target": [
+          -600,
+          0,
+          20
+        ],
+        "focal": 28
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            520,
+            240,
+            60
+          ],
+          "target": [
+            -600,
+            0,
+            20
+          ],
+          "focal": 28
+        },
+        {
+          "t": 8,
+          "p": [
+            470,
+            232,
+            58
+          ],
+          "target": [
+            -600,
+            0,
+            20
+          ],
+          "focal": 28
+        }
+      ],
+      "tracks": {},
+      "beats": [],
+      "purpose": "Aerial sunset establishing shot at about 300 m: above faceted magenta, violet and orange clouds the camera looks west over the whole Persian city with its turquoise and gold domes, minarets and the palace gateway; the desert with three pyramids on the left horizon, blue mountains on the right, the low sun at the centre",
+      "audio": "High-altitude wind, soft rush of air past the clouds, a faint distant city hum far below. No music, no dialogue, no narration.",
+      "locks": "no vehicles; no modern objects, wires or signs",
+      "loc": {
+        "tag": "@loc_lp_persia_sky_sunset_v1",
+        "time": "sunset, low sun",
+        "desc": "Low-poly sunset sky at 300 m above faceted magenta, violet and orange clouds; Persian city below with turquoise and gold domes, minarets, one palace gateway; horizon left Egyptian desert with three pyramids, right blue mountains; low sun at centre"
+      },
+      "onlyPieces": [
+        "persia_palace",
+        "persia_mosque",
+        "persia_meydan",
+        "persia_walls",
+        "persia_pyramids",
+        "persia_mountains"
+      ],
+      "musicVideo": false,
+      "useBlockingVideo": true,
+      "useStartFrame": true,
+      "move": "push"
+    },
+    {
+      "id": "SC01_SH02",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "dolly",
+      "easing": "smooth",
+      "panel": {
+        "genre": "General",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "az": 160,
+        "el": 10,
+        "intensity": 0.9,
+        "color": "#9fb4ff",
+        "fill": 0.65,
+        "soft": 0.75
+      },
+      "camBase": {
+        "p": [
+          0,
+          1.7,
+          -30
+        ],
+        "target": [
+          0,
+          7,
+          -150
+        ],
+        "focal": 28
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            0,
+            1.7,
+            -30
+          ],
+          "target": [
+            0,
+            7,
+            -150
+          ],
+          "focal": 28
+        },
+        {
+          "t": 8,
+          "p": [
+            0,
+            1.7,
+            -38
+          ],
+          "target": [
+            0,
+            7,
+            -150
+          ],
+          "focal": 28
+        }
+      ],
+      "tracks": {},
+      "beats": [],
+      "purpose": "From the palace gateway, eye-level view north along the long reflecting pool of the palace garden at blue hour: the octagonal turquoise fountain in the middle, two rows of cypresses, red rose beds, twelve lit brass lanterns along the pool, and at the far end the turquoise-and-gold iwan arch with the gold dome rising behind it",
+      "audio": "Water trickling in the fountain, crickets, a soft breeze in the cypresses. No music, no dialogue, no narration.",
+      "locks": "no vehicles; no modern objects, wires or signs",
+      "loc": {
+        "tag": "@loc_lp_palace_garden_bluehour_v1",
+        "time": "blue hour, first stars",
+        "desc": "Low-poly empty Persian palace garden at blue hour: long reflecting pool with one octagonal turquoise-tiled fountain, two rows of cypress trees, red rose beds, terracotta walkway, twelve lit brass lanterns along the pool, turquoise-and-gold iwan arch and gold dome at the far end, first stars"
+      },
+      "onlyPieces": [
+        "persia_garden",
+        "persia_palace"
+      ],
+      "musicVideo": false,
+      "useBlockingVideo": true,
+      "useStartFrame": true,
+      "move": "push"
+    },
+    {
+      "id": "SC01_SH03",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "handheld",
+      "easing": "smooth",
+      "panel": {
+        "genre": "General",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "az": 170,
+        "el": 35,
+        "intensity": 3.2,
+        "color": "#ffb066",
+        "fill": 0.95,
+        "soft": 0.3
+      },
+      "camBase": {
+        "p": [
+          -62.5,
+          1.6,
+          25
+        ],
+        "target": [
+          -112,
+          3.4,
+          25
+        ],
+        "focal": 24
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            -62.5,
+            1.6,
+            25
+          ],
+          "target": [
+            -112,
+            3.4,
+            25
+          ],
+          "focal": 24
+        },
+        {
+          "t": 8,
+          "p": [
+            -68,
+            1.6,
+            25.2
+          ],
+          "target": [
+            -112,
+            3.4,
+            25
+          ],
+          "focal": 24
+        }
+      ],
+      "tracks": {},
+      "beats": [],
+      "purpose": "Inside the narrow covered bazaar alley at sunset, slowly walking down the alley: the brass merchant stall on the left, the rug and spice stall on the right, saffron and indigo canopies crossed by sun shafts, and the turquoise tiled arch and dome at the far end",
+      "audio": "Soft wind through the covered alley, fabric canopies flapping, a brass lamp chain creaking gently. No music, no dialogue, no narration.",
+      "locks": "no vehicles; no modern objects, wires or signs",
+      "loc": {
+        "tag": "@loc_lp_bazar_alley_sunset_v1",
+        "time": "sunset",
+        "desc": "Low-poly narrow covered Persian bazaar alley at sunset: brass merchant stall left with hanging lamps, trays and teapots on a wooden counter; rug stall right with three hanging kilims and four spice baskets in cones; saffron and indigo canopies with sun shafts; clay walls; turquoise tiled arch and dome at the far end"
+      },
+      "onlyPieces": [
+        "persia_bazaar",
+        "persia_mosque"
+      ],
+      "musicVideo": false,
+      "useBlockingVideo": true,
+      "useStartFrame": true,
+      "move": "push"
+    },
+    {
+      "id": "SC01_SH04",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "slider",
+      "easing": "smooth",
+      "panel": {
+        "genre": "General",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "az": 175,
+        "el": 5,
+        "intensity": 2.6,
+        "color": "#ffae6e",
+        "fill": 0.5,
+        "soft": 0.35
+      },
+      "camBase": {
+        "p": [
+          -71.5,
+          8.2,
+          40.5
+        ],
+        "target": [
+          -132,
+          16,
+          21
+        ],
+        "focal": 28
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            -71.5,
+            8.2,
+            40.5
+          ],
+          "target": [
+            -132,
+            16,
+            21
+          ],
+          "focal": 28
+        },
+        {
+          "t": 8,
+          "p": [
+            -71.5,
+            8.2,
+            38
+          ],
+          "target": [
+            -132,
+            16,
+            21
+          ],
+          "focal": 28
+        }
+      ],
+      "tracks": {},
+      "beats": [],
+      "purpose": "From the flat rooftop terrace above the bazaar at sunset, looking west across the terrace and the rooftops at the turquoise mosque dome, its two minarets and the gold dome, with the low sun behind them",
+      "audio": "Warm evening wind, striped awning fabric flapping, swallows calling over the rooftops. No music, no dialogue, no narration.",
+      "locks": "no vehicles; no modern objects, wires or signs",
+      "loc": {
+        "tag": "@loc_lp_bazar_rooftop_sunset_v1",
+        "time": "sunset, sun low behind the domes",
+        "desc": "Low-poly flat rooftop terrace above a Persian bazaar at sunset: sand clay parapet, two striped saffron-and-indigo awnings on wooden poles left, three brass lanterns, one wooden bench, two clay jars and one rolled purple kilim right; turquoise and gold domes, two minarets, low sun behind"
+      },
+      "onlyPieces": [
+        "persia_rooftop",
+        "persia_mosque"
+      ],
+      "musicVideo": false,
+      "useBlockingVideo": true,
+      "useStartFrame": true,
+      "move": "left"
+    }
+  ],
+  "current": 0
+}

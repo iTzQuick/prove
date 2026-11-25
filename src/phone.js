@@ -30,7 +30,7 @@ const STEPS = [
   { id: 'out', n: 5, label: 'Prompt', help: 'Scegli il modello e prendi prompt e file per Higgsfield.' },
 ];
 
-const SET_ITEMS = ['wall', 'doorway', 'window', 'table', 'chair', 'sofa', 'bed', 'stairs', 'column', 'lamp', 'tree', 'car', 'plane', 'cube', 'cylinder', 'sphere', 'case', 'bottle', 'phone'];
+const SET_ITEMS = ['wall', 'doorway', 'window', 'table', 'chair', 'sofa', 'bed', 'stairs', 'column', 'lamp', 'tree', 'car', 'plane', 'cube', 'cylinder', 'sphere', 'case', 'bottle', 'phone', 'persia_carpet', 'persia_lamp'];
 const SHOT_SIZES = [
   { id: 'wide', label: 'Campo lungo', ratio: 0.33, aim: 0.55 },
   { id: 'full', label: 'Figura intera', ratio: 0.85, aim: 0.55 },
@@ -98,6 +98,7 @@ export function initPhone(api) {
       { label: 'Importa libreria Elements…', run: () => api.fileAction('lib') },
       { label: 'Carica scena demo', run: () => api.fileAction('demo') },
       { label: 'Carica arena (mappa)', run: () => api.fileAction('arena') },
+      { label: 'Carica Persia (mappa low-poly)', run: () => api.fileAction('persia') },
       { label: 'Nuovo progetto', danger: true, run: () => api.fileAction('new') },
       '-',
       { label: 'Versione completa (desktop)', note: 'tutti i comandi', run: () => { location.search = '?layout=desktop'; } },
