@@ -40,7 +40,7 @@ ${body.trim()}
 `;
 fs.writeFileSync(path.join(OUT, 'index.html'), page);
 
-const extra = [['projects/arena.blocking.json', 'projects'], ['higgsfield/elements.json', 'higgsfield']];
+const extra = [...fs.readdirSync(path.join(ROOT, 'projects')).filter(f => f.endsWith('.json')).map(f => [`projects/${f}`, 'projects']), ['higgsfield/elements.json', 'higgsfield']];
 for (const [rel, dir] of extra) {
   const src = path.join(ROOT, rel);
   if (!fs.existsSync(src)) continue;
