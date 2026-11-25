@@ -57,6 +57,22 @@ Ogni shot ha la sua **Location di questo shot** (tab *Shot*): vuota = usa quella
 Principessa, Lova persiano, Djinn, tappeto volante e lampada magica sono già sulla terrazza con il loro `@tag`, **nascosti**: tocca l'occhio nella lista *Scena* per usarli.
 I pezzi sono nel menu *Aggiungi → Persia*. Per rigenerare il progetto: `node tools/make-persia.mjs`; le misure sono in `src/persia-map.js`.
 
+## Videoclip Persia (9 shot)
+
+*Progetto → Carica videoclip Persia* apre una sequenza di 68 s nella città low-poly. Lova è il protagonista e la Principessa lo guida; i personaggi e gli oggetti sono gli Element di Higgsfield.
+
+1. La porta: crane dal deserto alla porta sud.
+2. La via: frontale basso su Lova.
+3. La piazza: lei lo chiama dalla vasca.
+4. Il bazar: lei lo tira per mano tra i raggi di sole.
+5. La terrazza: lei gli dà la lampada.
+6. Il genio: inquadratura dal basso, il genio cresce dal fumo dietro Lova.
+7. Il tappeto: decollo verso la moschea.
+8. Il volo sulla città al tramonto, con le piramidi sullo sfondo.
+9. Il giardino all'ora blu: atterraggio alla fontana davanti al palazzo.
+
+Per rigenerarlo: `node tools/make-persia-clip.mjs`.
+
 ## Cosa fa
 
 | Area | Funzioni |

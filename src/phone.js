@@ -99,6 +99,7 @@ export function initPhone(api) {
       { label: 'Carica scena demo', run: () => api.fileAction('demo') },
       { label: 'Carica arena (mappa)', run: () => api.fileAction('arena') },
       { label: 'Carica Persia (mappa low-poly)', run: () => api.fileAction('persia') },
+      { label: 'Carica videoclip Persia (9 shot)', run: () => api.fileAction('persiaclip') },
       { label: 'Nuovo progetto', danger: true, run: () => api.fileAction('new') },
       '-',
       { label: 'Versione completa (desktop)', note: 'tutti i comandi', run: () => { location.search = '?layout=desktop'; } },

@@ -1408,6 +1408,7 @@ function fileAction(act) {
   else if (act === 'lib') $('#libInput').click();
   else if (act === 'arena') loadBundledProject('projects/arena.blocking.json');
   else if (act === 'persia') loadBundledProject('projects/persia.blocking.json', 'Persia caricata: 4 shot, uno per ogni Element location');
+  else if (act === 'persiaclip') loadBundledProject('projects/persia-clip.blocking.json', 'Videoclip Persia: 9 shot con Lova e la Principessa');
 }
 $('#fileInput').addEventListener('change', async (e) => {
   const f = e.target.files[0]; if (!f) return;

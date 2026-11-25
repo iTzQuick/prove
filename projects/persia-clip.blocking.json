@@ -1,0 +1,6145 @@
+{
+  "version": 1,
+  "meta": {
+    "project": "Persia — videoclip",
+    "scene": "VC01",
+    "look": "stylised low-poly 3D animated film",
+    "styleLock": "Look: strongly faceted low-poly 3D world with flat-shaded polygons and crisp edges; clean geometric Persian architecture with turquoise and gold tilework, gold domes, sand clay walls, terracotta paving, saffron and indigo textiles; saturated sunset palette of magenta, violet and orange; soft real light and shadows, no outlines.",
+    "locationTag": "",
+    "locationDesc": "a walled low-poly Persian city in the desert: a palace with a turquoise-and-gold iwan and a gold dome behind a long garden with a reflecting pool; a great arcaded square; a covered bazaar leading to a turquoise-domed mosque with two minarets and a gold-domed shrine; flat-roofed clay houses with wind towers; dunes, three pyramids to the south-west and blue mountains to the north",
+    "timeOfDay": "sunset"
+  },
+  "objects": [
+    {
+      "id": "p0001",
+      "kind": "persia_sky",
+      "name": "Cielo al tramonto",
+      "tag": "",
+      "role": "set",
+      "color": "#c54b8d",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          0
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0002",
+      "kind": "persia_desert",
+      "name": "Deserto e dune",
+      "tag": "",
+      "role": "set",
+      "color": "#e4c48c",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          0
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0003",
+      "kind": "persia_mountains",
+      "name": "Montagne blu",
+      "tag": "",
+      "role": "set",
+      "color": "#3f5693",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -820.8483439816047,
+          0,
+          -2255.26228988618
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0004",
+      "kind": "persia_pyramids",
+      "name": "Tre piramidi",
+      "tag": "",
+      "role": "set",
+      "color": "#d9b071",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -1230,
+          0,
+          860
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0005",
+      "kind": "persia_clouds",
+      "name": "Nuvole",
+      "tag": "",
+      "role": "set",
+      "color": "#ff8fa8",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          0
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0006",
+      "kind": "persia_ground",
+      "name": "Terreno città",
+      "tag": "",
+      "role": "set",
+      "color": "#e8cfa2",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          -30
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0007",
+      "kind": "persia_walls",
+      "name": "Mura e porta sud",
+      "tag": "",
+      "role": "set",
+      "color": "#b98f63",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          170
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0008",
+      "kind": "persia_houses",
+      "name": "Case della città",
+      "tag": "",
+      "role": "set",
+      "color": "#d8b88a",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          70,
+          0,
+          90
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p0009",
+      "kind": "persia_meydan",
+      "name": "Piazza e portici",
+      "tag": "",
+      "role": "set",
+      "color": "#d3c3a0",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          25
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000a",
+      "kind": "persia_palace",
+      "name": "Palazzo, iwan e cupola d'oro",
+      "tag": "",
+      "role": "set",
+      "color": "#e3ad3b",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          -172
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000b",
+      "kind": "persia_garden",
+      "name": "Giardino del palazzo",
+      "tag": "",
+      "role": "set",
+      "color": "#5d8e3c",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          0,
+          0,
+          -87
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000c",
+      "kind": "persia_bazaar",
+      "name": "Bazar coperto",
+      "tag": "",
+      "role": "set",
+      "color": "#f2a01f",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -86,
+          0,
+          25
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000d",
+      "kind": "persia_rooftop",
+      "name": "Terrazza sul bazar",
+      "tag": "",
+      "role": "set",
+      "color": "#c0623a",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -81,
+          0,
+          38
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000e",
+      "kind": "persia_mosque",
+      "name": "Moschea turchese e minareti",
+      "tag": "",
+      "role": "set",
+      "color": "#24aeb0",
+      "desc": "",
+      "hidden": false,
+      "base": {
+        "p": [
+          -132,
+          0,
+          25
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000f",
+      "kind": "mannequin",
+      "name": "Principessa",
+      "tag": "@char_persian_princess_v1",
+      "role": "character",
+      "color": "#d64598",
+      "desc": "Low-poly strikingly beautiful adult woman, 172 cm, slim hourglass figure, original face with high cheekbones, full lips, winged kohl eyes, olive skin, glossy black side braid on the left shoulder, gold diadem with one ruby, rose-pink veil, fitted burgundy tunic with gold embroidery, saffron sash, wide saffron trousers, gold slippers, two gold bangles per wrist.",
+      "hidden": false,
+      "height": 1.72,
+      "base": {
+        "p": [
+          -84,
+          6.56,
+          37
+        ],
+        "r": [
+          0,
+          -90,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": {
+          "j": {
+            "shoulder_l": [
+              0,
+              0,
+              8
+            ],
+            "shoulder_r": [
+              0,
+              0,
+              -8
+            ]
+          },
+          "hipsY": 0
+        }
+      }
+    },
+    {
+      "id": "p000g",
+      "kind": "mannequin",
+      "name": "Lova",
+      "tag": "@char_lova_persian_v1",
+      "role": "character",
+      "color": "#3a6fe0",
+      "desc": "Low-poly Lova in Persian streetwear: short dark hair, thin moustache and chin beard, slim red-lens sunglasses with gold temples, pearl-bead necklace with one white broken-heart pendant, open deep indigo hoodie with gold arabesques and a gold Simurgh on the back, white tee, one watch per wrist, very baggy cream jeans with turquoise tile graphics, silver wallet chain, tan work boots.",
+      "hidden": false,
+      "height": 1.8,
+      "base": {
+        "p": [
+          -82.5,
+          6.56,
+          37.5
+        ],
+        "r": [
+          0,
+          -90,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": {
+          "j": {
+            "shoulder_l": [
+              0,
+              0,
+              8
+            ],
+            "shoulder_r": [
+              0,
+              0,
+              -8
+            ]
+          },
+          "hipsY": 0
+        }
+      }
+    },
+    {
+      "id": "p000h",
+      "kind": "mannequin",
+      "name": "Djinn",
+      "tag": "@char_djinn_v1",
+      "role": "character",
+      "color": "#2fc0cf",
+      "desc": "Low-poly djinn, adult man, about 260 cm with tail, original face, copper skin with glowing turquoise lines, turquoise eyes, white beard in two braids, white-and-saffron turban with one emerald, one silver chain across the bare chest, no legs: violet faceted smoke tail. Empty hands.",
+      "hidden": false,
+      "height": 2.2,
+      "base": {
+        "p": [
+          -81,
+          6.56,
+          39
+        ],
+        "r": [
+          0,
+          -90,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": {
+          "j": {
+            "shoulder_l": [
+              0,
+              0,
+              8
+            ],
+            "shoulder_r": [
+              0,
+              0,
+              -8
+            ]
+          },
+          "hipsY": 0
+        }
+      }
+    },
+    {
+      "id": "p000i",
+      "kind": "persia_carpet",
+      "name": "Tappeto volante",
+      "tag": "@prop_flying_carpet_lp_v1",
+      "role": "prop",
+      "color": "#2b3a8f",
+      "desc": "One single low-poly flying carpet, 2 x 1.4 m, 2 cm thick, deep indigo field, one terracotta-and-gold eight-pointed star medallion in the centre, gold geometric border, exactly four gold corner tassels, plain indigo underside.",
+      "hidden": false,
+      "base": {
+        "p": [
+          -87,
+          7.46,
+          39
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    },
+    {
+      "id": "p000j",
+      "kind": "persia_lamp",
+      "name": "Lampada magica",
+      "tag": "@prop_magic_lamp_lp_v1",
+      "role": "prop",
+      "color": "#c99a3e",
+      "desc": "One single low-poly brass oil lamp, 30 cm long, boat-shaped body on a round foot, long spout on the right, curled handle on the left, hinged dome lid with one turquoise stone on top, one band of engraved arabesques around the body.",
+      "hidden": false,
+      "base": {
+        "p": [
+          -82.6,
+          7.04,
+          39.85
+        ],
+        "r": [
+          0,
+          0,
+          0
+        ],
+        "s": [
+          1,
+          1,
+          1
+        ],
+        "pose": null
+      }
+    }
+  ],
+  "shots": [
+    {
+      "id": "VC01_SH01",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "crane",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Epic",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "el": 7,
+        "intensity": 2.6,
+        "color": "#ffae6e",
+        "fill": 0.5,
+        "soft": 0.35,
+        "az": 94
+      },
+      "camBase": {
+        "p": [
+          2.5,
+          24,
+          212
+        ],
+        "target": [
+          0,
+          2,
+          176
+        ],
+        "focal": 28
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            2.5,
+            24,
+            212
+          ],
+          "target": [
+            0,
+            2,
+            176
+          ],
+          "focal": 28
+        },
+        {
+          "t": 8,
+          "p": [
+            1.4,
+            1.7,
+            186
+          ],
+          "target": [
+            0,
+            4,
+            160
+          ],
+          "focal": 28
+        }
+      ],
+      "tracks": {
+        "p000g": [
+          {
+            "t": 0,
+            "p": [
+              0,
+              0,
+              192
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  22,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -22,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 4,
+            "p": [
+              0,
+              0,
+              185
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_r": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_l": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_l": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_r": [
+                  22,
+                  0,
+                  -6
+                ],
+                "shoulder_l": [
+                  -22,
+                  0,
+                  6
+                ],
+                "elbow_r": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_l": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              0,
+              0,
+              178
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  22,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -22,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000f": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000h": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000i": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "p000j": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "beats": [
+        {
+          "t0": 0,
+          "t1": 3,
+          "text": "@char_lova_persian_v1 walks toward the gate, small puffs of sand at each step, the indigo hoodie lifting in the warm wind."
+        },
+        {
+          "t0": 3,
+          "t1": 6,
+          "text": "He keeps walking; the turquoise-tiled arch of the gate grows around him and the gold palace dome appears above the wall."
+        },
+        {
+          "t0": 6,
+          "t1": 8,
+          "text": "He slows inside the shadow of the gateway and lifts his chin toward the city."
+        }
+      ],
+      "purpose": "Opening of the music video: @char_lova_persian_v1 walks alone out of the desert toward the open south gate of the walled Persian city at sunset; the crane descends behind him until the gate frames him and the gold palace dome and the minarets rise beyond the walls",
+      "audio": "",
+      "locks": "no vehicles; no modern objects, wires or signs; no other people",
+      "loc": {
+        "tag": "",
+        "time": "sunset, low sun in the west",
+        "desc": "Low-poly walled Persian city seen from the desert at sunset: sand clay walls with crenellations, one tall open south gate with a turquoise-tiled arch, beyond it flat-roofed clay houses, minarets and the gold palace dome"
+      },
+      "onlyPieces": [
+        "persia_walls",
+        "persia_palace",
+        "persia_houses"
+      ],
+      "move": "crane",
+      "musicVideo": true,
+      "useBlockingVideo": true,
+      "useStartFrame": true
+    },
+    {
+      "id": "VC01_SH02",
+      "duration": 6,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "steadicam",
+      "easing": "smooth",
+      "panel": {
+        "genre": "General",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "el": 7,
+        "intensity": 2.6,
+        "color": "#ffae6e",
+        "fill": 0.5,
+        "soft": 0.35,
+        "az": -95
+      },
+      "camBase": {
+        "p": [
+          0.3,
+          0.75,
+          146.8
+        ],
+        "target": [
+          0,
+          1.5,
+          150
+        ],
+        "focal": 24
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            0.3,
+            0.75,
+            146.8
+          ],
+          "target": [
+            0,
+            1.5,
+            150
+          ],
+          "focal": 24
+        },
+        {
+          "t": 6,
+          "p": [
+            0.3,
+            0.85,
+            138.8
+          ],
+          "target": [
+            0,
+            1.55,
+            142
+          ],
+          "focal": 24
+        }
+      ],
+      "tracks": {
+        "p000g": [
+          {
+            "t": 0,
+            "p": [
+              0,
+              0,
+              150
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  22,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -22,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 2,
+            "p": [
+              0,
+              0,
+              147
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "head": [
+                  -28,
+                  0,
+                  0
+                ],
+                "neck": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 4,
+            "p": [
+              0,
+              0,
+              144
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "head": [
+                  -15,
+                  45,
+                  0
+                ],
+                "neck": [
+                  0,
+                  12,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 6,
+            "p": [
+              0,
+              0,
+              142
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_r": [
+                  -20,
+                  0,
+                  -40
+                ],
+                "elbow_r": [
+                  -150,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "head": [
+                  -8,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000f": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000h": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000i": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "p000j": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "beats": [
+        {
+          "t0": 0,
+          "t1": 2,
+          "text": "@char_lova_persian_v1 walks up the main street toward the camera, the city gate glowing gold behind him."
+        },
+        {
+          "t0": 2,
+          "t1": 4,
+          "text": "He looks up at the wind towers and small domes on the clay houses, turning his head slowly to the left."
+        },
+        {
+          "t0": 4,
+          "t1": 6,
+          "text": "He pushes his red-lens sunglasses up onto his head and a half smile appears."
+        }
+      ],
+      "purpose": "@char_lova_persian_v1 walks up the main street of the city at sunset, seen from a low frontal angle as the camera moves back in front of him; the glowing south gate and the clay houses with wind towers behind him",
+      "audio": "",
+      "locks": "no vehicles; no modern objects, wires or signs; no other people",
+      "loc": {
+        "tag": "",
+        "time": "sunset, low sun in the west",
+        "desc": "Low-poly main street of a Persian city at sunset: terracotta paving, two rows of sand clay houses with small domes and wind towers, the tall south gate glowing at the end of the street"
+      },
+      "onlyPieces": [
+        "persia_walls",
+        "persia_houses"
+      ],
+      "move": "pull",
+      "musicVideo": true,
+      "useBlockingVideo": true,
+      "useStartFrame": true
+    },
+    {
+      "id": "VC01_SH03",
+      "duration": 6,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "dolly",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Drama",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/1.4 Wide Open",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "el": 7,
+        "intensity": 2.6,
+        "color": "#ffae6e",
+        "fill": 0.5,
+        "soft": 0.35,
+        "az": 125
+      },
+      "camBase": {
+        "p": [
+          25.6,
+          1.74,
+          72.4
+        ],
+        "target": [
+          16.5,
+          1.25,
+          59.5
+        ],
+        "focal": 40
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            25.6,
+            1.74,
+            72.4
+          ],
+          "target": [
+            16.5,
+            1.25,
+            59.5
+          ],
+          "focal": 40
+        },
+        {
+          "t": 6,
+          "p": [
+            25.2,
+            1.72,
+            71.8
+          ],
+          "target": [
+            15,
+            1.25,
+            58.5
+          ],
+          "focal": 40
+        }
+      ],
+      "tracks": {
+        "p000g": [
+          {
+            "t": 0,
+            "p": [
+              24,
+              0,
+              70
+            ],
+            "r": [
+              0,
+              -144,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 4.5,
+            "p": [
+              24,
+              0,
+              70
+            ],
+            "r": [
+              0,
+              -144,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 6,
+            "p": [
+              23.6,
+              0,
+              69.4
+            ],
+            "r": [
+              0,
+              -144,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  22,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -22,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000f": [
+          {
+            "t": 0,
+            "p": [
+              16,
+              0,
+              59
+            ],
+            "r": [
+              0,
+              36,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 1.8,
+            "p": [
+              16,
+              0,
+              59
+            ],
+            "r": [
+              0,
+              36,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_r": [
+                  0,
+                  0,
+                  -135
+                ],
+                "elbow_r": [
+                  0,
+                  0,
+                  -40
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 3.6,
+            "p": [
+              16,
+              0,
+              59
+            ],
+            "r": [
+              0,
+              36,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_r": [
+                  0,
+                  0,
+                  -135
+                ],
+                "elbow_r": [
+                  0,
+                  0,
+                  -40
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 4.4,
+            "p": [
+              15,
+              0,
+              58.6
+            ],
+            "r": [
+              0,
+              -110,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "spine": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_l": [
+                  -62,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  75,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  30,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  65,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  45,
+                  0,
+                  8
+                ],
+                "elbow_l": [
+                  -95,
+                  0,
+                  0
+                ],
+                "shoulder_r": [
+                  -55,
+                  0,
+                  -8
+                ],
+                "elbow_r": [
+                  -90,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": -0.04
+            }
+          },
+          {
+            "t": 6,
+            "p": [
+              9,
+              0,
+              56.2
+            ],
+            "r": [
+              0,
+              -110,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "spine": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_l": [
+                  -62,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  75,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  30,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  65,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  45,
+                  0,
+                  8
+                ],
+                "elbow_l": [
+                  -95,
+                  0,
+                  0
+                ],
+                "shoulder_r": [
+                  -55,
+                  0,
+                  -8
+                ],
+                "elbow_r": [
+                  -90,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": -0.04
+            }
+          }
+        ],
+        "p000h": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000i": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "p000j": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "beats": [
+        {
+          "t0": 0,
+          "t1": 2,
+          "text": "@char_lova_persian_v1 stops at the edge of the great square, the long pool and the turquoise arcades ahead; @char_persian_princess_v1 stands by the pool and turns to him."
+        },
+        {
+          "t0": 2,
+          "t1": 4,
+          "text": "@char_persian_princess_v1 lifts her hand and waves him to follow, a bright smile."
+        },
+        {
+          "t0": 4,
+          "t1": 6,
+          "text": "She turns and runs toward the arcades on frame-left, looking back once; @char_lova_persian_v1 takes his first step after her."
+        }
+      ],
+      "purpose": "In the great square at sunset, over @char_lova_persian_v1's right shoulder: @char_persian_princess_v1 stands by the long pool, waves him to follow and runs toward the arcades; @char_lova_persian_v1 stays dominant in the foreground",
+      "audio": "",
+      "locks": "no vehicles; no modern objects, wires or signs; no other people",
+      "loc": {
+        "tag": "",
+        "time": "sunset, low sun in the west",
+        "desc": "Low-poly great square of a Persian city at sunset: a long rectangular pool, two-storey arcades with turquoise-tiled arches on all sides, the covered bazaar entrance on the west side"
+      },
+      "onlyPieces": [
+        "persia_meydan",
+        "persia_bazaar",
+        "persia_houses"
+      ],
+      "move": "push",
+      "musicVideo": true,
+      "useBlockingVideo": true,
+      "useStartFrame": true
+    },
+    {
+      "id": "VC01_SH04",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "gimbal",
+      "easing": "smooth",
+      "panel": {
+        "genre": "General",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "el": 7,
+        "intensity": 2.6,
+        "color": "#ffae6e",
+        "fill": 0.5,
+        "soft": 0.35,
+        "az": -4
+      },
+      "camBase": {
+        "p": [
+          -66.3,
+          1.55,
+          25.2
+        ],
+        "target": [
+          -62,
+          1.45,
+          25.5
+        ],
+        "focal": 28
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            -66.3,
+            1.55,
+            25.2
+          ],
+          "target": [
+            -62,
+            1.45,
+            25.5
+          ],
+          "focal": 28
+        },
+        {
+          "t": 4,
+          "p": [
+            -74.3,
+            1.55,
+            25.2
+          ],
+          "target": [
+            -70,
+            1.45,
+            25.5
+          ],
+          "focal": 28
+        },
+        {
+          "t": 8,
+          "p": [
+            -82.3,
+            1.55,
+            25.2
+          ],
+          "target": [
+            -78,
+            1.45,
+            25.5
+          ],
+          "focal": 28
+        }
+      ],
+      "tracks": {
+        "p000g": [
+          {
+            "t": 0,
+            "p": [
+              -62,
+              0,
+              25.75
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  22,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -22,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 2,
+            "p": [
+              -66,
+              0,
+              25.75
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_r": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_l": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_l": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_r": [
+                  22,
+                  0,
+                  -6
+                ],
+                "shoulder_l": [
+                  -22,
+                  0,
+                  6
+                ],
+                "elbow_r": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_l": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 4,
+            "p": [
+              -70,
+              0,
+              25.75
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  22,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -22,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 6,
+            "p": [
+              -74,
+              0,
+              25.75
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "head": [
+                  -15,
+                  45,
+                  0
+                ],
+                "neck": [
+                  0,
+                  12,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              -78,
+              0,
+              25.75
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  22,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -22,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000f": [
+          {
+            "t": 0,
+            "p": [
+              -62.35,
+              0,
+              24.2
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_r": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_l": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_l": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_r": [
+                  22,
+                  0,
+                  -6
+                ],
+                "shoulder_l": [
+                  -22,
+                  0,
+                  6
+                ],
+                "elbow_r": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_l": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 2,
+            "p": [
+              -66.35,
+              0,
+              24.2
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  22,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -22,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 4,
+            "p": [
+              -70.35,
+              0,
+              24.2
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_r": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_l": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_l": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_r": [
+                  22,
+                  0,
+                  -6
+                ],
+                "shoulder_l": [
+                  -22,
+                  0,
+                  6
+                ],
+                "elbow_r": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_l": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 6,
+            "p": [
+              -74.35,
+              0,
+              24.2
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  22,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -22,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              -78.35,
+              0,
+              24.2
+            ],
+            "r": [
+              0,
+              60,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_r": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_l": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_l": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_r": [
+                  22,
+                  0,
+                  -6
+                ],
+                "shoulder_l": [
+                  -22,
+                  0,
+                  6
+                ],
+                "elbow_r": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_l": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000h": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000i": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "p000j": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "beats": [
+        {
+          "t0": 0,
+          "t1": 3,
+          "text": "@char_persian_princess_v1 pulls @char_lova_persian_v1 by the hand along the covered bazaar at a brisk walk, shafts of sunset light crossing them one after another."
+        },
+        {
+          "t0": 3,
+          "t1": 6,
+          "text": "@char_lova_persian_v1 turns his head to the brass lamps and the hanging kilims as they pass, still walking."
+        },
+        {
+          "t0": 6,
+          "t1": 8,
+          "text": "@char_persian_princess_v1 looks back over her shoulder at him and laughs; the turquoise arch at the end of the alley comes closer behind the camera."
+        }
+      ],
+      "purpose": "@char_persian_princess_v1 leads @char_lova_persian_v1 by the hand through the covered bazaar at sunset, the camera moving backward in front of them; @char_lova_persian_v1 stays centred and sharp, the brass lamps, hanging kilims and sun shafts sliding past, the turquoise arch of the mosque at the far end",
+      "audio": "",
+      "locks": "no vehicles; no modern objects, wires or signs; no other people",
+      "loc": {
+        "tag": "@loc_lp_bazar_alley_sunset_v1",
+        "time": "sunset",
+        "desc": "Low-poly narrow covered Persian bazaar alley at sunset: brass merchant stall left with hanging lamps, trays and teapots on a wooden counter; rug stall right with three hanging kilims and four spice baskets in cones; saffron and indigo canopies with sun shafts; clay walls; turquoise tiled arch and dome at the far end"
+      },
+      "onlyPieces": [
+        "persia_bazaar",
+        "persia_mosque"
+      ],
+      "move": "pull",
+      "musicVideo": true,
+      "useBlockingVideo": true,
+      "useStartFrame": true
+    },
+    {
+      "id": "VC01_SH05",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "dolly",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Drama",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "el": 7,
+        "intensity": 2.6,
+        "color": "#ffae6e",
+        "fill": 0.5,
+        "soft": 0.35,
+        "az": -163
+      },
+      "camBase": {
+        "p": [
+          -78,
+          8.06,
+          36.9
+        ],
+        "target": [
+          -83.6,
+          7.91,
+          38.6
+        ],
+        "focal": 35
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            -78,
+            8.06,
+            36.9
+          ],
+          "target": [
+            -83.6,
+            7.91,
+            38.6
+          ],
+          "focal": 35
+        },
+        {
+          "t": 8,
+          "p": [
+            -79.6,
+            8.04,
+            37.2
+          ],
+          "target": [
+            -84,
+            7.91,
+            38.5
+          ],
+          "focal": 35
+        }
+      ],
+      "tracks": {
+        "p000g": [
+          {
+            "t": 0,
+            "p": [
+              -84,
+              6.56,
+              38
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 2.5,
+            "p": [
+              -84,
+              6.56,
+              38
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 3.5,
+            "p": [
+              -84,
+              6.56,
+              38
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "spine": [
+                  10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  -70,
+                  0,
+                  4
+                ],
+                "shoulder_r": [
+                  -70,
+                  0,
+                  -4
+                ],
+                "elbow_l": [
+                  -20,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -20,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 4.5,
+            "p": [
+              -84,
+              6.56,
+              38
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  -55,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -55,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -55,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -55,
+                  0,
+                  0
+                ],
+                "head": [
+                  20,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              -84,
+              6.56,
+              38
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  -55,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -55,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -55,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -55,
+                  0,
+                  0
+                ],
+                "head": [
+                  20,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000f": [
+          {
+            "t": 0,
+            "p": [
+              -82.4,
+              6.56,
+              39.6
+            ],
+            "r": [
+              0,
+              -135,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "spine": [
+                  10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  -70,
+                  0,
+                  4
+                ],
+                "shoulder_r": [
+                  -70,
+                  0,
+                  -4
+                ],
+                "elbow_l": [
+                  -20,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -20,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 3.5,
+            "p": [
+              -82.4,
+              6.56,
+              39.6
+            ],
+            "r": [
+              0,
+              -135,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "spine": [
+                  10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  -70,
+                  0,
+                  4
+                ],
+                "shoulder_r": [
+                  -70,
+                  0,
+                  -4
+                ],
+                "elbow_l": [
+                  -20,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -20,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 5,
+            "p": [
+              -82.4,
+              6.56,
+              39.6
+            ],
+            "r": [
+              0,
+              -135,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              -82.1,
+              6.56,
+              39.9
+            ],
+            "r": [
+              0,
+              -135,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000h": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000i": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "p000j": [
+          {
+            "t": 0,
+            "p": [
+              -82.75,
+              7.64,
+              39.25
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "t": 3.5,
+            "p": [
+              -83.1,
+              7.66,
+              38.8
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "t": 4.5,
+            "p": [
+              -83.55,
+              7.68,
+              38.05
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "t": 8,
+            "p": [
+              -83.58,
+              7.74,
+              38
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "beats": [
+        {
+          "t0": 0,
+          "t1": 3,
+          "text": "@char_persian_princess_v1 holds out @prop_magic_lamp_lp_v1 to @char_lova_persian_v1 with both hands; he looks at it, then at her."
+        },
+        {
+          "t0": 3,
+          "t1": 5,
+          "text": "@char_lova_persian_v1 takes the lamp; its weight drops his wrists slightly."
+        },
+        {
+          "t0": 5,
+          "t1": 8,
+          "text": "He lifts it to his chest and studies the engraved arabesques, the low sun flaring along the brass; @char_persian_princess_v1 steps back to watch."
+        }
+      ],
+      "purpose": "On the rooftop terrace at sunset @char_persian_princess_v1 gives @char_lova_persian_v1 the magic lamp; @char_lova_persian_v1 faces the camera with the turquoise mosque dome, its minarets and the low sun behind him, the lamp catching the light",
+      "audio": "",
+      "locks": "no vehicles; no modern objects, wires or signs; no other people",
+      "loc": {
+        "tag": "@loc_lp_bazar_rooftop_sunset_v1",
+        "time": "sunset, sun low behind the domes",
+        "desc": "Low-poly flat rooftop terrace above a Persian bazaar at sunset: sand clay parapet, two striped saffron-and-indigo awnings on wooden poles left, three brass lanterns, one wooden bench, two clay jars and one rolled purple kilim right; turquoise and gold domes, two minarets, low sun behind"
+      },
+      "onlyPieces": [
+        "persia_rooftop",
+        "persia_mosque"
+      ],
+      "move": "push",
+      "musicVideo": true,
+      "useBlockingVideo": true,
+      "useStartFrame": true
+    },
+    {
+      "id": "VC01_SH06",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "crane",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Epic",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "el": 7,
+        "intensity": 2.6,
+        "color": "#ffae6e",
+        "fill": 0.5,
+        "soft": 0.35,
+        "az": 176
+      },
+      "camBase": {
+        "p": [
+          -81.4,
+          7.01,
+          38.5
+        ],
+        "target": [
+          -84,
+          8.36,
+          38.3
+        ],
+        "focal": 24
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            -81.4,
+            7.01,
+            38.5
+          ],
+          "target": [
+            -84,
+            8.36,
+            38.3
+          ],
+          "focal": 24
+        },
+        {
+          "t": 8,
+          "p": [
+            -81.2,
+            7.36,
+            38.7
+          ],
+          "target": [
+            -85.2,
+            9.86,
+            38.8
+          ],
+          "focal": 24
+        }
+      ],
+      "tracks": {
+        "p000g": [
+          {
+            "t": 0,
+            "p": [
+              -84,
+              6.56,
+              38
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  -55,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -55,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -55,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -55,
+                  0,
+                  0
+                ],
+                "head": [
+                  20,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 1.2,
+            "p": [
+              -84,
+              6.56,
+              38
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  -150,
+                  0,
+                  12
+                ],
+                "shoulder_r": [
+                  -150,
+                  0,
+                  -12
+                ],
+                "elbow_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ],
+                "head": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              -84,
+              6.56,
+              38
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  -150,
+                  0,
+                  12
+                ],
+                "shoulder_r": [
+                  -150,
+                  0,
+                  -12
+                ],
+                "elbow_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ],
+                "head": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000f": [
+          {
+            "t": 0,
+            "p": [
+              -86.2,
+              6.56,
+              36.2
+            ],
+            "r": [
+              0,
+              50.7,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 5,
+            "p": [
+              -86.2,
+              6.56,
+              36.2
+            ],
+            "r": [
+              0,
+              50.7,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 7,
+            "p": [
+              -86,
+              6.56,
+              35.8
+            ],
+            "r": [
+              0,
+              50.7,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  -30,
+                  0,
+                  120
+                ],
+                "shoulder_r": [
+                  -30,
+                  0,
+                  -120
+                ],
+                "elbow_l": [
+                  -40,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -40,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000h": [
+          {
+            "t": 0,
+            "p": [
+              -83.75,
+              8.66,
+              38
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              0.04,
+              0.04,
+              0.04
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  -30,
+                  -10,
+                  28
+                ],
+                "elbow_l": [
+                  -115,
+                  0,
+                  -50
+                ],
+                "shoulder_r": [
+                  -30,
+                  10,
+                  -28
+                ],
+                "elbow_r": [
+                  -115,
+                  0,
+                  50
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 2,
+            "p": [
+              -84.2,
+              8.56,
+              38.4
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              0.08,
+              0.08,
+              0.08
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  -30,
+                  -10,
+                  28
+                ],
+                "elbow_l": [
+                  -115,
+                  0,
+                  -50
+                ],
+                "shoulder_r": [
+                  -30,
+                  10,
+                  -28
+                ],
+                "elbow_r": [
+                  -115,
+                  0,
+                  50
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 6,
+            "p": [
+              -86.6,
+              6.96,
+              39
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1.35,
+              1.35,
+              1.35
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  -30,
+                  -10,
+                  28
+                ],
+                "elbow_l": [
+                  -115,
+                  0,
+                  -50
+                ],
+                "shoulder_r": [
+                  -30,
+                  10,
+                  -28
+                ],
+                "elbow_r": [
+                  -115,
+                  0,
+                  50
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              -86.6,
+              6.96,
+              39
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1.35,
+              1.35,
+              1.35
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  -30,
+                  -10,
+                  28
+                ],
+                "elbow_l": [
+                  -115,
+                  0,
+                  -50
+                ],
+                "shoulder_r": [
+                  -30,
+                  10,
+                  -28
+                ],
+                "elbow_r": [
+                  -115,
+                  0,
+                  50
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000i": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "p000j": [
+          {
+            "t": 0,
+            "p": [
+              -83.58,
+              7.74,
+              38
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "t": 1.2,
+            "p": [
+              -83.75,
+              8.68,
+              38
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "t": 8,
+            "p": [
+              -83.75,
+              8.68,
+              38
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "beats": [
+        {
+          "t0": 0,
+          "t1": 2,
+          "text": "@char_lova_persian_v1 raises @prop_magic_lamp_lp_v1 above his head with both hands, the low sun behind him, and rubs its side once with his thumb."
+        },
+        {
+          "t0": 2,
+          "t1": 4,
+          "text": "Violet faceted smoke pours from the spout and swirls up behind his left shoulder."
+        },
+        {
+          "t0": 4,
+          "t1": 7,
+          "text": "@char_djinn_v1 rises out of the smoke behind him and grows to full height, turquoise lines glowing, arms folding across his chest; @char_lova_persian_v1 does not turn, a slow grin."
+        },
+        {
+          "t0": 7,
+          "t1": 8,
+          "text": "@char_persian_princess_v1 on frame-right steps back with her hands raised in awe."
+        }
+      ],
+      "purpose": "Low-angle hero shot on the rooftop at sunset: @char_lova_persian_v1 raises the magic lamp above his head and @char_djinn_v1 grows out of violet smoke behind his shoulder, towering over him; @char_lova_persian_v1 stays in the centre, calm and in control",
+      "audio": "",
+      "locks": "no vehicles; no modern objects, wires or signs; no other people",
+      "loc": {
+        "tag": "@loc_lp_bazar_rooftop_sunset_v1",
+        "time": "sunset, sun low behind the domes",
+        "desc": "Low-poly flat rooftop terrace above a Persian bazaar at sunset: sand clay parapet, two striped saffron-and-indigo awnings on wooden poles left, three brass lanterns, one wooden bench, two clay jars and one rolled purple kilim right; turquoise and gold domes, two minarets, low sun behind"
+      },
+      "onlyPieces": [
+        "persia_rooftop",
+        "persia_mosque"
+      ],
+      "move": "crane",
+      "musicVideo": true,
+      "useBlockingVideo": true,
+      "useStartFrame": true
+    },
+    {
+      "id": "VC01_SH07",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "crane",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Epic",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "el": 7,
+        "intensity": 2.6,
+        "color": "#ffae6e",
+        "fill": 0.5,
+        "soft": 0.35,
+        "az": -176
+      },
+      "camBase": {
+        "p": [
+          -78,
+          8.26,
+          37.2
+        ],
+        "target": [
+          -89,
+          7.86,
+          38
+        ],
+        "focal": 28
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            -78,
+            8.26,
+            37.2
+          ],
+          "target": [
+            -89,
+            7.86,
+            38
+          ],
+          "focal": 28
+        },
+        {
+          "t": 8,
+          "p": [
+            -88.5,
+            10.96,
+            38.2
+          ],
+          "target": [
+            -96,
+            11.46,
+            36.8
+          ],
+          "focal": 28
+        }
+      ],
+      "tracks": {
+        "p000g": [
+          {
+            "t": 0,
+            "p": [
+              -86.6,
+              6.56,
+              37.7
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  22,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -22,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 1.6,
+            "p": [
+              -90.65,
+              7.14,
+              38.25
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  90,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  0,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  90,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  40,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": -0.45
+            }
+          },
+          {
+            "t": 2.6,
+            "p": [
+              -90.65,
+              7.14,
+              38.25
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  90,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  0,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  90,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  40,
+                  0,
+                  0
+                ],
+                "shoulder_r": [
+                  -70,
+                  0,
+                  -15
+                ],
+                "elbow_r": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ]
+              },
+              "hipsY": -0.45
+            }
+          },
+          {
+            "t": 3.5,
+            "p": [
+              -90.65,
+              7.14,
+              38.25
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  90,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  0,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  90,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  40,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": -0.45
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              -96.35,
+              11.09,
+              37.05
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  90,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  0,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  90,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  40,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": -0.45
+            }
+          }
+        ],
+        "p000f": [
+          {
+            "t": 0,
+            "p": [
+              -86,
+              6.56,
+              39.4
+            ],
+            "r": [
+              0,
+              -100,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 2.4,
+            "p": [
+              -88.2,
+              6.56,
+              38.8
+            ],
+            "r": [
+              0,
+              -95,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -25,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  12,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  20,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  28,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  -10,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  22,
+                  0,
+                  6
+                ],
+                "shoulder_r": [
+                  -22,
+                  0,
+                  -6
+                ],
+                "elbow_l": [
+                  -15,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -25,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 3.5,
+            "p": [
+              -89.85,
+              7.14,
+              37.7
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  25,
+                  35
+                ],
+                "hip_r": [
+                  -90,
+                  -25,
+                  -35
+                ],
+                "knee_l": [
+                  150,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  150,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  -20,
+                  0,
+                  10
+                ],
+                "shoulder_r": [
+                  -20,
+                  0,
+                  -10
+                ],
+                "elbow_l": [
+                  -40,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -40,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": -0.82
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              -95.55,
+              11.09,
+              36.5
+            ],
+            "r": [
+              0,
+              -90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  25,
+                  35
+                ],
+                "hip_r": [
+                  -90,
+                  -25,
+                  -35
+                ],
+                "knee_l": [
+                  150,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  150,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  -20,
+                  0,
+                  10
+                ],
+                "shoulder_r": [
+                  -20,
+                  0,
+                  -10
+                ],
+                "elbow_l": [
+                  -40,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -40,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": -0.82
+            }
+          }
+        ],
+        "p000h": [
+          {
+            "t": 0,
+            "p": [
+              -87.2,
+              6.96,
+              41.4
+            ],
+            "r": [
+              0,
+              -110,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_r": [
+                  -88,
+                  0,
+                  -5
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              -87.2,
+              6.96,
+              41.4
+            ],
+            "r": [
+              0,
+              -110,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_r": [
+                  -88,
+                  0,
+                  -5
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000i": [
+          {
+            "t": 0,
+            "p": [
+              -90.3,
+              7.11,
+              38
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "t": 3.5,
+            "p": [
+              -90.3,
+              7.11,
+              38
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "t": 8,
+            "p": [
+              -96,
+              11.06,
+              36.8
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "p000j": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "beats": [
+        {
+          "t0": 0,
+          "t1": 2,
+          "text": "@char_djinn_v1 points at @prop_flying_carpet_lp_v1 hovering beyond the parapet; @char_lova_persian_v1 walks to it and steps on, the carpet dipping under his weight."
+        },
+        {
+          "t0": 2,
+          "t1": 4,
+          "text": "@char_lova_persian_v1 kneels at the front and holds out his hand; @char_persian_princess_v1 takes it, steps on behind him and sits."
+        },
+        {
+          "t0": 4,
+          "t1": 8,
+          "text": "The carpet rises and glides west toward the turquoise dome and the low sun, its tassels fluttering, @char_lova_persian_v1's hoodie blowing back."
+        }
+      ],
+      "purpose": "@char_djinn_v1 points at @prop_flying_carpet_lp_v1 hovering at the edge of the rooftop; @char_lova_persian_v1 steps on first, offers his hand to @char_persian_princess_v1, and the carpet lifts off and glides west toward the turquoise mosque dome and the low sun",
+      "audio": "",
+      "locks": "no vehicles; no modern objects, wires or signs; no other people",
+      "loc": {
+        "tag": "@loc_lp_bazar_rooftop_sunset_v1",
+        "time": "sunset, sun low behind the domes",
+        "desc": "Low-poly flat rooftop terrace above a Persian bazaar at sunset: sand clay parapet, two striped saffron-and-indigo awnings on wooden poles left, three brass lanterns, one wooden bench, two clay jars and one rolled purple kilim right; turquoise and gold domes, two minarets, low sun behind"
+      },
+      "onlyPieces": [
+        "persia_rooftop",
+        "persia_mosque",
+        "persia_bazaar"
+      ],
+      "move": "crane",
+      "musicVideo": true,
+      "useBlockingVideo": true,
+      "useStartFrame": true
+    },
+    {
+      "id": "VC01_SH08",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "drone",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Epic",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "el": 7,
+        "intensity": 2.6,
+        "color": "#ffae6e",
+        "fill": 0.5,
+        "soft": 0.35,
+        "az": -150
+      },
+      "camBase": {
+        "p": [
+          8.5,
+          32.4,
+          65
+        ],
+        "target": [
+          0,
+          30.9,
+          70
+        ],
+        "focal": 35
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            8.5,
+            32.4,
+            65
+          ],
+          "target": [
+            0,
+            30.9,
+            70
+          ],
+          "focal": 35
+        },
+        {
+          "t": 4,
+          "p": [
+            8.5,
+            33.4,
+            30
+          ],
+          "target": [
+            0,
+            31.9,
+            35
+          ],
+          "focal": 35
+        },
+        {
+          "t": 8,
+          "p": [
+            8.5,
+            34.4,
+            -5
+          ],
+          "target": [
+            0,
+            32.9,
+            0
+          ],
+          "focal": 35
+        }
+      ],
+      "tracks": {
+        "p000g": [
+          {
+            "t": 0,
+            "p": [
+              0.3,
+              30.03,
+              69.6
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  90,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  0,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  90,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  40,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": -0.45
+            }
+          },
+          {
+            "t": 3,
+            "p": [
+              0.3,
+              30.78,
+              43.35
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  90,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  0,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  90,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  40,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": -0.45
+            }
+          },
+          {
+            "t": 5,
+            "p": [
+              0.3,
+              31.28,
+              25.85
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  90,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  0,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  90,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  40,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  -10,
+                  0,
+                  85
+                ],
+                "shoulder_r": [
+                  -10,
+                  0,
+                  -85
+                ],
+                "head": [
+                  -12,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": -0.45
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              0.3,
+              32.03,
+              -0.4
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  90,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  0,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  90,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  40,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  -10,
+                  0,
+                  85
+                ],
+                "shoulder_r": [
+                  -10,
+                  0,
+                  -85
+                ],
+                "head": [
+                  -12,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": -0.45
+            }
+          }
+        ],
+        "p000f": [
+          {
+            "t": 0,
+            "p": [
+              -0.3,
+              30.03,
+              70.5
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  25,
+                  35
+                ],
+                "hip_r": [
+                  -90,
+                  -25,
+                  -35
+                ],
+                "knee_l": [
+                  150,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  150,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  -20,
+                  0,
+                  10
+                ],
+                "shoulder_r": [
+                  -20,
+                  0,
+                  -10
+                ],
+                "elbow_l": [
+                  -40,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -40,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": -0.82
+            }
+          },
+          {
+            "t": 5.5,
+            "p": [
+              -0.3,
+              31.43,
+              22.5
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  25,
+                  35
+                ],
+                "hip_r": [
+                  -90,
+                  -25,
+                  -35
+                ],
+                "knee_l": [
+                  150,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  150,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  -20,
+                  0,
+                  10
+                ],
+                "shoulder_r": [
+                  -20,
+                  0,
+                  -10
+                ],
+                "elbow_l": [
+                  -40,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -40,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": -0.82
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              -0.3,
+              32.03,
+              0.5
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "spine": [
+                  18,
+                  0,
+                  0
+                ],
+                "hip_l": [
+                  -90,
+                  25,
+                  35
+                ],
+                "hip_r": [
+                  -90,
+                  -25,
+                  -35
+                ],
+                "knee_l": [
+                  150,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  150,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  -60,
+                  0,
+                  10
+                ],
+                "shoulder_r": [
+                  -60,
+                  0,
+                  -10
+                ],
+                "elbow_l": [
+                  -30,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -30,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": -0.82
+            }
+          }
+        ],
+        "p000h": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000i": [
+          {
+            "t": 0,
+            "p": [
+              0,
+              30,
+              70
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "t": 4,
+            "p": [
+              0,
+              31,
+              35
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "t": 8,
+            "p": [
+              0,
+              32,
+              0
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "p000j": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "beats": [
+        {
+          "t0": 0,
+          "t1": 3,
+          "text": "@prop_flying_carpet_lp_v1 flies north above the great square, @char_lova_persian_v1 kneeling at the front, hoodie snapping in the wind, @char_persian_princess_v1 seated behind him, the turquoise mosque dome and the low sun behind them."
+        },
+        {
+          "t0": 3,
+          "t1": 6,
+          "text": "@char_lova_persian_v1 slowly spreads his arms wide into the wind and tilts his head back, eyes closed behind the red lenses."
+        },
+        {
+          "t0": 6,
+          "t1": 8,
+          "text": "@char_persian_princess_v1 leans forward toward his shoulder, smiling; the arcades and the long pool slide away far below."
+        }
+      ],
+      "purpose": "The flying carpet crosses the city at about 30 m at sunset, filmed from a drone flying alongside: @char_lova_persian_v1 kneels at the front nearest the camera and spreads his arms into the wind, @char_persian_princess_v1 seated behind him, the turquoise mosque dome, the minarets and the low sun behind them, the great square sliding by below",
+      "audio": "",
+      "locks": "no vehicles; no modern objects, wires or signs; no other people",
+      "loc": {
+        "tag": "",
+        "time": "sunset, sun low in the west",
+        "desc": "Low-poly Persian city seen from about 30 m at sunset: the great square with its long pool and arcades, the covered bazaar roofs, flat clay rooftops with wind towers, the turquoise mosque dome and two minarets to the west"
+      },
+      "onlyPieces": [
+        "persia_meydan",
+        "persia_mosque",
+        "persia_bazaar",
+        "persia_houses"
+      ],
+      "move": "truck",
+      "musicVideo": true,
+      "useBlockingVideo": true,
+      "useStartFrame": true
+    },
+    {
+      "id": "VC01_SH09",
+      "duration": 8,
+      "aspect": "16:9",
+      "resolution": "1080p",
+      "model": "cs4",
+      "rig": "tripod",
+      "easing": "smooth",
+      "panel": {
+        "genre": "Epic",
+        "era": "2020s",
+        "tempo": "Single shot",
+        "body": "35mm Film",
+        "lens": "Clean Sharp",
+        "aperture": "f/4 Moderate",
+        "light": "Custom",
+        "palette": ""
+      },
+      "light": {
+        "el": 10,
+        "intensity": 0.9,
+        "color": "#9fb4ff",
+        "fill": 0.65,
+        "soft": 0.75,
+        "az": -101
+      },
+      "camBase": {
+        "p": [
+          4,
+          1,
+          -71
+        ],
+        "target": [
+          0,
+          1.9,
+          -50
+        ],
+        "focal": 24
+      },
+      "camKeys": [
+        {
+          "t": 0,
+          "p": [
+            4,
+            1,
+            -71
+          ],
+          "target": [
+            0,
+            1.9,
+            -50
+          ],
+          "focal": 24
+        },
+        {
+          "t": 5.5,
+          "p": [
+            4,
+            1,
+            -71
+          ],
+          "target": [
+            0,
+            1.5,
+            -79.5
+          ],
+          "focal": 24
+        },
+        {
+          "t": 8,
+          "p": [
+            4,
+            1.05,
+            -71
+          ],
+          "target": [
+            0,
+            6,
+            -150
+          ],
+          "focal": 24
+        }
+      ],
+      "tracks": {
+        "p000g": [
+          {
+            "t": 0,
+            "p": [
+              0.25,
+              2.03,
+              -52.4
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  90,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  0,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  90,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  40,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": -0.45
+            }
+          },
+          {
+            "t": 5,
+            "p": [
+              0.25,
+              0.93,
+              -79.9
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  0,
+                  0
+                ],
+                "knee_l": [
+                  90,
+                  0,
+                  0
+                ],
+                "hip_r": [
+                  0,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  90,
+                  0,
+                  0
+                ],
+                "ankle_r": [
+                  40,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": -0.45
+            }
+          },
+          {
+            "t": 6.5,
+            "p": [
+              0.3,
+              0.93,
+              -79.8
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_r": [
+                  -65,
+                  0,
+                  -12
+                ],
+                "elbow_r": [
+                  -15,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              0.3,
+              0.93,
+              -79.8
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000f": [
+          {
+            "t": 0,
+            "p": [
+              -0.3,
+              2.03,
+              -51.5
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  25,
+                  35
+                ],
+                "hip_r": [
+                  -90,
+                  -25,
+                  -35
+                ],
+                "knee_l": [
+                  150,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  150,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  -20,
+                  0,
+                  10
+                ],
+                "shoulder_r": [
+                  -20,
+                  0,
+                  -10
+                ],
+                "elbow_l": [
+                  -40,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -40,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": -0.82
+            }
+          },
+          {
+            "t": 5.8,
+            "p": [
+              -0.3,
+              0.93,
+              -79
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "hip_l": [
+                  -90,
+                  25,
+                  35
+                ],
+                "hip_r": [
+                  -90,
+                  -25,
+                  -35
+                ],
+                "knee_l": [
+                  150,
+                  0,
+                  0
+                ],
+                "knee_r": [
+                  150,
+                  0,
+                  0
+                ],
+                "shoulder_l": [
+                  -20,
+                  0,
+                  10
+                ],
+                "shoulder_r": [
+                  -20,
+                  0,
+                  -10
+                ],
+                "elbow_l": [
+                  -40,
+                  0,
+                  0
+                ],
+                "elbow_r": [
+                  -40,
+                  0,
+                  0
+                ]
+              },
+              "hipsY": -0.82
+            }
+          },
+          {
+            "t": 7.3,
+            "p": [
+              -0.35,
+              0.93,
+              -79.4
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          },
+          {
+            "t": 8,
+            "p": [
+              -0.35,
+              0.93,
+              -79.4
+            ],
+            "r": [
+              0,
+              180,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000h": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ],
+            "pose": {
+              "j": {
+                "shoulder_l": [
+                  0,
+                  0,
+                  8
+                ],
+                "shoulder_r": [
+                  0,
+                  0,
+                  -8
+                ]
+              },
+              "hipsY": 0
+            }
+          }
+        ],
+        "p000i": [
+          {
+            "t": 0,
+            "p": [
+              0,
+              2,
+              -52
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "t": 5,
+            "p": [
+              0,
+              0.9,
+              -79.5
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "t": 8,
+            "p": [
+              0,
+              0.9,
+              -79.5
+            ],
+            "r": [
+              0,
+              90,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "p000j": [
+          {
+            "t": 0,
+            "p": [
+              4000,
+              -2500,
+              4000
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "beats": [
+        {
+          "t0": 0,
+          "t1": 3,
+          "text": "At blue hour @prop_flying_carpet_lp_v1 glides low over the long reflecting pool toward the camera, its reflection racing beneath it, the twelve brass lanterns lit on both sides, @char_lova_persian_v1 kneeling at the front."
+        },
+        {
+          "t0": 3,
+          "t1": 5,
+          "text": "It slows and settles beside the octagonal turquoise fountain, the water rippling under it."
+        },
+        {
+          "t0": 5,
+          "t1": 8,
+          "text": "@char_lova_persian_v1 stands up and offers his hand; @char_persian_princess_v1 rises beside him; both turn to face the turquoise-and-gold iwan and the gold dome at the end of the garden as the first stars appear."
+        }
+      ],
+      "purpose": "Final shot of the sequence, palace garden at blue hour: @prop_flying_carpet_lp_v1 glides low over the long reflecting pool between the lit lanterns and settles beside the turquoise fountain; @char_lova_persian_v1 stands, helps @char_persian_princess_v1 up, and the camera pans with them to the turquoise-and-gold iwan and the gold dome at the end of the garden",
+      "audio": "",
+      "locks": "no vehicles; no modern objects, wires or signs; no other people",
+      "loc": {
+        "tag": "@loc_lp_palace_garden_bluehour_v1",
+        "time": "blue hour, first stars",
+        "desc": "Low-poly empty Persian palace garden at blue hour: long reflecting pool with one octagonal turquoise-tiled fountain, two rows of cypress trees, red rose beds, terracotta walkway, twelve lit brass lanterns along the pool, turquoise-and-gold iwan arch and gold dome at the far end, first stars"
+      },
+      "onlyPieces": [
+        "persia_garden",
+        "persia_palace"
+      ],
+      "move": "pan",
+      "musicVideo": true,
+      "useBlockingVideo": true,
+      "useStartFrame": true
+    }
+  ],
+  "current": 0
+}
